@@ -1,0 +1,17 @@
+.form-field {
+  input {
+    width: 100%;
+  }
+
+  .error {
+    border-color: red;
+    border-width: 1px;
+  }
+
+  &__error {
+    display: block;
+    margin-bottom: 0.35rem;
+    margin-left: 0.25rem;
+    font-size: 12px;
+  }
+}

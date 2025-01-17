@@ -1,0 +1,57 @@
+@use "../abstracts/" as *;
+
+.icon {
+  display: inline-block;
+  width: $icon-size-regular;
+  height: $icon-size-regular;
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  cursor: pointer;
+
+  &--fill {
+    &-dark {
+      background-color: $primary-dark;
+    }
+    &-light {
+      background-color: #ffffff;
+    }
+    &-gray {
+      background-color: #999999;
+    }
+  }
+
+  &--size {
+    &-small {
+      height: $icon-size-small;
+      width: $icon-size-small;
+    }
+  }
+
+  &--gear {
+    mask-image: url("/icons/gear-icon.svg");
+  }
+
+  &--plus {
+    mask-image: url("/icons/plus-icon.svg");
+  }
+
+  &--edit {
+    mask-image: url("/icons/edit-icon.svg");
+  }
+
+  &--save {
+    mask-image: url("/icons/save-icon.svg");
+  }
+
+  &--trash {
+    mask-image: url("/icons/trash-icon.svg");
+  }
+
+  &--close {
+    mask-image: url("/icons/close-icon.svg");
+  }
+
+  &--search {
+    mask-image: url("/icons/search-icon.svg");
+  }
+}
