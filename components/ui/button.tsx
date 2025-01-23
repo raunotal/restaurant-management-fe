@@ -1,7 +1,6 @@
 import classNames from "classnames";
 import LoadingSpinner from "./loading-spinner";
 import { IconType } from "@/config/types";
-import Icon from "./icon";
 
 interface ButtonProps {
   disabled?: boolean;
@@ -30,17 +29,7 @@ export default function Button(props: ButtonProps) {
     children,
   } = props;
 
-  let buttonContent = (
-    <>
-      {icon && iconPosition === "left" && (
-        <Icon fill="light" type={icon} className="button__icon--left" />
-      )}
-      {children}
-      {icon && iconPosition === "right" && (
-        <Icon fill="light" type={icon} className="button__icon--right" />
-      )}
-    </>
-  );
+  let buttonContent = <>{children}</>;
 
   if (loading) {
     buttonContent = <LoadingSpinner />;
