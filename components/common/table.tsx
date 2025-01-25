@@ -36,20 +36,20 @@ export default function Table(props: TableProps) {
               </thead>
               <tbody className="bg-white">
                 {rows.map((row, index) => (
-                  <tr key={`row-${index}`} className="border-b border-gray-200">
+                  <tr
+                    key={`row-${index}`}
+                    className="border-b border-gray-200 font-medium"
+                  >
                     {Object.values(row).map((value, index) => (
                       <td
                         className={classNames(
-                          "px-3 py-3.5",
-                          "text-gray-500 text-sm text-left",
+                          "px-3 py-4 text-gray-500 text-sm text-left",
                           {
-                            "pl-6": index === 0,
-                            "text-gray-900": index === 0,
+                            "text-gray-900 pl-6": index === 0,
                             "font-light":
                               index !== 0 &&
                               index !== Object.values(row).length - 1,
-                            "pr-6": index === Object.values(row).length - 1,
-                            "text-indigo-600":
+                            "text-indigo-600 pr-6 text-right":
                               index === Object.values(row).length - 1,
                           }
                         )}
