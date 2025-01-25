@@ -1,26 +1,33 @@
-import { IconType } from "@/config/types";
-import classNames from "classnames";
-import React from "react";
+import {
+  Label,
+  Description,
+  Field,
+  Input as InputComponent,
+} from "@headlessui/react";
 
 export interface InputProps
   extends React.DetailedHTMLProps<
     React.InputHTMLAttributes<HTMLInputElement>,
     HTMLInputElement
   > {
-  background?: "dark" | "light" | "white" | "transparent";
-  icon?: IconType;
+  description: string;
+  label: string;
   hasError?: boolean;
 }
 
 export default function Input(props: InputProps) {
-  const { background = "white", icon, hasError, ...rest } = props;
+  const { description, label } = props;
 
   return (
-    <div className={classNames("input", { "input--icon": icon })}>
-      <input
-        className={classNames(`input--${background}`, { error: hasError })}
-        {...rest}
+    <Field disabled>
+      <Label className="data-[disabled]:opacity-50">{label}</Label>
+      <Description className="data-[disabled]:opacity-50">
+        {description}
+      </Description>
+      <InputComponent
+        name="full_name"
+        className="data-[disabled]:bg-gray-100"
       />
-    </div>
+    </Field>
   );
 }

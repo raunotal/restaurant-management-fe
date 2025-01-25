@@ -6,7 +6,7 @@ import classNames from "classnames";
 
 const inter = Inter({
   subsets: ["latin"],
-  weight: ["300", "400", "500"],
+  weight: ["300", "400", "500", "600", "700"],
 });
 
 export default function RootLayout({
@@ -20,7 +20,7 @@ export default function RootLayout({
         <Providers>
           <main className="grid grid-cols-[288px_1fr] grid-rows-[1fr] h-full">
             <Sidebar />
-            <div className="bg-gray-50">{children}</div>
+            <div className="bg-gray-100 p-8">{children}</div>
           </main>
         </Providers>
       </body>

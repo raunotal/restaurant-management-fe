@@ -1,5 +1,14 @@
 import React from "react";
 
-export default function Header() {
-  return <div>Header</div>;
+interface HeaderProps {
+  children: React.ReactNode;
+}
+
+export default function Header(props: HeaderProps) {
+  const { children } = props;
+  return (
+    <div>
+      <h2>{children}</h2>
+    </div>
+  );
 }

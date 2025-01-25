@@ -1,6 +1,5 @@
 "use client";
 
-import RecipeCategoryModal from "@/components/recipes/recipe-category-modal";
 import Button from "@/components/ui/button";
 import Input from "@/components/ui/input";
 import { useState } from "react";
@@ -12,9 +11,7 @@ export default function RecipesPage() {
 
   return (
     <>
-      {showAddRecipes && (
-        <RecipeCategoryModal isOpen onClose={toggleAddRecipes} />
-      )}
+
       <main className="recipes-page">
         <div className="recipes-page__header">
           <h1>Retseptid</h1>

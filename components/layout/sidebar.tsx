@@ -25,7 +25,7 @@ export default function Sidebar() {
               <div className="text-gray-400 text-xs">Seaded</div>
               <ul className="-m-2 mt-2">
                 <li>
-                  <NavLink href="/dashboard" showLetter>
+                  <NavLink href="/units" showLetter>
                     Ühikud
                   </NavLink>
                 </li>
