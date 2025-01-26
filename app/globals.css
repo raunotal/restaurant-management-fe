@@ -10,7 +10,14 @@
 }
 
 @layer base {
-  h1, h2, h3 {
+  html {
+    font-family: "inter-variable", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3 {
     @apply text-gray-900;
   }
 
@@ -22,5 +29,9 @@
   }
   h3 {
     @apply font-semibold;
+  }
+
+  input {
+    outline-style: solid;
   }
 }

@@ -1,13 +1,28 @@
+import { sortTableRows } from "@/utils/helpers";
 import classNames from "classnames";
 
+export type TableRow = Record<
+  string,
+  string | number | undefined | TableRowAction[]
+>;
+
+export type TableRowAction = {
+  text: string;
+  position?: number;
+  onClick: () => void;
+};
+
 interface TableProps {
+  groupBy?: string;
   headers: string[];
-  rows: Record<string, string>[];
+  rows: TableRow[];
   className?: string;
 }
 
 export default function Table(props: TableProps) {
-  const { headers, rows, className } = props;
+  const { groupBy, headers, rows, className } = props;
+  const sortedRows = sortTableRows(rows, groupBy);
+
   return (
     <div className={classNames(className)}>
       <div className="-my-2 -mx-8 overflow-x-auto">
@@ -35,29 +50,43 @@ export default function Table(props: TableProps) {
                 </tr>
               </thead>
               <tbody className="bg-white">
-                {rows.map((row, index) => (
+                {sortedRows.map((row, rowIndex) => (
                   <tr
-                    key={`row-${index}`}
+                    key={`row-${rowIndex}`}
                     className="border-b border-gray-200 font-medium"
                   >
-                    {Object.values(row).map((value, index) => (
-                      <td
-                        className={classNames(
-                          "px-3 py-4 text-gray-500 text-sm text-left",
-                          {
-                            "text-gray-900 pl-6": index === 0,
-                            "font-light":
-                              index !== 0 &&
-                              index !== Object.values(row).length - 1,
-                            "text-indigo-600 pr-6 text-right":
-                              index === Object.values(row).length - 1,
-                          }
-                        )}
-                        key={`row-${index}-${value}`}
-                      >
-                        {value}
-                      </td>
-                    ))}
+                    {Object.values(row).map((value, rowFieldIndex) => {
+                      const isRowAction = Array.isArray(value);
+
+                      return (
+                        <td
+                          className={classNames(
+                            "px-3 py-4 text-gray-500 text-sm text-left",
+                            {
+                              "text-gray-900 pl-6": rowFieldIndex === 0,
+                              "font-light":
+                                rowFieldIndex !== 0 &&
+                                rowFieldIndex !== Object.values(row).length - 1,
+                              "text-indigo-600 pr-6 text-right":
+                                rowFieldIndex === Object.values(row).length - 1,
+                            }
+                          )}
+                          key={`row-${rowIndex}-${value}`}
+                        >
+                          {!isRowAction && (value as string)}
+                          {isRowAction &&
+                            value.map((action, index) => (
+                              <span
+                                className="cursor-pointer"
+                                onClick={action.onClick}
+                                key={`${rowIndex}-action-${index}`}
+                              >
+                                {action.text}
+                              </span>
+                            ))}
+                        </td>
+                      );
+                    })}
                   </tr>
                 ))}
               </tbody>

@@ -1,13 +1,8 @@
-import { Inter } from "next/font/google";
 import Providers from "@/components/providers/providers";
 import "./globals.css";
 import Sidebar from "@/components/layout/sidebar";
-import classNames from "classnames";
-
-const inter = Inter({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-});
+import { Suspense } from "react";
+import Loader from "@/components/layout/loader";
 
 export default function RootLayout({
   children,
@@ -15,12 +10,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="et" className={classNames(inter.className, "h-full")}>
+    <html lang="et" className="h-full">
+      <head>
+        <link
+          rel="stylesheet"
+          href="https://use.typekit.net/llq6uka.css"
+        ></link>
+      </head>
       <body className="h-full">
         <Providers>
-          <main className="grid grid-cols-[288px_1fr] grid-rows-[1fr] h-full">
+          <main className="grid grid-cols-[288px_1fr] grid-rows-[1fr] h-full relative">
             <Sidebar />
-            <div className="bg-gray-100 p-8">{children}</div>
+            <Suspense fallback={<Loader />}>
+              <div className="bg-gray-100 p-8">{children}</div>
+            </Suspense>
           </main>
         </Providers>
       </body>

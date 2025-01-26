@@ -15,7 +15,7 @@ export default function Sidebar() {
             <li>
               <ul className="-m-2">
                 <li>
-                  <NavLink href="/dashboard" iconType="home">
+                  <NavLink href="/" iconType="home">
                     Töölaud
                   </NavLink>
                 </li>

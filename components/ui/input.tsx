@@ -10,23 +10,22 @@ export interface InputProps
     React.InputHTMLAttributes<HTMLInputElement>,
     HTMLInputElement
   > {
-  description: string;
+  description?: string;
   label: string;
-  hasError?: boolean;
+  name: string;
 }
 
 export default function Input(props: InputProps) {
-  const { description, label } = props;
+  const { description, label, className } = props;
 
   return (
-    <Field disabled>
-      <Label className="data-[disabled]:opacity-50">{label}</Label>
-      <Description className="data-[disabled]:opacity-50">
-        {description}
-      </Description>
+    <Field className={className}>
+      <Label className="text-gary-900 font-medium text-sm">{label}</Label>
+      <Description>{description}</Description>
       <InputComponent
-        name="full_name"
-        className="data-[disabled]:bg-gray-100"
+        className="py-1.5 px-3 mt-2 text-sm outline-gray-300 -outline-offset-1 outline-1 outline-solid focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 text-gray-900 py-1.5 px3 bg-white rounded-md w-full placeholder:text-gray-400"
+        style={{ outlineStyle: "solid" }}
+        {...props}
       />
     </Field>
   );
