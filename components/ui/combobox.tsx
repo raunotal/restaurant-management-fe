@@ -42,14 +42,15 @@ export default function Combobox(props: ComboboxProps) {
     <Field className={classNames("flex flex-col", className)}>
       <Label className="text-gary-900 font-medium text-sm">{label}</Label>
       <HeadlessCombobox
-        value={selected}
+        immediate
+        value={selected || { key: "", value: "" }}
         onChange={onChange}
         onClose={() => setQuery("")}
       >
         <div className="relative mt-2 ">
           <ComboboxInput
             className={inputClass}
-            displayValue={(element: ComboboxElement) => element?.value || ""}
+            displayValue={(element: ComboboxElement) => element.value}
             onChange={(event) => setQuery(event.target.value)}
             placeholder={placeholder}
           />
@@ -70,7 +71,7 @@ export default function Combobox(props: ComboboxProps) {
           {filteredData.map((element) => (
             <ComboboxOption
               key={`autocomplete-${element.key}`}
-              value={element.value}
+              value={element}
               className="py-2 pl-3 pr-9 text-sm hover:bg-indigo-600 hover:text-white cursor-pointer"
             >
               {element.value}

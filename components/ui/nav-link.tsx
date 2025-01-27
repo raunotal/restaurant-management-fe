@@ -14,10 +14,10 @@ export default function NavLink(props: NavLinkProps) {
   return (
     <Link
       href={href}
-      className="flex gap-3 items-center text-gray-700 rounded-md font-semibold text-sm p-2 hover:text-indigo-600 hover:bg-gray-50 group"
+      className="flex gap-x-3 text-gray-700 rounded-md font-semibold text-sm p-2 hover:text-indigo-600 hover:bg-gray-50 group"
     >
       {showLetter && (
-        <span className="font-medium text-gray-400 group-hover:text-indigo-600 text-xs bg-white border border-gray-200 group-hover:border-indigo-600 rounded-lg w-6 h-6 flex items-center justify-center leading-6">
+        <span className="font-medium text-gray-400 group-hover:text-indigo-600 text-xs bg-white border border-gray-200 group-hover:border-indigo-600 rounded-lg w-6 h-6 flex items-center justify-center">
           {children!.toString().charAt(0)}
         </span>
       )}
