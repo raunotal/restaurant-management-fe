@@ -1,14 +1,14 @@
 import { Endpoint } from "@/config/endpoints";
 import { QueryKey } from "@/config/query-keys";
 import { API } from "@/lib/api-client";
-import { RecipeCategory, RecipeCategoryMutation } from "@/types/recipe-category";
+import { RecipeCategory } from "@/types/recipe-category";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const getRecipeCategories = async () => {
   return (await API.get<RecipeCategory[]>(Endpoint.RecipeCategories)).data;
 };
 
-const createRecipeCategory = async (data: RecipeCategoryMutation) => {
+const createRecipeCategory = async (data: RecipeCategory) => {
   return (await API.post<RecipeCategory>(Endpoint.RecipeCategories, data)).data;
 };
 

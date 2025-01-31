@@ -5,11 +5,4 @@ export const recipeCategorySchema = z.object({
   name: z.string().min(1, "Kategooria nimi ei tohi olla tühi"),
 });
 
-export const recipeCategoryMutationSchema = recipeCategorySchema.omit({
-  id: true,
-});
-
 export type RecipeCategory = z.infer<typeof recipeCategorySchema>;
-export type RecipeCategoryMutation = z.infer<
-  typeof recipeCategoryMutationSchema
->;

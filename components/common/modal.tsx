@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import Icon from "../ui/icon";
 import classNames from "classnames";
 
 // { isOpen, onClose, children }
@@ -40,7 +39,6 @@ const Modal = (props: ModalProps) => {
       <div className="modal">
         <div className="modal__backdrop" onClick={onClose}></div>
         <div ref={modalRef} className={classNames("modal__content", className)}>
-          <Icon fill="dark" type="close" onClick={onClose} />
           {children}
         </div>
       </div>,

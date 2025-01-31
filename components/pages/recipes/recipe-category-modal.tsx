@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import Modal from "../common/modal";
 import { useForm } from "@tanstack/react-form";
 import Button from "../ui/button";
-import Icon from "../ui/icon";
 import {
   useCreateRecipeCategory,
   useDeleteRecipeCategory,
@@ -84,12 +83,6 @@ function FormCategory(props: RecipeCategory) {
           )}
         />
       </form>
-      {!isEditing ? (
-        <Icon type="edit" fill="dark" size="small" onClick={toggleEditing} />
-      ) : (
-        <Icon fill="dark" size="small" type="save" onClick={handleUpdate} />
-      )}
-      <Icon type="trash" fill="dark" size="small" onClick={handleDelete} />
     </div>
   );
 }
