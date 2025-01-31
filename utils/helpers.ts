@@ -32,3 +32,12 @@ export const sortTableRows = (rows: TableRow[], groupBy?: string) => {
     return 0;
   });
 };
+
+export const setEmptyToNull = <T extends object>(obj: T): T => {
+  return Object.fromEntries(
+    Object.entries(obj).map(([key, value]) => [
+      key,
+      value === "" || value === undefined ? null : value,
+    ])
+  ) as T;
+};

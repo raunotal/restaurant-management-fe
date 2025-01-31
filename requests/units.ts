@@ -36,10 +36,7 @@ export const useCreateUnit = (
 };
 
 export const useUpdateUnit = (
-  options?: Omit<
-    UseMutationOptions<CreateUnitDTO, Error, CreateUnitDTO>,
-    "mutationFn"
-  >
+  options?: Omit<UseMutationOptions<Unit, Error, Unit>, "mutationFn">
 ) => {
   return useCustomMutation<Unit>(QueryKey.Units, updateUnit, options);
 };

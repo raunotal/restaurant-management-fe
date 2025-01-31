@@ -17,7 +17,7 @@ const unitSchema: z.ZodType<UnitType> = z.lazy(() =>
     id: z.string(),
     name: z.string().min(1, "Ühiku nimi ei tohi olla tühi"),
     displayName: z.string().optional(),
-    ratio: z.number().optional(),
+    ratio: z.number().positive().optional(),
     parentUnit: z.union([unitSchema, z.null()]).optional(),
   })
 );

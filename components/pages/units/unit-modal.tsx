@@ -2,21 +2,26 @@ import Modal from "@/components/layout/modal";
 import Combobox, { ComboboxElement } from "@/components/ui/combobox";
 import Button from "@/components/ui/button";
 import Input from "@/components/ui/input";
-import { useCreateUnit, useDeleteUnit, useUnits } from "@/requests/units";
+import {
+  useCreateUnit,
+  useDeleteUnit,
+  useUnits,
+  useUpdateUnit,
+} from "@/requests/units";
 import { DialogTitle } from "@headlessui/react";
 import React, { useEffect, useState } from "react";
 import { useForm } from "@tanstack/react-form";
 import { CreateUnitDTO, createUnitSchema, Unit } from "@/types/unit";
+import { setEmptyToNull } from "@/utils/helpers";
 
 interface UnitModalProps {
   isOpen: boolean;
-  isEditing?: boolean;
   unit?: Unit;
   setIsOpen: (isOpen: boolean) => void;
 }
 
 export default function UnitModal(props: UnitModalProps) {
-  const { isEditing, unit, setIsOpen, isOpen } = props;
+  const { unit, setIsOpen, isOpen } = props;
   const { data: units } = useUnits();
   const [selectedParentUnit, setSelectedParentUnit] =
     useState<ComboboxElement>();
@@ -40,6 +45,12 @@ export default function UnitModal(props: UnitModalProps) {
     },
   });
 
+  const { mutateAsync: updateMutateAsync } = useUpdateUnit({
+    onSuccess: () => {
+      setIsOpen(false);
+    },
+  });
+
   const { handleSubmit, Field, Subscribe, reset } = useForm({
     defaultValues: {
       name: unit?.name || "",
@@ -47,7 +58,13 @@ export default function UnitModal(props: UnitModalProps) {
       parentUnitId: unit?.parentUnit?.id || "",
       ratio: unit?.ratio || 0,
     } as CreateUnitDTO,
-    onSubmit: ({ value }) => createMutateAsync(value),
+    onSubmit: ({ value }) => {
+      if (unit) {
+        updateMutateAsync(setEmptyToNull({ ...value, id: unit.id }));
+      } else {
+        createMutateAsync(setEmptyToNull(value));
+      }
+    },
     validators: {
       onChange: createUnitSchema,
     },
@@ -63,11 +80,12 @@ export default function UnitModal(props: UnitModalProps) {
   return (
     <Modal {...props}>
       <DialogTitle className="font-bold">
-        {isEditing ? "Muuda ühikut" : "Lisa uus ühik"}
+        {unit ? "Muuda ühikut" : "Lisa uus ühik"}
       </DialogTitle>
       <form
         onSubmit={(e) => {
           e.preventDefault();
+          e.stopPropagation();
           handleSubmit();
         }}
       >
@@ -108,20 +126,23 @@ export default function UnitModal(props: UnitModalProps) {
             />
           )}
         />
-        <Field
-          name="ratio"
-          children={(field) => (
-            <Input
-              name={field.name}
-              label="Suhe"
-              type="number"
-              step={0.001}
-              min={0.001}
-              value={field.state.value === 0 ? "" : field.state.value}
-              onChange={(e) => field.handleChange(+e.target.value)}
-            />
-          )}
-        />
+        {selectedParentUnit && (
+          <Field
+            name="ratio"
+            children={(field) => (
+              <Input
+                name={field.name}
+                label="Suhe"
+                type="number"
+                step={0.001}
+                min={0}
+                value={field.state.value}
+                onChange={(e) => field.handleChange(+e.target.value)}
+                hasError={!!field.state.meta.errors.length}
+              />
+            )}
+          />
+        )}
         <div className="flex gap-4 mt-6">
           <Subscribe
             children={() => (
@@ -131,7 +152,11 @@ export default function UnitModal(props: UnitModalProps) {
                   Sulge
                 </Button>
                 {unit && (
-                  <Button type="button" onClick={() => deleteMutateAsync(unit)}>
+                  <Button
+                    type="button"
+                    color="danger"
+                    onClick={() => deleteMutateAsync(unit)}
+                  >
                     Kustuta
                   </Button>
                 )}
