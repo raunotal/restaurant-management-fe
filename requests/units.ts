@@ -1,16 +1,16 @@
 import { Endpoint } from "@/config/endpoints";
 import { QueryKey } from "@/config/query-keys";
 import { API } from "@/lib/api-client";
-import { Unit } from "@/types/unit";
+import { CreateUnitDTO, Unit } from "@/types/unit";
 import { useCustomMutation, useCustomQuery } from "./base";
-import { UseQueryOptions } from "@tanstack/react-query";
+import { UseMutationOptions } from "@tanstack/react-query";
 
 const getUnits = async () => {
   await new Promise((resolve) => setTimeout(resolve, 1000));
   return (await API.get<Unit[]>(Endpoint.Units)).data;
 };
 
-const createUnit = async (data: Unit) => {
+const createUnit = async (data: CreateUnitDTO) => {
   return (await API.post<Unit>(Endpoint.Units, data)).data;
 };
 
@@ -18,24 +18,34 @@ const updateUnit = async (data: Unit) => {
   return (await API.patch<Unit>(`${Endpoint.Units}/${data.id}`, data)).data;
 };
 
-const deleteUnit = async (id: string): Promise<void> => {
-  await API.delete(`${Endpoint.Units}/${id}`);
+const deleteUnit = async (data: Unit): Promise<Unit> => {
+  return await API.delete(`${Endpoint.Units}/${data.id}`);
 };
 
-export const useUnits = (
-  options?: Omit<UseQueryOptions<Unit[], Error>, "queryKey" | "queryFn">
+export const useUnits = () => {
+  return useCustomQuery<Unit[]>(QueryKey.Units, getUnits);
+};
+
+export const useCreateUnit = (
+  options?: Omit<
+    UseMutationOptions<CreateUnitDTO, Error, CreateUnitDTO>,
+    "mutationFn"
+  >
 ) => {
-  return useCustomQuery<Unit[]>(QueryKey.Units, getUnits, options);
+  return useCustomMutation<CreateUnitDTO>(QueryKey.Units, createUnit, options);
 };
 
-export const useCreateUnit = () => {
-  return useCustomMutation<Unit>(QueryKey.Units, createUnit);
+export const useUpdateUnit = (
+  options?: Omit<
+    UseMutationOptions<CreateUnitDTO, Error, CreateUnitDTO>,
+    "mutationFn"
+  >
+) => {
+  return useCustomMutation<Unit>(QueryKey.Units, updateUnit, options);
 };
 
-export const useUpdateUnit = () => {
-  return useCustomMutation<Unit>(QueryKey.Units, updateUnit);
-};
-
-export const useDeleteUnit = () => {
-  return useCustomMutation(QueryKey.Units, deleteUnit);
+export const useDeleteUnit = (
+  options?: Omit<UseMutationOptions<Unit, Error, Unit>, "mutationFn">
+) => {
+  return useCustomMutation<Unit>(QueryKey.Units, deleteUnit, options);
 };

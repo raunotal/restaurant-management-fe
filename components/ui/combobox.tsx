@@ -39,7 +39,7 @@ export default function Combobox(props: ComboboxProps) {
     "py-1.5 px-3 text-sm outline-gray-300 -outline-offset-1 outline-1 outline-solid focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 text-gray-900 py-1.5 px3 bg-white rounded-md w-full placeholder:text-gray-400";
 
   return (
-    <Field className={classNames("flex flex-col", className)}>
+    <Field className={classNames("flex flex-col mt-4", className)}>
       <Label className="text-gary-900 font-medium text-sm">{label}</Label>
       <HeadlessCombobox
         immediate

@@ -1,17 +1,14 @@
-interface ButtonProps {
-  onClick?: () => void;
-  children: React.ReactNode;
-}
+type ButtonProps = Omit<React.HTMLProps<HTMLButtonElement>, "type"> & {
+  type?: "submit" | "reset" | "button";
+};
 
 export default function Button(props: ButtonProps) {
-  const { onClick, children } = props;
-
   return (
     <button
+      {...props}
       className="text-white bg-indigo-600 font-semibold p-2.5 rounded-md text-sm"
-      onClick={onClick}
     >
-      {children}
+      {props.children}
     </button>
   );
 }

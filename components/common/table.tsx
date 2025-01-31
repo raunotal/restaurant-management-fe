@@ -8,8 +8,9 @@ export type TableRow = Record<
 
 export type TableRowAction = {
   text: string;
+  data?: string;
   position?: number;
-  onClick: () => void;
+  onClick: (data?: string) => void;
 };
 
 interface TableProps {
@@ -71,14 +72,14 @@ export default function Table(props: TableProps) {
                                 rowFieldIndex === Object.values(row).length - 1,
                             }
                           )}
-                          key={`row-${rowIndex}-${value}`}
+                          key={`row-${rowIndex}-${rowFieldIndex}`}
                         >
                           {!isRowAction && (value as string)}
                           {isRowAction &&
                             value.map((action, index) => (
                               <span
                                 className="cursor-pointer"
-                                onClick={action.onClick}
+                                onClick={() => action.onClick(action.data)}
                                 key={`${rowIndex}-action-${index}`}
                               >
                                 {action.text}

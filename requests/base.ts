@@ -18,10 +18,7 @@ export const useCustomQuery = <TData>(
   });
 };
 
-export const useCustomMutation = <
-  TData extends { id?: string } | string,
-  TResponse = TData
->(
+export const useCustomMutation = <TData, TResponse = TData>(
   queryKey: string | string[],
   mutationFn: (data: TData) => Promise<TResponse>,
   options?: Omit<UseMutationOptions<TResponse, Error, TData>, "mutationFn">
@@ -29,14 +26,13 @@ export const useCustomMutation = <
   const queryClient = useQueryClient();
 
   return useMutation<TResponse, Error, TData>({
-    mutationFn,
     ...options,
+    mutationFn,
     onSuccess: (_, variables) => {
+      console.log("onSuccess", queryKey, variables);
+
       queryClient.invalidateQueries({
-        queryKey:
-          typeof variables === "object" && "id" in variables
-            ? [queryKey, variables.id]
-            : [queryKey],
+        queryKey: [queryKey],
       });
       options?.onSuccess?.(_, variables, { variables });
     },
