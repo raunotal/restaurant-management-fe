@@ -2,6 +2,34 @@ import Image from "next/image";
 import React from "react";
 import logo from "@/public/logo.svg";
 import NavLink from "../ui/nav-link";
+import {
+  SIDEBAR_NAVIGATION_MENU,
+  SIDEBAR_SETTINGS_MENU,
+  SidebarMenu,
+} from "@/config/sidebar";
+import classNames from "classnames";
+
+function SidebarMenuSection(props: SidebarMenu) {
+  const { items, name, showLetter } = props;
+  return (
+    <>
+      {name && <div className="text-gray-400 text-xs">{name}</div>}
+      <ul className={classNames("-m-2", name && "mt-2")}>
+        {items.map((item, index) => (
+          <li key={item.label + index}>
+            <NavLink
+              href={item.href}
+              iconType={item.iconType}
+              showLetter={showLetter}
+            >
+              {item.label}
+            </NavLink>
+          </li>
+        ))}
+      </ul>
+    </>
+  );
+}
 
 export default function Sidebar() {
   return (
@@ -13,23 +41,10 @@ export default function Sidebar() {
         <nav className="flex flex-col flex-1">
           <ul className="flex flex-col flex-1 gap-7 font-semibold">
             <li>
-              <ul className="-m-2">
-                <li>
-                  <NavLink href="/" iconType="home">
-                    Töölaud
-                  </NavLink>
-                </li>
-              </ul>
+              <SidebarMenuSection {...SIDEBAR_NAVIGATION_MENU} />
             </li>
             <li>
-              <div className="text-gray-400 text-xs">Seaded</div>
-              <ul className="-m-2 mt-2">
-                <li>
-                  <NavLink href="/units" showLetter>
-                    Ühikud
-                  </NavLink>
-                </li>
-              </ul>
+              <SidebarMenuSection {...SIDEBAR_SETTINGS_MENU} />
             </li>
             <li className="mt-auto py-3">Sinu Nimi</li>
           </ul>

@@ -13,12 +13,11 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "@tanstack/react-form";
 import { CreateUnitDTO, createUnitSchema, Unit } from "@/types/unit";
 import { setEmptyToNull } from "@/utils/helpers";
+import { ModalProps } from "@/config/types";
 
-interface UnitModalProps {
-  isOpen: boolean;
+type UnitModalProps = ModalProps & {
   unit?: Unit;
-  setIsOpen: (isOpen: boolean) => void;
-}
+};
 
 export default function UnitModal(props: UnitModalProps) {
   const { unit, setIsOpen, isOpen } = props;
