@@ -9,7 +9,7 @@ const getSuppliers = async () => {
   return (await API.get<Supplier[]>(Endpoints.Suppliers)).data;
 };
 
-const createSupplier = async (data: Supplier) => {
+const createSupplier = async (data: CreateSupplierDTO) => {
   return (await API.post<Supplier>(Endpoints.Suppliers, data)).data;
 };
 
@@ -32,7 +32,7 @@ export const useCreateSupplier = (
     "mutationFn"
   >
 ) => {
-  return useCustomMutation<Supplier>(
+  return useCustomMutation<CreateSupplierDTO>(
     QueryKey.Suppliers,
     createSupplier,
     options

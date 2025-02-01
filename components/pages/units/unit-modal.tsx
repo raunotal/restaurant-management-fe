@@ -11,11 +11,15 @@ import {
 import { DialogTitle } from "@headlessui/react";
 import React, { useEffect, useState } from "react";
 import { useForm } from "@tanstack/react-form";
-import { CreateUnitDTO, createUnitSchema } from "@/types/unit";
+import { CreateUnitDTO, createUnitSchema, Unit } from "@/types/unit";
 import { setEmptyToNull } from "@/utils/helpers";
 import { ModalProps } from "@/config/types";
 
-export default function UnitModal(props: ModalProps) {
+type UnitModalProps = ModalProps & {
+  unit?: Unit;
+};
+
+export default function UnitModal(props: UnitModalProps) {
   const { unit, setIsOpen, isOpen } = props;
   const { data: units } = useUnits();
   const [selectedParentUnit, setSelectedParentUnit] =

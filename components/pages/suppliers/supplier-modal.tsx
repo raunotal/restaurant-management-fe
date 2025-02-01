@@ -1,17 +1,28 @@
 import Modal from "@/components/layout/modal";
 import Button from "@/components/ui/button";
 import Input from "@/components/ui/input";
-import { useCreateUnit, useDeleteUnit, useUpdateUnit } from "@/requests/units";
 import { DialogTitle } from "@headlessui/react";
 import React, { useEffect } from "react";
 import { useForm } from "@tanstack/react-form";
-import { CreateUnitDTO, createUnitSchema } from "@/types/unit";
 import { setEmptyToNull } from "@/utils/helpers";
 import { ModalProps } from "@/config/types";
-import { useCreateSupplier } from "@/requests/suppliers";
+import {
+  useCreateSupplier,
+  useDeleteSupplier,
+  useUpdateSupplier,
+} from "@/requests/suppliers";
+import {
+  CreateSupplierDTO,
+  createSupplierSchema,
+  Supplier,
+} from "@/types/supplier";
 
-export default function SupplierModal(props: ModalProps) {
-  const { unit, setIsOpen, isOpen } = props;
+type SupplierModalProps = ModalProps & {
+  supplier?: Supplier;
+};
+
+export default function SupplierModal(props: SupplierModalProps) {
+  const { supplier, setIsOpen, isOpen } = props;
 
   const { mutateAsync: createMutateAsync } = useCreateSupplier({
     onSuccess: () => {
@@ -19,13 +30,13 @@ export default function SupplierModal(props: ModalProps) {
     },
   });
 
-  const { mutateAsync: deleteMutateAsync } = useDeleteUnit({
+  const { mutateAsync: deleteMutateAsync } = useDeleteSupplier({
     onSuccess: () => {
       setIsOpen(false);
     },
   });
 
-  const { mutateAsync: updateMutateAsync } = useUpdateUnit({
+  const { mutateAsync: updateMutateAsync } = useUpdateSupplier({
     onSuccess: () => {
       setIsOpen(false);
     },
@@ -33,20 +44,18 @@ export default function SupplierModal(props: ModalProps) {
 
   const { handleSubmit, Field, Subscribe, reset } = useForm({
     defaultValues: {
-      name: unit?.name || "",
-      displayName: unit?.displayName || "",
-      parentUnitId: unit?.parentUnit?.id || "",
-      ratio: unit?.ratio || 0,
-    } as CreateUnitDTO,
+      name: supplier?.name || "",
+      address: supplier?.address || "",
+    } as CreateSupplierDTO,
     onSubmit: ({ value }) => {
-      if (unit) {
-        updateMutateAsync(setEmptyToNull({ ...value, id: unit.id }));
+      if (supplier) {
+        updateMutateAsync(setEmptyToNull({ ...value, id: supplier.id }));
       } else {
         createMutateAsync(setEmptyToNull(value));
       }
     },
     validators: {
-      onChange: createUnitSchema,
+      onChange: createSupplierSchema,
     },
   });
 
@@ -59,7 +68,7 @@ export default function SupplierModal(props: ModalProps) {
   return (
     <Modal {...props}>
       <DialogTitle className="font-bold">
-        {unit ? "Muuda tarnijat" : "Lisa uus tarnija"}
+        {supplier ? "Muuda tarnijat" : "Lisa uus tarnija"}
       </DialogTitle>
       <form
         onSubmit={(e) => {
@@ -81,11 +90,11 @@ export default function SupplierModal(props: ModalProps) {
           )}
         />
         <Field
-          name="displayName"
+          name="address"
           children={(field) => (
             <Input
               name={field.name}
-              label="Lühend"
+              label="Aadress"
               value={field.state.value}
               onChange={(e) => field.handleChange(e.target.value)}
             />
@@ -99,11 +108,11 @@ export default function SupplierModal(props: ModalProps) {
                 <Button type="button" onClick={() => setIsOpen(false)}>
                   Sulge
                 </Button>
-                {unit && (
+                {supplier && (
                   <Button
                     type="button"
                     color="danger"
-                    onClick={() => deleteMutateAsync(unit)}
+                    onClick={() => deleteMutateAsync(supplier)}
                   >
                     Kustuta
                   </Button>
