@@ -2,18 +2,13 @@ import Modal from "@/components/layout/modal";
 import Combobox, { ComboboxElement } from "@/components/ui/combobox";
 import Button from "@/components/ui/button";
 import Input from "@/components/ui/input";
-import {
-  useCreateUnit,
-  useDeleteUnit,
-  useUnits,
-  useUpdateUnit,
-} from "@/requests/units";
 import { DialogTitle } from "@headlessui/react";
 import React, { useEffect, useState } from "react";
 import { useForm } from "@tanstack/react-form";
 import { CreateUnitDTO, createUnitSchema, Unit } from "@/types/unit";
 import { setEmptyToNull } from "@/utils/helpers";
 import { ModalProps } from "@/config/types";
+import services from "@/service/services";
 
 type UnitModalProps = ModalProps & {
   unit?: Unit;
@@ -21,7 +16,8 @@ type UnitModalProps = ModalProps & {
 
 export default function UnitModal(props: UnitModalProps) {
   const { unit, setIsOpen, isOpen } = props;
-  const { data: units } = useUnits();
+  const { useGetAll, useCreate, useUpdate, useDelete } = services.unitService;
+  const units = useGetAll().data;
   const [selectedParentUnit, setSelectedParentUnit] =
     useState<ComboboxElement>();
 
@@ -32,19 +28,19 @@ export default function UnitModal(props: UnitModalProps) {
     });
   }, [unit]);
 
-  const { mutateAsync: createMutateAsync } = useCreateUnit({
+  const { mutateAsync: createMutateAsync } = useCreate({
     onSuccess: () => {
       setIsOpen(false);
     },
   });
 
-  const { mutateAsync: deleteMutateAsync } = useDeleteUnit({
+  const { mutateAsync: deleteMutateAsync } = useUpdate({
     onSuccess: () => {
       setIsOpen(false);
     },
   });
 
-  const { mutateAsync: updateMutateAsync } = useUpdateUnit({
+  const { mutateAsync: updateMutateAsync } = useDelete({
     onSuccess: () => {
       setIsOpen(false);
     },

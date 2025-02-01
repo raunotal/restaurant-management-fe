@@ -3,11 +3,11 @@
 import { TableRow } from "@/components/common/table";
 import SettingsPage from "@/components/layout/settings-page";
 import UnitModal from "@/components/pages/units/unit-modal";
-import { useUnits } from "@/requests/units";
+import services from "@/service/services";
 import React, { useState } from "react";
 
 export default function UnitsPage() {
-  const { data: units } = useUnits();
+  const units = services.unitService.useGetAll().data;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUnit, setSelectedUnit] = useState<string>();
 

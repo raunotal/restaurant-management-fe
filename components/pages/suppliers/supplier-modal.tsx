@@ -7,15 +7,11 @@ import { useForm } from "@tanstack/react-form";
 import { setEmptyToNull } from "@/utils/helpers";
 import { ModalProps } from "@/config/types";
 import {
-  useCreateSupplier,
-  useDeleteSupplier,
-  useUpdateSupplier,
-} from "@/requests/suppliers";
-import {
   CreateSupplierDTO,
   createSupplierSchema,
   Supplier,
 } from "@/types/supplier";
+import services from "@/service/services";
 
 type SupplierModalProps = ModalProps & {
   supplier?: Supplier;
@@ -23,20 +19,21 @@ type SupplierModalProps = ModalProps & {
 
 export default function SupplierModal(props: SupplierModalProps) {
   const { supplier, setIsOpen, isOpen } = props;
+  const { useCreate, useDelete, useUpdate } = services.supplierService;
 
-  const { mutateAsync: createMutateAsync } = useCreateSupplier({
+  const { mutateAsync: createMutateAsync } = useCreate({
     onSuccess: () => {
       setIsOpen(false);
     },
   });
 
-  const { mutateAsync: deleteMutateAsync } = useDeleteSupplier({
+  const { mutateAsync: deleteMutateAsync } = useDelete({
     onSuccess: () => {
       setIsOpen(false);
     },
   });
 
-  const { mutateAsync: updateMutateAsync } = useUpdateSupplier({
+  const { mutateAsync: updateMutateAsync } = useUpdate({
     onSuccess: () => {
       setIsOpen(false);
     },

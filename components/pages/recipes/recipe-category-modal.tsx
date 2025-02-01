@@ -7,7 +7,7 @@ import {
   useDeleteRecipeCategory,
   useRecipeCategories,
   useUpdateRecipeCategory,
-} from "@/requests/recipe-categories";
+} from "@/service/recipe-categories";
 import {
   RecipeCategory,
   recipeCategoryMutationSchema,
