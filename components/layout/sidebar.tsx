@@ -2,7 +2,11 @@ import Image from "next/image";
 import React from "react";
 import logo from "@/public/logo.svg";
 import NavLink from "../ui/nav-link";
-import { SIDEBAR_NAVIGATION_MENU, SidebarMenu } from "@/config/sidebar";
+import {
+  SIDEBAR_NAVIGATION_MENU,
+  SIDEBAR_SETTINGS_MENU,
+  SidebarMenu,
+} from "@/config/sidebar";
 import classNames from "classnames";
 
 function SidebarMenuSection(props: SidebarMenu) {
@@ -40,19 +44,7 @@ export default function Sidebar() {
               <SidebarMenuSection {...SIDEBAR_NAVIGATION_MENU} />
             </li>
             <li>
-              <div className="text-gray-400 text-xs">Seaded</div>
-              <ul className="-m-2 mt-2">
-                <li>
-                  <NavLink href="/units" showLetter>
-                    Ühikud
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink href="/suppliers" showLetter>
-                    Tarnijad
-                  </NavLink>
-                </li>
-              </ul>
+              <SidebarMenuSection {...SIDEBAR_SETTINGS_MENU} />
             </li>
             <li className="mt-auto py-3">Sinu Nimi</li>
           </ul>
