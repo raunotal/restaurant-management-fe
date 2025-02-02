@@ -22,7 +22,7 @@ export default function Modal(props: ModalProps) {
       <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
         <DialogPanel
           className={classNames(
-            "max-w-lg space-y-4 bg-white p-12 rounded-xl min-w-[350px]",
+            "max-w-lg space-y-4 bg-white p-12 rounded-xl min-w-[350px] w-full",
             className
           )}
         >

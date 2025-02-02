@@ -27,16 +27,20 @@ export const SIDEBAR_SETTINGS_MENU: SidebarMenu = {
   showLetter: true,
   items: [
     {
-      label: "Ühikud",
-      href: "/units",
-    },
-    {
       label: "Tarnijad",
       href: "/suppliers",
     },
     {
       label: "Tooraine kategooriad",
       href: "/ingredient-categories",
+    },
+    {
+      label: "Retsepti kategooriad",
+      href: "/recipe-categories",
+    },
+    {
+      label: "Ühikud",
+      href: "/units",
     },
   ],
 };

@@ -16,10 +16,16 @@ const ingredientCategoryService = createDataService<
   CreateIngredientCategoryDTO
 >(Endpoints.IngredientCategories);
 
+const recipeCategoryService = createDataService<
+  IngredientCategory,
+  CreateIngredientCategoryDTO
+>(Endpoints.RecipeCategories);
+
 const services = {
   unitService,
   supplierService,
   ingredientCategoryService,
+  recipeCategoryService,
 };
 
 export default services;
