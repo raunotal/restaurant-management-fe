@@ -3,12 +3,11 @@
 import { TableRow } from "@/components/common/table";
 import SettingsPage from "@/components/layout/settings-page";
 import SupplierModal from "@/components/pages/suppliers/supplier-modal";
-import { useSuppliers } from "@/requests/suppliers";
+import services from "@/service/services";
 import React, { useState } from "react";
 
 export default function SuppliersPage() {
-  const { data: suppliers } = useSuppliers();
-  
+  const suppliers = services.supplierService.useGetAll().data;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedSupplier, setSelectedSupplier] = useState<string>();
 

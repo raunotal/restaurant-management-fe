@@ -1,25 +1,28 @@
 import Modal from "@/components/layout/modal";
 import Button from "@/components/ui/button";
 import Input from "@/components/ui/input";
-import { DialogTitle } from "@headlessui/react";
-import React, { useEffect } from "react";
-import { useForm } from "@tanstack/react-form";
-import { setEmptyToNull } from "@/utils/helpers";
 import { ModalProps } from "@/config/types";
-import {
-  CreateSupplierDTO,
-  createSupplierSchema,
-  Supplier,
-} from "@/types/supplier";
 import services from "@/service/services";
+import {
+  CreateIngredientCategoryDTO,
+  createIngredientCategorySchema,
+  IngredientCategory,
+} from "@/types/ingredient-category";
+import { setEmptyToNull } from "@/utils/helpers";
+import { DialogTitle } from "@headlessui/react";
+import { useForm } from "@tanstack/react-form";
+import { useEffect } from "react";
 
-type SupplierModalProps = ModalProps & {
-  supplier?: Supplier;
+type IngredientCategoryModalProps = ModalProps & {
+  ingredientCategory?: IngredientCategory;
 };
 
-export default function SupplierModal(props: SupplierModalProps) {
-  const { supplier, setIsOpen, isOpen } = props;
-  const { useCreate, useDelete, useUpdate } = services.supplierService;
+export default function IngredientCategoriesModal(
+  props: IngredientCategoryModalProps
+) {
+  const { ingredientCategory, setIsOpen, isOpen } = props;
+  const { useCreate, useDelete, useUpdate } =
+    services.ingredientCategoryService;
 
   const { mutateAsync: createMutateAsync } = useCreate({
     onSuccess: () => {
@@ -41,18 +44,20 @@ export default function SupplierModal(props: SupplierModalProps) {
 
   const { handleSubmit, Field, Subscribe, reset } = useForm({
     defaultValues: {
-      name: supplier?.name || "",
-      address: supplier?.address || "",
-    } as CreateSupplierDTO,
+      name: ingredientCategory?.name || "",
+      description: ingredientCategory?.description || "",
+    } as CreateIngredientCategoryDTO,
     onSubmit: ({ value }) => {
-      if (supplier) {
-        updateMutateAsync(setEmptyToNull({ ...value, id: supplier.id }));
+      if (ingredientCategory) {
+        updateMutateAsync(
+          setEmptyToNull({ ...value, id: ingredientCategory.id })
+        );
       } else {
         createMutateAsync(setEmptyToNull(value));
       }
     },
     validators: {
-      onChange: createSupplierSchema,
+      onChange: createIngredientCategorySchema,
     },
   });
 
@@ -65,12 +70,13 @@ export default function SupplierModal(props: SupplierModalProps) {
   return (
     <Modal {...props}>
       <DialogTitle className="font-bold">
-        {supplier ? "Muuda tarnijat" : "Lisa uus tarnija"}
+        {ingredientCategory
+          ? "Muuda tooraine kategooriat"
+          : "Lisa tooraine kategooria"}
       </DialogTitle>
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          e.stopPropagation();
           handleSubmit();
         }}
       >
@@ -87,11 +93,11 @@ export default function SupplierModal(props: SupplierModalProps) {
           )}
         />
         <Field
-          name="address"
+          name="description"
           children={(field) => (
             <Input
               name={field.name}
-              label="Aadress"
+              label="Kirjeldus"
               value={field.state.value}
               onChange={(e) => field.handleChange(e.target.value)}
             />
@@ -105,11 +111,13 @@ export default function SupplierModal(props: SupplierModalProps) {
                 <Button type="button" onClick={() => setIsOpen(false)}>
                   Sulge
                 </Button>
-                {supplier && (
+                {ingredientCategory && (
                   <Button
                     type="button"
                     color="danger"
-                    onClick={() => deleteMutateAsync(supplier)}
+                    onClick={() => {
+                      deleteMutateAsync(ingredientCategory);
+                    }}
                   >
                     Kustuta
                   </Button>

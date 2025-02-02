@@ -34,5 +34,9 @@ export const SIDEBAR_SETTINGS_MENU: SidebarMenu = {
       label: "Tarnijad",
       href: "/suppliers",
     },
+    {
+      label: "Tooraine kategooriad",
+      href: "/ingredient-categories",
+    },
   ],
 };
