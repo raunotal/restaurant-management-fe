@@ -6,6 +6,7 @@ import {
   CreateIngredientCategoryDTO,
 } from "@/types/ingredient-category";
 import { createDataService } from "./base";
+import { CreateRecipeDTO, Recipe } from "@/types/recipe";
 
 const unitService = createDataService<Unit, CreateUnitDTO>(Endpoints.Units);
 const supplierService = createDataService<Supplier, CreateSupplierDTO>(
@@ -21,11 +22,16 @@ const recipeCategoryService = createDataService<
   CreateIngredientCategoryDTO
 >(Endpoints.RecipeCategories);
 
+const recipeService = createDataService<Recipe, CreateRecipeDTO>(
+  Endpoints.Recipes
+);
+
 const services = {
   unitService,
   supplierService,
   ingredientCategoryService,
   recipeCategoryService,
+  recipeService,
 };
 
 export default services;

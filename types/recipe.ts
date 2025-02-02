@@ -1,52 +1,33 @@
 import { z } from "zod";
-import { recipeCategorySchema } from "./recipe-category";
+import { RecipeCategory, recipeCategorySchema } from "./recipe-category";
 
-export const recipeSchema = z.object({
+type RecipeType = {
+  id: string;
+  name: string;
+  preparationTime: number;
+  category: RecipeCategory | null;
+  isActive: boolean;
+};
+
+type CreateRecipeDTOType = Omit<RecipeType, "id" | "category"> & {
+  categoryId: string;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const recipeSchema: z.ZodType<RecipeType> = z.object({
   id: z.string(),
   name: z.string().min(1, "Retsepti nimi ei tohi olla tühi"),
-  imageUrl: z.string().url().optional(),
-  comments: z.string().optional(),
-  preparationTime: z.number().int().positive().optional(),
-  isActive: z.boolean().default(false),
-  category: recipeCategorySchema.optional(),
-  ingredients: z
-    .array(
-      z.object({
-        // Define RecipeIngredient schema here if needed
-      })
-    )
-    .optional(),
-  recipes: z
-    .array(
-      z.object({
-        // Define RecipeRecipe schema here if needed
-      })
-    )
-    .optional(),
-  inRecipes: z
-    .array(
-      z.object({
-        // Define RecipeRecipe schema here if needed
-      })
-    )
-    .optional(),
-  preparationInstructions: z
-    .array(
-      z.object({
-        // Define PreparationInstructions schema here if needed
-      })
-    )
-    .optional(),
+  preparationTime: z.number().positive(),
+  category: z.union([recipeCategorySchema, z.null()]),
+  isActive: z.boolean(),
 });
 
-// Recipe mutation schema (omitting id and relations)
-export const recipeMutationSchema = recipeSchema
-  .omit({
-    id: true,
-  })
-  .extend({
-    categoryId: z.string().optional(),
-  });
+export const createRecipeSchema: z.ZodType<CreateRecipeDTOType> = z.object({
+  name: z.string().min(1, "Retsepti nimi ei tohi olla tühi"),
+  preparationTime: z.number().positive(),
+  categoryId: z.string(),
+  isActive: z.boolean(),
+});
 
 export type Recipe = z.infer<typeof recipeSchema>;
-export type RecipeMutation = z.infer<typeof recipeMutationSchema>;
+export type CreateRecipeDTO = z.infer<typeof createRecipeSchema>;
