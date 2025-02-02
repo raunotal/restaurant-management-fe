@@ -19,6 +19,11 @@ export const SIDEBAR_NAVIGATION_MENU: SidebarMenu = {
       href: "/",
       iconType: "home",
     },
+    {
+      label: "Retseptid",
+      href: "/recipes",
+      iconType: "recipes",
+    },
   ],
 };
 

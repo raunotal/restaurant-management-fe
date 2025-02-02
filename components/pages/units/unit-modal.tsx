@@ -34,13 +34,13 @@ export default function UnitModal(props: UnitModalProps) {
     },
   });
 
-  const { mutateAsync: deleteMutateAsync } = useUpdate({
+  const { mutateAsync: deleteMutateAsync } = useDelete({
     onSuccess: () => {
       setIsOpen(false);
     },
   });
 
-  const { mutateAsync: updateMutateAsync } = useDelete({
+  const { mutateAsync: updateMutateAsync } = useUpdate({
     onSuccess: () => {
       setIsOpen(false);
     },
@@ -54,9 +54,14 @@ export default function UnitModal(props: UnitModalProps) {
       ratio: unit?.ratio || 0,
     } as CreateUnitDTO,
     onSubmit: ({ value }) => {
+      console.log("unit", unit);
+
       if (unit) {
+        console.log("I am here");
+
         updateMutateAsync(setEmptyToNull({ ...value, id: unit.id }));
       } else {
+        console.log("I am here 2");
         createMutateAsync(setEmptyToNull(value));
       }
     },
