@@ -3,6 +3,10 @@ import "./globals.css";
 import Sidebar from "@/components/layout/sidebar";
 import { Suspense } from "react";
 import Loader from "@/components/layout/loader";
+import { Inter } from "next/font/google";
+import classNames from "classnames";
+
+const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({
   children,
@@ -19,7 +23,12 @@ export default function RootLayout({
       </head>
       <body className="h-full">
         <Providers>
-          <main className="grid grid-cols-[288px_1fr] grid-rows-[1fr] h-full relative">
+          <main
+            className={classNames(
+              "grid grid-cols-[288px_1fr] grid-rows-[1fr] h-full relative",
+              inter.className
+            )}
+          >
             <Sidebar />
             <Suspense fallback={<Loader />}>
               <div className="bg-gray-100 p-8">{children}</div>

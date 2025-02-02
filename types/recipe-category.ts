@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-type RecipeCategoryType = {
+export type RecipeCategoryType = {
   id: string;
   name: string;
   description?: string;
@@ -8,8 +8,7 @@ type RecipeCategoryType = {
 
 type CreateRecipeCategoryDTOType = Omit<RecipeCategoryType, "id">;
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const recipeCategorySchema: z.ZodType<RecipeCategoryType> = z.object({
+export const recipeCategorySchema: z.ZodType<RecipeCategoryType> = z.object({
   id: z.string(),
   name: z.string().min(1, "Retsepti kategooria nimi ei tohi olla tühi"),
   description: z.string().optional(),

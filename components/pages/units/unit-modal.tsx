@@ -1,9 +1,9 @@
 import Modal from "@/components/layout/modal";
-import Combobox, { ComboboxElement } from "@/components/ui/combobox";
+import Combobox from "@/components/ui/combobox";
 import Button from "@/components/ui/button";
 import Input from "@/components/ui/input";
 import { DialogTitle } from "@headlessui/react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useForm } from "@tanstack/react-form";
 import { CreateUnitDTO, createUnitSchema, Unit } from "@/types/unit";
 import { setEmptyToNull } from "@/utils/helpers";
@@ -18,15 +18,6 @@ export default function UnitModal(props: UnitModalProps) {
   const { unit, setIsOpen, isOpen } = props;
   const { useGetAll, useCreate, useUpdate, useDelete } = services.unitService;
   const units = useGetAll().data;
-  const [selectedParentUnit, setSelectedParentUnit] =
-    useState<ComboboxElement>();
-
-  useEffect(() => {
-    setSelectedParentUnit({
-      key: unit?.parentUnit?.id || "",
-      value: unit?.parentUnit?.name || "",
-    });
-  }, [unit]);
 
   const { mutateAsync: createMutateAsync } = useCreate({
     onSuccess: () => {
@@ -34,19 +25,19 @@ export default function UnitModal(props: UnitModalProps) {
     },
   });
 
-  const { mutateAsync: deleteMutateAsync } = useUpdate({
+  const { mutateAsync: deleteMutateAsync } = useDelete({
     onSuccess: () => {
       setIsOpen(false);
     },
   });
 
-  const { mutateAsync: updateMutateAsync } = useDelete({
+  const { mutateAsync: updateMutateAsync } = useUpdate({
     onSuccess: () => {
       setIsOpen(false);
     },
   });
 
-  const { handleSubmit, Field, Subscribe, reset } = useForm({
+  const { handleSubmit, Field, Subscribe, reset, state } = useForm({
     defaultValues: {
       name: unit?.name || "",
       displayName: unit?.displayName || "",
@@ -54,9 +45,14 @@ export default function UnitModal(props: UnitModalProps) {
       ratio: unit?.ratio || 0,
     } as CreateUnitDTO,
     onSubmit: ({ value }) => {
+      console.log("unit", unit);
+
       if (unit) {
+        console.log("I am here");
+
         updateMutateAsync(setEmptyToNull({ ...value, id: unit.id }));
       } else {
+        console.log("I am here 2");
         createMutateAsync(setEmptyToNull(value));
       }
     },
@@ -67,7 +63,6 @@ export default function UnitModal(props: UnitModalProps) {
 
   useEffect(() => {
     if (!isOpen) {
-      setSelectedParentUnit(undefined);
       reset();
     }
   }, [reset, isOpen]);
@@ -113,15 +108,12 @@ export default function UnitModal(props: UnitModalProps) {
             <Combobox
               label="Pea ühik"
               data={units.map((unit) => ({ key: unit.id, value: unit.name }))}
-              selected={selectedParentUnit}
-              onChange={(value) => {
-                setSelectedParentUnit(value);
-                field.handleChange(value.key);
-              }}
+              selected={field.state.value}
+              onChange={(value) => field.handleChange(value.key)}
             />
           )}
         />
-        {selectedParentUnit && (
+        {state.values.parentUnitId && (
           <Field
             name="ratio"
             children={(field) => (
