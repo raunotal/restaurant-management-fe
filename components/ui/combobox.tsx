@@ -20,12 +20,21 @@ interface ComboboxProps {
   label?: string;
   placeholder?: string;
   selected?: ComboboxElement;
+  isField?: boolean;
   onChange: (value: ComboboxElement) => void;
   className?: string;
 }
 
 export default function Combobox(props: ComboboxProps) {
-  const { data, label, placeholder, selected, onChange, className } = props;
+  const {
+    data,
+    label,
+    placeholder,
+    selected,
+    isField = true,
+    onChange,
+    className,
+  } = props;
   const [query, setQuery] = useState("");
 
   const filteredData =
@@ -39,7 +48,7 @@ export default function Combobox(props: ComboboxProps) {
     "py-1.5 px-3 text-sm outline-gray-300 -outline-offset-1 outline-1 outline-solid focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 text-gray-900 py-1.5 px3 bg-white rounded-md w-full placeholder:text-gray-400";
 
   return (
-    <Field className={classNames("flex flex-col mt-4", className)}>
+    <Field className={classNames("flex flex-col", className, isField && "mt-4")}>
       <Label className="text-gary-900 font-medium text-sm">{label}</Label>
       <HeadlessCombobox
         immediate
@@ -47,7 +56,7 @@ export default function Combobox(props: ComboboxProps) {
         onChange={onChange}
         onClose={() => setQuery("")}
       >
-        <div className="relative mt-2 ">
+        <div className={classNames("relative", isField && "mt-2")}>
           <ComboboxInput
             className={inputClass}
             displayValue={(element: ComboboxElement) => element.value}
