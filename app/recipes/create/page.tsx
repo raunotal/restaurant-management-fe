@@ -33,6 +33,14 @@ export default function CreateRecipePage() {
     value: category.name,
   }));
 
+  const uploadImage = async (data: FormData) => {
+    const response = await fetch("/api/images", {
+      method: "POST",
+      body: data,
+    });
+    console.log("response", await response.json());
+  };
+
   return (
     <>
       <PageHeader title="Lisa uus retsept" />
@@ -43,7 +51,7 @@ export default function CreateRecipePage() {
         }}
       >
         <div className="flex gap-10 mt-10">
-          <div className="basis-2/3">
+          <div className="basis-3/4">
             <div className="flex items-center gap-3 col-span-2">
               <Badge text="Mitteaktiivne" />
               <Field
@@ -99,8 +107,14 @@ export default function CreateRecipePage() {
               </div>
             </AddRecipeRow>
           </div>
-          <div className="basis-1/3">
-            <div>Add image and comments placeholder</div>
+          <div className="basis-1/4">
+            {/* image upload */}
+            <input
+              name="image"
+              type="file"
+              accept="image/*"
+              onChange={(e) => uploadImage(new FormData(e.target.form!))}
+            />
           </div>
         </div>
         <div className="flex justify-end mt-10">
