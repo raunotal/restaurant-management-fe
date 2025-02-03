@@ -2,6 +2,7 @@
 
 import PageHeader from "@/components/layout/page-header";
 import AddRecipeRow from "@/components/pages/recipes/add-recipe-row";
+import ImageUpload from "@/components/pages/recipes/image-upload";
 import TimeInput from "@/components/pages/recipes/time-input";
 import Badge from "@/components/ui/badge";
 import Button from "@/components/ui/button";
@@ -12,8 +13,10 @@ import services from "@/service/services";
 import { CreateRecipeDTO } from "@/types/recipe";
 import { setEmptyToNull } from "@/utils/helpers";
 import { useForm } from "@tanstack/react-form";
+import { useState } from "react";
 
 export default function CreateRecipePage() {
+  const [image, setImage] = useState<File | null>(null);
   const recipeCategories = services.recipeCategoryService.useGetAll().data;
 
   const { mutateAsync: createMutateAsync } = services.recipeService.useCreate();
@@ -24,22 +27,33 @@ export default function CreateRecipePage() {
       isActive: false,
       categoryId: "",
       preparationTime: 0,
+      comments: "",
     } as CreateRecipeDTO,
-    onSubmit: ({ value }) => createMutateAsync(setEmptyToNull(value)),
+    onSubmit: async ({ value }) => {
+      console.log("value", value);
+
+      const data = new FormData();
+      data.append("image", image!);
+      const response = await fetch("/api/images", {
+        method: "POST",
+        body: data,
+      });
+
+      const uploadedImage = await response.json();
+      console.log("uploadedImage", uploadedImage);
+      await createMutateAsync(
+        setEmptyToNull({
+          ...value,
+          imageUrl: uploadedImage.imageUrl,
+        })
+      );
+    },
   });
 
   const recipeCategoriesData = recipeCategories.map((category) => ({
     key: category.id,
     value: category.name,
   }));
-
-  const uploadImage = async (data: FormData) => {
-    const response = await fetch("/api/images", {
-      method: "POST",
-      body: data,
-    });
-    console.log("response", await response.json());
-  };
 
   return (
     <>
@@ -70,7 +84,6 @@ export default function CreateRecipePage() {
               contentClassName="flex-col"
             >
               <div className="flex gap-4">
-                {/* <Input name="name" isField={false} className="basis-2/3" /> */}
                 <Field
                   name="name"
                   children={(field) => (
@@ -108,12 +121,9 @@ export default function CreateRecipePage() {
             </AddRecipeRow>
           </div>
           <div className="basis-1/4">
-            {/* image upload */}
-            <input
-              name="image"
-              type="file"
-              accept="image/*"
-              onChange={(e) => uploadImage(new FormData(e.target.form!))}
+            <ImageUpload
+              onChange={(file) => setImage(file)}
+              selectedImage={image}
             />
           </div>
         </div>

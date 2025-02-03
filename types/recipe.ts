@@ -7,6 +7,8 @@ type RecipeType = {
   preparationTime: number;
   category: RecipeCategory | null;
   isActive: boolean;
+  imageUrl?: string;
+  comments?: string;
 };
 
 type CreateRecipeDTOType = Omit<RecipeType, "id" | "category"> & {
@@ -20,6 +22,8 @@ const recipeSchema: z.ZodType<RecipeType> = z.object({
   preparationTime: z.number().positive(),
   category: z.union([recipeCategorySchema, z.null()]),
   isActive: z.boolean(),
+  imageUrl: z.string().optional(),
+  comments: z.string().optional(),
 });
 
 export const createRecipeSchema: z.ZodType<CreateRecipeDTOType> = z.object({
@@ -27,6 +31,8 @@ export const createRecipeSchema: z.ZodType<CreateRecipeDTOType> = z.object({
   preparationTime: z.number().positive(),
   categoryId: z.string(),
   isActive: z.boolean(),
+  imageUrl: z.string().optional(),
+  comments: z.string().optional(),
 });
 
 export type Recipe = z.infer<typeof recipeSchema>;
