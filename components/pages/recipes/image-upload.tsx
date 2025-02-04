@@ -9,12 +9,10 @@ type ImageUploadProps = {
 };
 
 export default function ImageUpload(props: ImageUploadProps) {
-  const { selectedImage, onChange } = props;
+  const { onChange } = props;
   const [previewImage, setPreviewImage] = useState<
     string | ArrayBuffer | null
   >();
-
-  console.log("selectedImage", selectedImage);
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];

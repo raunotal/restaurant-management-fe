@@ -30,21 +30,22 @@ export default function CreateRecipePage() {
       comments: "",
     } as CreateRecipeDTO,
     onSubmit: async ({ value }) => {
-      console.log("value", value);
+      let imageResponse = null;
 
-      const data = new FormData();
-      data.append("image", image!);
-      const response = await fetch("/api/images", {
-        method: "POST",
-        body: data,
-      });
+      if (image) {
+        const data = new FormData();
+        data.append("image", image);
+        const response = await fetch("/api/images", {
+          method: "POST",
+          body: data,
+        });
+        imageResponse = await response.json();
+      }
 
-      const uploadedImage = await response.json();
-      console.log("uploadedImage", uploadedImage);
       await createMutateAsync(
         setEmptyToNull({
           ...value,
-          imageUrl: uploadedImage.imageUrl,
+          imageUrl: imageResponse?.imageUrl,
         })
       );
     },
