@@ -45,14 +45,9 @@ export default function UnitModal(props: UnitModalProps) {
       ratio: unit?.ratio || 0,
     } as CreateUnitDTO,
     onSubmit: ({ value }) => {
-      console.log("unit", unit);
-
       if (unit) {
-        console.log("I am here");
-
         updateMutateAsync(setEmptyToNull({ ...value, id: unit.id }));
       } else {
-        console.log("I am here 2");
         createMutateAsync(setEmptyToNull(value));
       }
     },

@@ -2,21 +2,28 @@
 
 import PageHeader from "@/components/layout/page-header";
 import AddRecipeRow from "@/components/pages/recipes/add-recipe-row";
+import ImageUpload from "@/components/pages/recipes/image-upload";
 import TimeInput from "@/components/pages/recipes/time-input";
 import Badge from "@/components/ui/badge";
 import Button from "@/components/ui/button";
 import Combobox from "@/components/ui/combobox";
 import Input from "@/components/ui/input";
 import Switch from "@/components/ui/switch";
+import Textarea from "@/components/ui/textarea";
 import services from "@/service/services";
 import { CreateRecipeDTO } from "@/types/recipe";
 import { setEmptyToNull } from "@/utils/helpers";
 import { useForm } from "@tanstack/react-form";
+import { useState } from "react";
+import toast from "react-hot-toast";
 
 export default function CreateRecipePage() {
+  const [image, setImage] = useState<File | null>(null);
   const recipeCategories = services.recipeCategoryService.useGetAll().data;
 
-  const { mutateAsync: createMutateAsync } = services.recipeService.useCreate();
+  const { mutateAsync: createMutateAsync } = services.recipeService.useCreate({
+    onSuccess: () => toast.success("Retsept on edukalt lisatud"),
+  });
 
   const { handleSubmit, Field, Subscribe } = useForm({
     defaultValues: {
@@ -24,8 +31,28 @@ export default function CreateRecipePage() {
       isActive: false,
       categoryId: "",
       preparationTime: 0,
+      comments: "",
     } as CreateRecipeDTO,
-    onSubmit: ({ value }) => createMutateAsync(setEmptyToNull(value)),
+    onSubmit: async ({ value }) => {
+      let imageResponse = null;
+
+      if (image) {
+        const data = new FormData();
+        data.append("image", image);
+        const response = await fetch("/api/images", {
+          method: "POST",
+          body: data,
+        });
+        imageResponse = await response.json();
+      }
+
+      await createMutateAsync(
+        setEmptyToNull({
+          ...value,
+          imageUrl: imageResponse?.imageUrl,
+        })
+      );
+    },
   });
 
   const recipeCategoriesData = recipeCategories.map((category) => ({
@@ -43,7 +70,7 @@ export default function CreateRecipePage() {
         }}
       >
         <div className="flex gap-10 mt-10">
-          <div className="basis-2/3">
+          <div className="basis-3/4">
             <div className="flex items-center gap-3 col-span-2">
               <Badge text="Mitteaktiivne" />
               <Field
@@ -62,7 +89,6 @@ export default function CreateRecipePage() {
               contentClassName="flex-col"
             >
               <div className="flex gap-4">
-                {/* <Input name="name" isField={false} className="basis-2/3" /> */}
                 <Field
                   name="name"
                   children={(field) => (
@@ -99,12 +125,37 @@ export default function CreateRecipePage() {
               </div>
             </AddRecipeRow>
           </div>
-          <div className="basis-1/3">
-            <div>Add image and comments placeholder</div>
+          <div className="basis-1/4">
+            <ImageUpload
+              onChange={(file) => setImage(file)}
+              selectedImage={image}
+            />
+            <Field
+              name="comments"
+              children={(field) => (
+                <Textarea
+                  name={field.name}
+                  value={field.state.value}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  label="Kommentaarid"
+                  description="Siia saad lisada üldise kommentaari retsepti kohta."
+                  rows={6}
+                  textareaClassName="mt-6"
+                  className="mt-8"
+                />
+              )}
+            />
           </div>
         </div>
         <div className="flex justify-end mt-10">
-          <Subscribe children={() => <Button type="submit">Salvesta</Button>} />
+          <Subscribe
+            selector={(state) => [state.isSubmitting]}
+            children={([isSubmitting]) => (
+              <Button isLoading={isSubmitting} type="submit">
+                Salvesta
+              </Button>
+            )}
+          />
         </div>
       </form>
     </>

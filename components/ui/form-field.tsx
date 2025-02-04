@@ -21,7 +21,6 @@ function FieldInfo(props: FieldInfoProps) {
 
 export default function FormField(props: FormFieldProps) {
   const { className, errors, showErrors, ...rest } = props;
-  console.log("errors", errors);
 
   return (
     <div className={classNames("form-field", className)}>
