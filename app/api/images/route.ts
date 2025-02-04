@@ -30,6 +30,11 @@ const compressImage = async (buffer: Buffer, contentType: string) => {
           .toBuffer();
         quality -= 10;
       }
+    } else if (contentType === "image/webp") {
+      while (compressedBuffer.length > MAX_SIZE && quality > 10) {
+        compressedBuffer = await sharp(buffer).webp({ quality }).toBuffer();
+        quality -= 10;
+      }
     }
 
     if (compressedBuffer.length > MAX_SIZE) {

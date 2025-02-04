@@ -5,6 +5,7 @@ import { Suspense } from "react";
 import Loader from "@/components/layout/loader";
 import { Inter } from "next/font/google";
 import classNames from "classnames";
+import { Toaster } from "react-hot-toast";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -31,7 +32,10 @@ export default function RootLayout({
           >
             <Sidebar />
             <Suspense fallback={<Loader />}>
-              <div className="bg-gray-100 p-8">{children}</div>
+              <div className="bg-gray-100 p-8">
+                <Toaster />
+                {children}
+              </div>
             </Suspense>
           </main>
         </Providers>

@@ -14,12 +14,15 @@ import { CreateRecipeDTO } from "@/types/recipe";
 import { setEmptyToNull } from "@/utils/helpers";
 import { useForm } from "@tanstack/react-form";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 export default function CreateRecipePage() {
   const [image, setImage] = useState<File | null>(null);
   const recipeCategories = services.recipeCategoryService.useGetAll().data;
 
-  const { mutateAsync: createMutateAsync } = services.recipeService.useCreate();
+  const { mutateAsync: createMutateAsync } = services.recipeService.useCreate({
+    onSuccess: () => toast.success("Retsept on edukalt lisatud"),
+  });
 
   const { handleSubmit, Field, Subscribe } = useForm({
     defaultValues: {
@@ -129,7 +132,14 @@ export default function CreateRecipePage() {
           </div>
         </div>
         <div className="flex justify-end mt-10">
-          <Subscribe children={() => <Button type="submit">Salvesta</Button>} />
+          <Subscribe
+            selector={(state) => [state.isSubmitting]}
+            children={([isSubmitting]) => (
+              <Button isLoading={isSubmitting} type="submit">
+                Salvesta
+              </Button>
+            )}
+          />
         </div>
       </form>
     </>
