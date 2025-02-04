@@ -9,6 +9,7 @@ import Button from "@/components/ui/button";
 import Combobox from "@/components/ui/combobox";
 import Input from "@/components/ui/input";
 import Switch from "@/components/ui/switch";
+import Textarea from "@/components/ui/textarea";
 import services from "@/service/services";
 import { CreateRecipeDTO } from "@/types/recipe";
 import { setEmptyToNull } from "@/utils/helpers";
@@ -128,6 +129,21 @@ export default function CreateRecipePage() {
             <ImageUpload
               onChange={(file) => setImage(file)}
               selectedImage={image}
+            />
+            <Field
+              name="comments"
+              children={(field) => (
+                <Textarea
+                  name={field.name}
+                  value={field.state.value}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  label="Kommentaarid"
+                  description="Siia saad lisada üldise kommentaari retsepti kohta."
+                  rows={6}
+                  textareaClassName="mt-6"
+                  className="mt-8"
+                />
+              )}
             />
           </div>
         </div>

@@ -2,29 +2,31 @@ import {
   Label,
   Description,
   Field,
-  Input as InputComponent,
+  Textarea as TextareaComponent,
 } from "@headlessui/react";
 import classNames from "classnames";
 
-export interface InputProps
+export interface TextareaProps
   extends React.DetailedHTMLProps<
-    React.InputHTMLAttributes<HTMLInputElement>,
-    HTMLInputElement
+    React.TextareaHTMLAttributes<HTMLTextAreaElement>,
+    HTMLTextAreaElement
   > {
   description?: string;
   hasError?: boolean;
   isField?: boolean;
   label?: string;
   name: string;
+  textareaClassName?: string;
 }
 
-export default function Input(props: InputProps) {
+export default function Textarea(props: TextareaProps) {
   const {
     description,
     label,
     isField = true,
     hasError,
     className,
+    textareaClassName,
     ...rest
   } = props;
 
@@ -36,11 +38,12 @@ export default function Input(props: InputProps) {
       {description && (
         <Description className="text-xs">{description}</Description>
       )}
-      <InputComponent
+      <TextareaComponent
         className={classNames(
           "py-1.5 px-3  text-sm outline-gray-300 -outline-offset-1 outline-1 outline-solid focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 text-gray-900 py-1.5 px3 bg-white rounded-md w-full placeholder:text-gray-400",
           isField && "mt-2",
-          hasError && "outline-red-500"
+          hasError && "outline-red-500",
+          textareaClassName
         )}
         style={{ outlineStyle: "solid" }}
         {...rest}
