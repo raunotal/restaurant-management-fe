@@ -6,14 +6,17 @@ import {
   useQueryClient,
   useSuspenseQuery,
 } from "@tanstack/react-query";
+import axios from "axios";
 
 export const useCustomQuery = <TData>(
   queryKey: string | string[],
   fetchFn: () => Promise<TData>,
+  id?: string,
   options?: Omit<UseQueryOptions<TData, Error>, "queryKey" | "queryFn">
 ) => {
+  const finalQueryKey = id ? [queryKey, id] : [queryKey];
   return useSuspenseQuery<TData, Error>({
-    queryKey: [queryKey],
+    queryKey: finalQueryKey,
     queryFn: fetchFn,
     ...options,
   });
@@ -45,6 +48,17 @@ export const createDataService = <
 >(
   endpoint: string
 ) => {
+  const get = async (id: string) => {
+    try {
+      return (await API.get<T>(`${endpoint}/${id}`))?.data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 404) {
+        return null;
+      }
+      throw error;
+    }
+  };
+
   const getAll = async () => {
     return (await API.get<T[]>(endpoint)).data;
   };
@@ -61,6 +75,8 @@ export const createDataService = <
     return await API.delete(`${endpoint}/${data.id}`);
   };
 
+  const useGet = (id: string) =>
+    useCustomQuery<T | null>(endpoint, () => get(id), id);
   const useGetAll = () => useCustomQuery<T[]>(endpoint, getAll);
   const useCreate = (
     options?: Omit<UseMutationOptions<T, Error, CreateDTO>, "mutationFn">
@@ -72,5 +88,5 @@ export const createDataService = <
     options?: Omit<UseMutationOptions<T, Error, T>, "mutationFn">
   ) => useCustomMutation<T>(endpoint, remove, options);
 
-  return { useGetAll, useCreate, useUpdate, useDelete };
+  return { useGet, useGetAll, useCreate, useUpdate, useDelete };
 };
