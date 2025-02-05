@@ -113,6 +113,7 @@ export default function RecipesFrom(props: RecipeFormProps) {
                       data={recipeCategoriesData}
                       onChange={(value) => field.handleChange(value?.key)}
                       isField={false}
+                      selected={field.state.value}
                     />
                   )}
                 />
