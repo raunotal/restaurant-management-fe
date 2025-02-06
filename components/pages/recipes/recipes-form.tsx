@@ -30,6 +30,14 @@ export default function RecipesFrom(props: RecipeFormProps) {
     onSuccess: () => toast.success("Retsept on edukalt lisatud"),
   });
 
+  const { mutateAsync: updateMutateAsync } = services.recipeService.useUpdate({
+    onSuccess: () => toast.success("Retsept on edukalt uuendatud"),
+  });
+
+  const { mutateAsync: deleteMutateAsync } = services.recipeService.useDelete({
+    onSuccess: () => toast.success("Retsept on edukalt kustutatud"),
+  });
+
   const { handleSubmit, Field, Subscribe } = useForm({
     defaultValues: {
       name: recipe?.name || "",
@@ -51,12 +59,27 @@ export default function RecipesFrom(props: RecipeFormProps) {
         imageResponse = await response.json();
       }
 
-      await createMutateAsync(
-        setEmptyToNull({
+      if (recipe) {
+        const isImageChanged =
+          !(recipe.imageUrl === image?.name) && imageResponse;
+
+        const updatedRecipe = {
+          id: recipe.id,
           ...value,
-          imageUrl: imageResponse?.imageUrl,
-        })
-      );
+        };
+
+        if (isImageChanged) {
+          updatedRecipe.imageUrl = imageResponse?.imageUrl;
+        }
+        await updateMutateAsync(setEmptyToNull(updatedRecipe));
+      } else {
+        await createMutateAsync(
+          setEmptyToNull({
+            ...value,
+            imageUrl: imageResponse?.imageUrl,
+          })
+        );
+      }
     },
   });
 
@@ -154,15 +177,20 @@ export default function RecipesFrom(props: RecipeFormProps) {
             />
           </div>
         </div>
-        <div className="flex justify-end mt-10">
+        <div className="flex justify-end mt-10 gap-3">
           <Subscribe
             selector={(state) => [state.isSubmitting]}
             children={([isSubmitting]) => (
-              <Button isLoading={isSubmitting} type="submit">
+              <Button
+                isLoading={isSubmitting}
+                disabled={isSubmitting}
+                type="submit"
+              >
                 Salvesta
               </Button>
             )}
           />
+          {recipe && <Button color="danger">Kustuta</Button>}
         </div>
       </form>
     </>

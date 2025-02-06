@@ -5,7 +5,7 @@ type RecipeType = {
   id: string;
   name: string;
   preparationTime: number;
-  category: RecipeCategory | null;
+  category?: RecipeCategory | null;
   isActive: boolean;
   imageUrl?: string;
   comments?: string;

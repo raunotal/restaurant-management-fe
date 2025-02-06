@@ -39,6 +39,7 @@ export default function ImageUpload(props: ImageUploadProps) {
                   fill
                   className="h-full object-cover"
                   priority
+                  sizes="100%"
                 />
               )}
             </div>
