@@ -20,6 +20,7 @@ interface ComboboxProps {
   label?: string;
   placeholder?: string;
   selected?: string;
+  hasError?: boolean;
   isField?: boolean;
   onChange: (value: ComboboxElement) => void;
   className?: string;
@@ -32,6 +33,7 @@ export default function Combobox(props: ComboboxProps) {
     placeholder,
     selected,
     isField = true,
+    hasError,
     onChange,
     className,
   } = props;
@@ -44,10 +46,15 @@ export default function Combobox(props: ComboboxProps) {
           return element.value.toLowerCase().includes(query.toLowerCase());
         });
 
-  const inputClass =
-    "py-1.5 px-3 text-sm outline-gray-300 -outline-offset-1 outline-1 outline-solid focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 text-gray-900 py-1.5 px3 bg-white rounded-md w-full placeholder:text-gray-400";
+  const inputClass = classNames(
+    "py-1.5 px-3 text-sm outline-gray-300 -outline-offset-1 outline-1 outline-solid focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 text-gray-900 py-1.5 px3 bg-white rounded-md w-full placeholder:text-gray-400",
+    hasError && "outline-red-500"
+  );
 
-  const selectedElement = data.find((element) => element.key === selected);
+  const selectedElement = data.find((element) => element.key === selected) || {
+    key: "",
+    value: "",
+  };
 
   return (
     <Field
