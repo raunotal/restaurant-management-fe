@@ -4,7 +4,7 @@ import { RecipeCategory, recipeCategorySchema } from "./recipe-category";
 type RecipeType = {
   id: string;
   name: string;
-  preparationTime: number;
+  preparationTime?: number;
   category?: RecipeCategory | null;
   isActive: boolean;
   imageUrl?: string;
@@ -19,7 +19,7 @@ type CreateRecipeDTOType = Omit<RecipeType, "id" | "category"> & {
 const recipeSchema: z.ZodType<RecipeType> = z.object({
   id: z.string(),
   name: z.string().min(1, "Retsepti nimi ei tohi olla tühi"),
-  preparationTime: z.number().positive(),
+  preparationTime: z.number().nonnegative().optional(),
   category: z.union([recipeCategorySchema, z.null()]),
   isActive: z.boolean(),
   imageUrl: z.string().optional(),
@@ -28,8 +28,8 @@ const recipeSchema: z.ZodType<RecipeType> = z.object({
 
 export const createRecipeSchema: z.ZodType<CreateRecipeDTOType> = z.object({
   name: z.string().min(1, "Retsepti nimi ei tohi olla tühi"),
-  preparationTime: z.number().positive(),
-  categoryId: z.string(),
+  preparationTime: z.number().nonnegative().optional(),
+  categoryId: z.string().nonempty(),
   isActive: z.boolean(),
   imageUrl: z.string().optional(),
   comments: z.string().optional(),

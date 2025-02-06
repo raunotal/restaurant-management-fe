@@ -13,5 +13,5 @@ export default function UpdateRecipesPage() {
     notFound();
   }
 
-  return <RecipesFrom recipe={recipe} />;
+  return <RecipesFrom recipe={recipe!} />;
 }

@@ -3,7 +3,7 @@
 import PageHeader from "@/components/layout/page-header";
 import Badge from "@/components/ui/badge";
 import services from "@/service/services";
-import { CreateRecipeDTO, Recipe } from "@/types/recipe";
+import { CreateRecipeDTO, createRecipeSchema, Recipe } from "@/types/recipe";
 import { setEmptyToNull } from "@/utils/helpers";
 import { useForm } from "@tanstack/react-form";
 import React, { useState } from "react";
@@ -16,6 +16,8 @@ import Textarea from "@/components/ui/textarea";
 import Button from "@/components/ui/button";
 import Combobox from "@/components/ui/combobox";
 import Switch from "@/components/ui/switch";
+import RecipeDeleteModal from "./recipe-delete-modal";
+import { useRouter } from "next/navigation";
 
 type RecipeFormProps = {
   recipe?: Recipe;
@@ -23,19 +25,20 @@ type RecipeFormProps = {
 
 export default function RecipesFrom(props: RecipeFormProps) {
   const { recipe } = props;
+  const router = useRouter();
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [image, setImage] = useState<File | null>(null);
   const recipeCategories = services.recipeCategoryService.useGetAll().data;
 
   const { mutateAsync: createMutateAsync } = services.recipeService.useCreate({
-    onSuccess: () => toast.success("Retsept on edukalt lisatud"),
+    onSuccess: (data) => {
+      toast.success("Retsept on edukalt lisatud");
+      router.push(`/recipes/${data.id}`);
+    },
   });
 
   const { mutateAsync: updateMutateAsync } = services.recipeService.useUpdate({
     onSuccess: () => toast.success("Retsept on edukalt uuendatud"),
-  });
-
-  const { mutateAsync: deleteMutateAsync } = services.recipeService.useDelete({
-    onSuccess: () => toast.success("Retsept on edukalt kustutatud"),
   });
 
   const { handleSubmit, Field, Subscribe } = useForm({
@@ -46,6 +49,9 @@ export default function RecipesFrom(props: RecipeFormProps) {
       preparationTime: recipe?.preparationTime || 0,
       comments: recipe?.comments || "",
     } as CreateRecipeDTO,
+    validators: {
+      onChange: createRecipeSchema,
+    },
     onSubmit: async ({ value }) => {
       let imageResponse = null;
 
@@ -90,6 +96,13 @@ export default function RecipesFrom(props: RecipeFormProps) {
 
   return (
     <>
+      {recipe && (
+        <RecipeDeleteModal
+          recipe={recipe}
+          isOpen={isDeleteModalOpen}
+          setIsOpen={setIsDeleteModalOpen}
+        />
+      )}
       <PageHeader title="Lisa uus retsept" />
       <form
         onSubmit={(e) => {
@@ -126,6 +139,7 @@ export default function RecipesFrom(props: RecipeFormProps) {
                       onChange={(e) => field.handleChange(e.target.value)}
                       isField={false}
                       className="basis-2/3"
+                      hasError={!!field.state.meta.errors.length}
                     />
                   )}
                 />
@@ -137,6 +151,7 @@ export default function RecipesFrom(props: RecipeFormProps) {
                       onChange={(value) => field.handleChange(value?.key)}
                       isField={false}
                       selected={field.state.value}
+                      hasError={!!field.state.meta.errors.length}
                     />
                   )}
                 />
@@ -190,7 +205,15 @@ export default function RecipesFrom(props: RecipeFormProps) {
               </Button>
             )}
           />
-          {recipe && <Button color="danger">Kustuta</Button>}
+          {recipe && (
+            <Button
+              type="button"
+              color="danger"
+              onClick={() => setIsDeleteModalOpen(true)}
+            >
+              Kustuta
+            </Button>
+          )}
         </div>
       </form>
     </>

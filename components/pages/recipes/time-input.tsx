@@ -2,12 +2,12 @@ import Input from "@/components/ui/input";
 import React from "react";
 
 type TimeInputProps = {
-  timeInMinutes: number;
+  timeInMinutes?: number;
   onChange: (timeInMinutes: number) => void;
 };
 
 export default function TimeInput(props: TimeInputProps) {
-  const { timeInMinutes, onChange } = props;
+  const { timeInMinutes = 0, onChange } = props;
   const handleTimeChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     type: "hours" | "minutes"
@@ -33,6 +33,7 @@ export default function TimeInput(props: TimeInputProps) {
         onChange={(e) => handleTimeChange(e, "hours")}
         isField={false}
         className="w-[65px]"
+        min={0}
       />
       <span>h</span>
       <span>:</span>
@@ -43,6 +44,7 @@ export default function TimeInput(props: TimeInputProps) {
         onChange={(e) => handleTimeChange(e, "minutes")}
         isField={false}
         className="w-[65px]"
+        min={0}
       />
       <span>min</span>
     </div>

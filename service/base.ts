@@ -3,7 +3,6 @@ import {
   UseQueryOptions,
   UseMutationOptions,
   useMutation,
-  useQueryClient,
   useSuspenseQuery,
 } from "@tanstack/react-query";
 import axios from "axios";
@@ -27,15 +26,19 @@ export const useCustomMutation = <TData, TResponse = TData>(
   mutationFn: (data: TData) => Promise<TResponse>,
   options?: Omit<UseMutationOptions<TResponse, Error, TData>, "mutationFn">
 ) => {
-  const queryClient = useQueryClient();
-
   return useMutation<TResponse, Error, TData>({
     ...options,
     mutationFn,
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({
-        queryKey: [queryKey],
-      });
+      // TODO: Check for need to invalidate queries
+      // if (hasIdProperty(variables)) {
+      //   queryClient.refetchQueries({
+      //     queryKey: [queryKey, variables.id],
+      //   });
+      // }
+      // queryClient.refetchQueries({
+      //   queryKey: [queryKey],
+      // });
       options?.onSuccess?.(_, variables, { variables });
     },
   });
@@ -71,7 +74,7 @@ export const createDataService = <
     return (await API.patch<T>(`${endpoint}/${data.id}`, data)).data;
   };
 
-  const remove = async (data: T): Promise<T> => {
+  const remove = async (data: T): Promise<void> => {
     return await API.delete(`${endpoint}/${data.id}`);
   };
 
@@ -85,8 +88,8 @@ export const createDataService = <
     options?: Omit<UseMutationOptions<T, Error, UpdateDTO>, "mutationFn">
   ) => useCustomMutation<UpdateDTO, T>(endpoint, update, options);
   const useDelete = (
-    options?: Omit<UseMutationOptions<T, Error, T>, "mutationFn">
-  ) => useCustomMutation<T>(endpoint, remove, options);
+    options?: Omit<UseMutationOptions<void, Error, T>, "mutationFn">
+  ) => useCustomMutation<T, void>(endpoint, remove, options);
 
   return { useGet, useGetAll, useCreate, useUpdate, useDelete };
 };

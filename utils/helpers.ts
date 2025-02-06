@@ -41,3 +41,12 @@ export const setEmptyToNull = <T extends object>(obj: T): T => {
     ])
   ) as T;
 };
+
+export const hasIdProperty = (obj: unknown): obj is { id: string } => {
+  return (
+    typeof obj === "object" &&
+    obj !== null &&
+    "id" in obj &&
+    typeof (obj as { id: string }).id === "string"
+  );
+};
