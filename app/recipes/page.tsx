@@ -1,6 +1,7 @@
 "use client";
 
 import PageHeader from "@/components/layout/page-header";
+import RecipesGrid from "@/components/pages/recipes/recipes-grid";
 import { useRouter } from "next/navigation";
 import React from "react";
 
@@ -13,6 +14,7 @@ export default function RecipesPage() {
         description="Siin saad hallata retsepte"
         onClick={() => router.push("/recipes/create")}
       />
+      <RecipesGrid />
     </>
   );
 }
