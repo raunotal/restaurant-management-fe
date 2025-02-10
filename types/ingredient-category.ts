@@ -8,12 +8,12 @@ type IngredientCategoryType = {
 
 type CreateIngredientCategoryDTOType = Omit<IngredientCategoryType, "id">;
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const ingredientCategorySchema: z.ZodType<IngredientCategoryType> = z.object({
-  id: z.string(),
-  name: z.string().min(1, "Koostisaine kategooria nimi ei tohi olla tühi"),
-  description: z.string().optional(),
-});
+export const ingredientCategorySchema: z.ZodType<IngredientCategoryType> =
+  z.object({
+    id: z.string(),
+    name: z.string().min(1, "Koostisaine kategooria nimi ei tohi olla tühi"),
+    description: z.string().optional(),
+  });
 
 export const createIngredientCategorySchema: z.ZodType<CreateIngredientCategoryDTOType> =
   z.object({

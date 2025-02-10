@@ -8,8 +8,7 @@ type SupplierType = {
 
 type CreateSupplierDTOType = Omit<SupplierType, "id">;
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const supplierSchema: z.ZodType<SupplierType> = z.object({
+export const supplierSchema: z.ZodType<SupplierType> = z.object({
   id: z.string(),
   name: z.string().min(1, "Tarnija nimi ei tohi olla tühi"),
   address: z.string().optional(),

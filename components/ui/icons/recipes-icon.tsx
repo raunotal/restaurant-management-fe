@@ -15,11 +15,7 @@ export default function RecipesIcon({
       id="Layer_1"
       data-name="Layer 1"
       stroke={color}
-      className={classNames(
-        className,
-        "group-hover:text-indigo-600",
-        "text-gray-300"
-      )}
+      className={classNames(className, "group-hover:text-indigo-600")}
       width={size}
       height={size}
     >

@@ -3,59 +3,64 @@
 import PageHeader from "@/components/layout/page-header";
 import Badge from "@/components/ui/badge";
 import services from "@/service/services";
-import { CreateRecipeDTO, createRecipeSchema, Recipe } from "@/types/recipe";
+import {
+  CreateIngredientDTO,
+  createIngredientSchema,
+} from "@/types/ingredient";
 import { setEmptyToNull } from "@/utils/helpers";
 import { useForm } from "@tanstack/react-form";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
-import ImageUpload from "../../common/image-upload";
-import TimeInput from "./time-input";
 import Input from "@/components/ui/input";
 import Textarea from "@/components/ui/textarea";
 import Button from "@/components/ui/button";
 import Combobox from "@/components/ui/combobox";
 import Switch from "@/components/ui/switch";
-import RecipeDeleteModal from "./recipe-delete-modal";
 import { useRouter } from "next/navigation";
+import IngredientDeleteModal from "./ingredient-delete-modal";
+import { Ingredient } from "@/types/ingredient";
 import FormRow from "@/components/common/form-row";
+import ImageUpload from "@/components/common/image-upload";
 
-type RecipeFormProps = {
-  recipe?: Recipe;
+type IngredientFormProps = {
+  ingredient?: Ingredient;
 };
 
-export default function RecipesFrom(props: RecipeFormProps) {
-  const { recipe } = props;
+export default function IngredientFrom(props: IngredientFormProps) {
+  const { ingredient } = props;
   const router = useRouter();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [image, setImage] = useState<File | null>(null);
-  const recipeCategories = services.recipeCategoryService.useGetAll().data;
+  const ingredientCategories =
+    services.ingredientCategoryService.useGetAll().data;
 
-  const { mutateAsync: createMutateAsync } = services.recipeService.useCreate({
-    onSuccess: (data) => {
-      toast.success("Retsept on edukalt lisatud");
-      router.push(`/recipes/${data.id}`);
-    },
-  });
+  const { mutateAsync: createMutateAsync } =
+    services.ingredientService.useCreate({
+      onSuccess: (data) => {
+        toast.success("Tooraine on edukalt lisatud");
+        router.push(`/ingredients/${data.id}`);
+      },
+    });
 
-  const { mutateAsync: updateMutateAsync } = services.recipeService.useUpdate({
-    onSuccess: () => toast.success("Retsept on edukalt uuendatud"),
-  });
+  const { mutateAsync: updateMutateAsync } =
+    services.ingredientService.useUpdate({
+      onSuccess: () => toast.success("Tooraine on edukalt uuendatud"),
+    });
 
   const { handleSubmit, Field, Subscribe } = useForm({
     defaultValues: {
-      name: recipe?.name || "",
-      isActive: recipe?.isActive || false,
-      categoryId: recipe?.category?.id || "",
-      preparationTime: recipe?.preparationTime || 0,
-      comments: recipe?.comments || "",
-    } as CreateRecipeDTO,
+      name: ingredient?.name || "",
+      isActive: ingredient?.isActive || false,
+      categoryId: ingredient?.category?.id || "",
+      comments: ingredient?.comments || "",
+    } as CreateIngredientDTO,
     validators: {
-      onChange: createRecipeSchema,
+      onChange: createIngredientSchema,
     },
     onSubmit: async ({ value }) => {
       let imageResponse = null;
 
-      if (image && recipe?.imageUrl !== image.name) {
+      if (image && ingredient?.imageUrl !== image.name) {
         const data = new FormData();
         data.append("image", image);
         const response = await fetch("/api/images", {
@@ -65,19 +70,19 @@ export default function RecipesFrom(props: RecipeFormProps) {
         imageResponse = await response.json();
       }
 
-      if (recipe) {
+      if (ingredient) {
         const isImageChanged =
-          !(recipe.imageUrl === image?.name) && imageResponse;
+          !(ingredient.imageUrl === image?.name) && imageResponse;
 
-        const updatedRecipe = {
-          id: recipe.id,
+        const updatedIngredient = {
+          id: ingredient.id,
           ...value,
         };
 
         if (isImageChanged) {
-          updatedRecipe.imageUrl = imageResponse?.imageUrl;
+          updatedIngredient.imageUrl = imageResponse?.imageUrl;
         }
-        await updateMutateAsync(setEmptyToNull(updatedRecipe));
+        await updateMutateAsync(setEmptyToNull(updatedIngredient));
       } else {
         await createMutateAsync(
           setEmptyToNull({
@@ -89,21 +94,21 @@ export default function RecipesFrom(props: RecipeFormProps) {
     },
   });
 
-  const recipeCategoriesData = recipeCategories!.map((category) => ({
+  const ingredientCategoriesData = ingredientCategories!.map((category) => ({
     key: category.id,
     value: category.name,
   }));
 
   return (
     <>
-      {recipe && (
-        <RecipeDeleteModal
-          recipe={recipe}
+      {ingredient && (
+        <IngredientDeleteModal
+          ingredient={ingredient}
           isOpen={isDeleteModalOpen}
           setIsOpen={setIsDeleteModalOpen}
         />
       )}
-      <PageHeader title="Lisa uus retsept" />
+      <PageHeader title="Lisa uus tooraine" />
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -147,22 +152,11 @@ export default function RecipesFrom(props: RecipeFormProps) {
                   name="categoryId"
                   children={(field) => (
                     <Combobox
-                      data={recipeCategoriesData}
+                      data={ingredientCategoriesData}
                       onChange={(value) => field.handleChange(value?.key)}
                       isField={false}
                       selected={field.state.value}
                       hasError={!!field.state.meta.errors.length}
-                    />
-                  )}
-                />
-              </div>
-              <div>
-                <Field
-                  name="preparationTime"
-                  children={(field) => (
-                    <TimeInput
-                      timeInMinutes={field.state.value}
-                      onChange={(value) => field.handleChange(value)}
                     />
                   )}
                 />
@@ -172,7 +166,7 @@ export default function RecipesFrom(props: RecipeFormProps) {
           <div className="basis-1/4">
             <ImageUpload
               onChange={(file) => setImage(file)}
-              imageUrl={recipe?.imageUrl}
+              imageUrl={ingredient?.imageUrl}
               selectedImage={image}
             />
             <Field
@@ -183,7 +177,7 @@ export default function RecipesFrom(props: RecipeFormProps) {
                   value={field.state.value}
                   onChange={(e) => field.handleChange(e.target.value)}
                   label="Kommentaarid"
-                  description="Siia saad lisada üldise kommentaari retsepti kohta."
+                  description="Siia saad lisada üldise kommentaari tooraine kohta."
                   rows={6}
                   textareaClassName="mt-6"
                   className="mt-8"
@@ -205,7 +199,7 @@ export default function RecipesFrom(props: RecipeFormProps) {
               </Button>
             )}
           />
-          {recipe && (
+          {ingredient && (
             <Button
               type="button"
               color="danger"

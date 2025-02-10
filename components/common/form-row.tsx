@@ -1,16 +1,16 @@
 import classNames from "classnames";
 
-type AddRecipeRowProps = {
+type FormRowProps = {
   title?: string;
   contentClassName?: string;
   children: React.ReactNode;
 };
 
-export default function AddRecipeRow({
+export default function FormRow({
   title,
   contentClassName,
   children,
-}: AddRecipeRowProps) {
+}: FormRowProps) {
   return (
     <div className="flex gap-8 mt-8">
       {title && <span className="font-semibold basis-1/3">{title}</span>}

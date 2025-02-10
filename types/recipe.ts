@@ -5,7 +5,7 @@ type RecipeType = {
   id: string;
   name: string;
   preparationTime?: number;
-  category?: RecipeCategory | null;
+  category: RecipeCategory;
   isActive: boolean;
   imageUrl?: string;
   comments?: string;
@@ -20,7 +20,7 @@ const recipeSchema: z.ZodType<RecipeType> = z.object({
   id: z.string(),
   name: z.string().min(1, "Retsepti nimi ei tohi olla tühi"),
   preparationTime: z.number().nonnegative().optional(),
-  category: z.union([recipeCategorySchema, z.null()]),
+  category: recipeCategorySchema,
   isActive: z.boolean(),
   imageUrl: z.string().optional(),
   comments: z.string().optional(),

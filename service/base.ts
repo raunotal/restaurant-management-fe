@@ -47,7 +47,7 @@ export const useCustomMutation = <TData, TResponse = TData>(
 export const createDataService = <
   T extends { id: string },
   CreateDTO,
-  UpdateDTO extends { id: string } = T
+  UpdateDTO extends { id: string } = CreateDTO & { id: string }
 >(
   endpoint: string
 ) => {
