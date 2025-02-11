@@ -8,6 +8,8 @@ import {
   SidebarMenu,
 } from "@/config/sidebar";
 import classNames from "classnames";
+import { auth } from "@/lib/auth-config";
+import { SignOut } from "../common/sign-out";
 
 function SidebarMenuSection(props: SidebarMenu) {
   const { items, name, showLetter } = props;
@@ -31,7 +33,9 @@ function SidebarMenuSection(props: SidebarMenu) {
   );
 }
 
-export default function Sidebar() {
+export default async function Sidebar() {
+  const session = await auth();
+
   return (
     <div>
       <div className="flex flex-col px-6 h-full gap-5">
@@ -46,7 +50,9 @@ export default function Sidebar() {
             <li>
               <SidebarMenuSection {...SIDEBAR_SETTINGS_MENU} />
             </li>
-            <li className="mt-auto py-3">Sinu Nimi</li>
+            <li className="mt-auto py-3 flex flex-col gap-2">
+              {session?.user?.name} <SignOut />
+            </li>
           </ul>
         </nav>
       </div>
