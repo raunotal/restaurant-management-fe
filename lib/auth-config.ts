@@ -16,12 +16,22 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
   ],
   callbacks: {
-    signIn({ profile }) {
+    signIn({ profile, user, account }) {
       if (!profile) {
         return false;
       }
-
+      user.access_token = account?.id_token;
       return profile.email?.endsWith("@augustresto.ee") || false;
+    },
+    jwt({ token, user }) {
+      if (user) {
+        token.access_token = user.access_token;
+      }
+      return token;
+    },
+    session({ session, token }) {
+      session.access_token = token.access_token as string;
+      return session;
     },
     authorized({ auth }) {
       return !!auth;

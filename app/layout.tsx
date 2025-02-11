@@ -6,14 +6,24 @@ import Loader from "@/components/layout/loader";
 import { Inter } from "next/font/google";
 import classNames from "classnames";
 import { Toaster } from "react-hot-toast";
+import { auth, signOut } from "@/lib/auth-config";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await auth();
+
+  if (session?.expires) {
+    const sessionExpires = new Date(session.expires);
+    if (sessionExpires.getTime() < Date.now()) {
+      signOut();
+    }
+  }
+
   return (
     <html lang="et" className="h-full">
       <head>
