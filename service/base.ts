@@ -30,15 +30,6 @@ export const useCustomMutation = <TData, TResponse = TData>(
     ...options,
     mutationFn,
     onSuccess: (_, variables) => {
-      // TODO: Check for need to invalidate queries
-      // if (hasIdProperty(variables)) {
-      //   queryClient.refetchQueries({
-      //     queryKey: [queryKey, variables.id],
-      //   });
-      // }
-      // queryClient.refetchQueries({
-      //   queryKey: [queryKey],
-      // });
       options?.onSuccess?.(_, variables, { variables });
     },
   });

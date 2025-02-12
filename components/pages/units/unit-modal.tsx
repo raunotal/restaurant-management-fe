@@ -9,6 +9,8 @@ import { CreateUnitDTO, createUnitSchema, Unit } from "@/types/unit";
 import { setEmptyToNull } from "@/utils/helpers";
 import { ModalProps } from "@/config/types";
 import services from "@/service/services";
+import { useQueryClient } from "@tanstack/react-query";
+import { Endpoints } from "@/config/endpoints";
 
 type UnitModalProps = ModalProps & {
   unit?: Unit;
@@ -18,21 +20,25 @@ export default function UnitModal(props: UnitModalProps) {
   const { unit, setIsOpen, isOpen } = props;
   const { useGetAll, useCreate, useUpdate, useDelete } = services.unitService;
   const units = useGetAll().data;
+  const queryClient = useQueryClient();
 
   const { mutateAsync: createMutateAsync } = useCreate({
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [Endpoints.Units] });
       setIsOpen(false);
     },
   });
 
   const { mutateAsync: deleteMutateAsync } = useDelete({
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [Endpoints.Units] });
       setIsOpen(false);
     },
   });
 
   const { mutateAsync: updateMutateAsync } = useUpdate({
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [Endpoints.Units] });
       setIsOpen(false);
     },
   });
