@@ -4,12 +4,14 @@ import {
   ingredientCategorySchema,
 } from "./ingredient-category";
 import { Supplier, supplierSchema } from "./supplier";
+import { Unit, unitSchema } from "./unit";
 
 type IngredientType = {
   id: string;
   name: string;
   grossQuantity?: number;
   netQuantity?: number;
+  unit: Unit;
   purchasePrice?: number;
   category: IngredientCategory;
   supplier: Supplier;
@@ -20,10 +22,11 @@ type IngredientType = {
 
 type CreateIngredientDTOType = Omit<
   IngredientType,
-  "id" | "category" | "supplier"
+  "id" | "category" | "supplier" | "unit"
 > & {
   categoryId: string;
   supplierId: string;
+  unitId: string;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -35,6 +38,7 @@ const ingredientSchema: z.ZodType<IngredientType> = z.object({
   purchasePrice: z.number().nonnegative().optional(),
   category: ingredientCategorySchema,
   supplier: supplierSchema,
+  unit: unitSchema,
   imageUrl: z.string().optional(),
   isActive: z.boolean(),
   comments: z.string().optional(),
@@ -48,6 +52,7 @@ export const createIngredientSchema: z.ZodType<CreateIngredientDTOType> =
     purchasePrice: z.number().nonnegative(),
     categoryId: z.string().nonempty(),
     supplierId: z.string().nonempty(),
+    unitId: z.string().nonempty(),
     imageUrl: z.string().optional(),
     isActive: z.boolean(),
     comments: z.string().optional(),

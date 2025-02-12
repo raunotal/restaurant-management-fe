@@ -12,7 +12,7 @@ type CreateUnitDTOType = Omit<Unit, "id" | "parentUnit"> & {
   parentUnitId?: string;
 };
 
-const unitSchema: z.ZodType<UnitType> = z.lazy(() =>
+export const unitSchema: z.ZodType<UnitType> = z.lazy(() =>
   z.object({
     id: z.string(),
     name: z.string().min(1, "Ühiku nimi ei tohi olla tühi"),

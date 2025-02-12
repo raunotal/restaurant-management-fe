@@ -21,6 +21,7 @@ import IngredientDeleteModal from "./ingredient-delete-modal";
 import { Ingredient } from "@/types/ingredient";
 import FormRow from "@/components/common/form-row";
 import ImageUpload from "@/components/common/image-upload";
+import { Unit } from "@/types/unit";
 
 type IngredientFormProps = {
   ingredient?: Ingredient;
@@ -29,10 +30,12 @@ type IngredientFormProps = {
 export default function IngredientFrom(props: IngredientFormProps) {
   const { ingredient } = props;
   const router = useRouter();
+  const [selectedUnit, setSelectedUnit] = useState<Unit | undefined>(undefined);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [image, setImage] = useState<File | null>(null);
   const ingredientCategories =
     services.ingredientCategoryService.useGetAll().data;
+  const units = services.unitService.useGetAll().data;
 
   const { mutateAsync: createMutateAsync } =
     services.ingredientService.useCreate({
@@ -50,8 +53,14 @@ export default function IngredientFrom(props: IngredientFormProps) {
   const { handleSubmit, Field, Subscribe } = useForm({
     defaultValues: {
       name: ingredient?.name || "",
-      isActive: ingredient?.isActive || false,
+      grossQuantity: ingredient?.grossQuantity || 0,
+      netQuantity: ingredient?.netQuantity || 0,
+      purchasePrice: ingredient?.purchasePrice || "",
+      unitId: ingredient?.unit.id || "",
       categoryId: ingredient?.category?.id || "",
+      supplierId: ingredient?.supplier?.id || "",
+      imageUrl: ingredient?.imageUrl || "",
+      isActive: ingredient?.isActive || false,
       comments: ingredient?.comments || "",
     } as CreateIngredientDTO,
     validators: {
@@ -99,6 +108,11 @@ export default function IngredientFrom(props: IngredientFormProps) {
     value: category.name,
   }));
 
+  const unitsData = units!.map((unit) => ({
+    key: unit.id,
+    value: unit.name,
+  }));
+
   return (
     <>
       {ingredient && (
@@ -108,7 +122,9 @@ export default function IngredientFrom(props: IngredientFormProps) {
           setIsOpen={setIsDeleteModalOpen}
         />
       )}
-      <PageHeader title="Lisa uus tooraine" />
+      <PageHeader
+        title={ingredient ? "Tooraine muutmine" : "Tooraine lisamine"}
+      />
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -131,7 +147,7 @@ export default function IngredientFrom(props: IngredientFormProps) {
               <Badge text="Aktiivne" color="active" />
             </div>
             <FormRow
-              title="Retsepti nimetus, kategooria valik ja valmistusaeg"
+              title="Tooraine nimetus, kategooria ja ühik"
               contentClassName="flex-col"
             >
               <div className="flex gap-4">
@@ -162,12 +178,92 @@ export default function IngredientFrom(props: IngredientFormProps) {
                 />
               </div>
             </FormRow>
+            <FormRow title="Ühik">
+              <Field
+                name="unitId"
+                children={(field) => (
+                  <Combobox
+                    data={unitsData}
+                    onChange={(value) => {
+                      setSelectedUnit(
+                        units.find((unit) => unit.id === value?.key)
+                      );
+                      field.handleChange(value?.key);
+                    }}
+                    isField={false}
+                    selected={field.state.value}
+                    hasError={!!field.state.meta.errors.length}
+                  />
+                )}
+              />
+            </FormRow>
+            <FormRow title="Brutokogus">
+              <Field
+                name="grossQuantity"
+                children={(field) => (
+                  <div className="flex flex-auto items-center gap-2">
+                    <Input
+                      name={field.name}
+                      value={field.state.value}
+                      onChange={(e) => field.handleChange(+e.target.value)}
+                      isField={false}
+                      className="basis-1/4"
+                      type="number"
+                      step={0.001}
+                      hasError={!!field.state.meta.errors.length}
+                    />
+                    {selectedUnit?.displayName}
+                  </div>
+                )}
+              />
+            </FormRow>
+            <FormRow title="Netokogus">
+              <Field
+                name="netQuantity"
+                children={(field) => (
+                  <div className="flex flex-auto items-center gap-2">
+                    <Input
+                      name={field.name}
+                      value={field.state.value}
+                      onChange={(e) => field.handleChange(+e.target.value)}
+                      isField={false}
+                      className="basis-1/4"
+                      type="number"
+                      step={0.001}
+                      hasError={!!field.state.meta.errors.length}
+                    />
+                    {selectedUnit?.displayName}
+                  </div>
+                )}
+              />
+            </FormRow>
+            <FormRow title="Hind">
+              <Field
+                name="purchasePrice"
+                children={(field) => (
+                  <div className="flex flex-auto items-center gap-2">
+                    <Input
+                      name={field.name}
+                      value={field.state.value}
+                      onChange={(e) => field.handleChange(+e.target.value)}
+                      isField={false}
+                      className="basis-1/4"
+                      type="number"
+                      step={0.01}
+                      hasError={!!field.state.meta.errors.length}
+                    />
+                    €
+                  </div>
+                )}
+              />
+            </FormRow>
           </div>
           <div className="basis-1/4">
             <ImageUpload
               onChange={(file) => setImage(file)}
               imageUrl={ingredient?.imageUrl}
               selectedImage={image}
+              type="ingredient"
             />
             <Field
               name="comments"

@@ -2,7 +2,7 @@ import React from "react";
 import { IconProps } from "./icon";
 import classNames from "classnames";
 
-export default function RecipesIcon({
+export default function IngredientsIcon({
   size = 24,
   color = "currentColor",
   className,

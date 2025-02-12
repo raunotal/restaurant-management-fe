@@ -174,6 +174,7 @@ export default function RecipesFrom(props: RecipeFormProps) {
               onChange={(file) => setImage(file)}
               imageUrl={recipe?.imageUrl}
               selectedImage={image}
+              type="recipe"
             />
             <Field
               name="comments"
