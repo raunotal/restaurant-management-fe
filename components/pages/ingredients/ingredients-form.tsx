@@ -51,7 +51,7 @@ export default function IngredientFrom(props: IngredientFormProps) {
       onSuccess: () => toast.success("Tooraine on edukalt uuendatud"),
     });
 
-  const { handleSubmit, Field, Subscribe, state } = useForm({
+  const { handleSubmit, Field, Subscribe } = useForm({
     defaultValues: {
       name: ingredient?.name || "",
       grossQuantity: ingredient?.grossQuantity || "",
