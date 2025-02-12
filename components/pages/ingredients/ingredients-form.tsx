@@ -104,8 +104,6 @@ export default function IngredientFrom(props: IngredientFormProps) {
     },
   });
 
-  console.log("state", state);
-
   const ingredientCategoriesData = ingredientCategories!.map((category) => ({
     key: category.id,
     value: category.name,
