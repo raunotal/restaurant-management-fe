@@ -36,6 +36,7 @@ export default function IngredientFrom(props: IngredientFormProps) {
   const ingredientCategories =
     services.ingredientCategoryService.useGetAll().data;
   const units = services.unitService.useGetAll().data;
+  const suppliers = services.supplierService.useGetAll().data;
 
   const { mutateAsync: createMutateAsync } =
     services.ingredientService.useCreate({
@@ -50,11 +51,11 @@ export default function IngredientFrom(props: IngredientFormProps) {
       onSuccess: () => toast.success("Tooraine on edukalt uuendatud"),
     });
 
-  const { handleSubmit, Field, Subscribe } = useForm({
+  const { handleSubmit, Field, Subscribe, state } = useForm({
     defaultValues: {
       name: ingredient?.name || "",
-      grossQuantity: ingredient?.grossQuantity || 0,
-      netQuantity: ingredient?.netQuantity || 0,
+      grossQuantity: ingredient?.grossQuantity || "",
+      netQuantity: ingredient?.netQuantity || "",
       purchasePrice: ingredient?.purchasePrice || "",
       unitId: ingredient?.unit.id || "",
       categoryId: ingredient?.category?.id || "",
@@ -64,7 +65,7 @@ export default function IngredientFrom(props: IngredientFormProps) {
       comments: ingredient?.comments || "",
     } as CreateIngredientDTO,
     validators: {
-      onChange: createIngredientSchema,
+      onSubmit: createIngredientSchema,
     },
     onSubmit: async ({ value }) => {
       let imageResponse = null;
@@ -103,6 +104,8 @@ export default function IngredientFrom(props: IngredientFormProps) {
     },
   });
 
+  console.log("state", state);
+
   const ingredientCategoriesData = ingredientCategories!.map((category) => ({
     key: category.id,
     value: category.name,
@@ -111,6 +114,11 @@ export default function IngredientFrom(props: IngredientFormProps) {
   const unitsData = units!.map((unit) => ({
     key: unit.id,
     value: unit.name,
+  }));
+
+  const suppliersData = suppliers!.map((supplier) => ({
+    key: supplier.id,
+    value: supplier.name,
   }));
 
   return (
@@ -177,6 +185,20 @@ export default function IngredientFrom(props: IngredientFormProps) {
                   )}
                 />
               </div>
+            </FormRow>
+            <FormRow title="Tarnija">
+              <Field
+                name="supplierId"
+                children={(field) => (
+                  <Combobox
+                    data={suppliersData}
+                    onChange={(value) => field.handleChange(value?.key)}
+                    isField={false}
+                    selected={field.state.value}
+                    hasError={!!field.state.meta.errors.length}
+                  />
+                )}
+              />
             </FormRow>
             <FormRow title="Ühik">
               <Field

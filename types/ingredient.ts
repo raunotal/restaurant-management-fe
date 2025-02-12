@@ -49,7 +49,7 @@ export const createIngredientSchema: z.ZodType<CreateIngredientDTOType> =
     name: z.string().min(1, "Tooraine nimi ei tohi olla tühi"),
     grossQuantity: z.number().nonnegative(),
     netQuantity: z.number().nonnegative(),
-    purchasePrice: z.number().nonnegative(),
+    purchasePrice: z.number().nonnegative().optional(),
     categoryId: z.string().nonempty(),
     supplierId: z.string().nonempty(),
     unitId: z.string().nonempty(),
