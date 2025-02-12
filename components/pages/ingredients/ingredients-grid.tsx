@@ -14,7 +14,7 @@ const IngredientsGridItem = (ingredient: Ingredient) => {
   return (
     <div
       className="max-w-[343px] h-[374px] cursor-pointer rounded-2xl overflow-hidden bg-white shadow-xl"
-      onClick={() => router.push(`/recipes/${id}`)}
+      onClick={() => router.push(`/ingredients/${id}`)}
     >
       <Image
         src={ingredient.imageUrl || placeholderImage}
@@ -26,9 +26,6 @@ const IngredientsGridItem = (ingredient: Ingredient) => {
       <div className="mt-8 px-6 pb-6 text-[14px] h-1/2">
         <div className="flex font-semibold justify-between">
           <span className="text-indigo-500">{category?.name}</span>
-          {/* {!!preparationTime && (
-            <span className="text-indigo-700">{preparationTime} min</span>
-          )} */}
         </div>
         <Badge
           className="mt-1"

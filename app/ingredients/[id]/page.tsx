@@ -1,17 +1,17 @@
 "use client";
 
-import RecipesFrom from "@/components/pages/recipes/recipes-form";
+import IngredientFrom from "@/components/pages/ingredients/ingredients-form";
 import services from "@/service/services";
 import { notFound, useParams } from "next/navigation";
 import React from "react";
 
 export default function UpdateIngredientPage() {
   const id = useParams().id;
-  const recipe = services.recipeService.useGet(id as string).data;
+  const ingredient = services.ingredientService.useGet(id as string).data;
 
-  if (!recipe) {
+  if (!ingredient) {
     notFound();
   }
 
-  return <RecipesFrom recipe={recipe!} />;
+  return <IngredientFrom ingredient={ingredient!} />;
 }
