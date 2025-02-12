@@ -24,6 +24,11 @@ export const SIDEBAR_NAVIGATION_MENU: SidebarMenu = {
       href: "/recipes",
       iconType: "recipes",
     },
+    {
+      label: "Toorained",
+      href: "/ingredients",
+      iconType: "ingredients",
+    },
   ],
 };
 

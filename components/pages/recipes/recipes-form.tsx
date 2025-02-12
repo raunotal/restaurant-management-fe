@@ -8,8 +8,7 @@ import { setEmptyToNull } from "@/utils/helpers";
 import { useForm } from "@tanstack/react-form";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
-import ImageUpload from "./image-upload";
-import AddRecipeRow from "./recipe-row";
+import ImageUpload from "../../common/image-upload";
 import TimeInput from "./time-input";
 import Input from "@/components/ui/input";
 import Textarea from "@/components/ui/textarea";
@@ -18,6 +17,7 @@ import Combobox from "@/components/ui/combobox";
 import Switch from "@/components/ui/switch";
 import RecipeDeleteModal from "./recipe-delete-modal";
 import { useRouter } from "next/navigation";
+import FormRow from "@/components/common/form-row";
 
 type RecipeFormProps = {
   recipe?: Recipe;
@@ -125,7 +125,7 @@ export default function RecipesFrom(props: RecipeFormProps) {
               />
               <Badge text="Aktiivne" color="active" />
             </div>
-            <AddRecipeRow
+            <FormRow
               title="Retsepti nimetus, kategooria valik ja valmistusaeg"
               contentClassName="flex-col"
             >
@@ -167,13 +167,14 @@ export default function RecipesFrom(props: RecipeFormProps) {
                   )}
                 />
               </div>
-            </AddRecipeRow>
+            </FormRow>
           </div>
           <div className="basis-1/4">
             <ImageUpload
               onChange={(file) => setImage(file)}
               imageUrl={recipe?.imageUrl}
               selectedImage={image}
+              type="recipe"
             />
             <Field
               name="comments"

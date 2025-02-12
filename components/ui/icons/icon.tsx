@@ -2,6 +2,7 @@ import { IconType } from "@/config/types";
 import React from "react";
 import DashboardIcon from "./dashboard-icon";
 import RecipesIcon from "./recipes-icon";
+import IngredientsIcon from "./ingredients-icon";
 import SignOutIcon from "./sign-out-icon";
 
 interface IconComponentProps extends IconProps {
@@ -27,6 +28,9 @@ export default function Icon(props: IconComponentProps) {
       break;
     case "recipes":
       IconComponent = <RecipesIcon {...iconProps} />;
+      break;
+    case "ingredients":
+      IconComponent = <IngredientsIcon {...iconProps} />;
       break;
     case "signout":
       IconComponent = <SignOutIcon {...iconProps} />;

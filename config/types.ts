@@ -1,4 +1,4 @@
-export type IconType = "home" | "recipes" | "signout";
+export type IconType = "home" | "recipes" | "ingredients" | "signout";
 
 export type ModalProps = {
   isOpen: boolean;
