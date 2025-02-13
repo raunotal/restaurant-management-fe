@@ -38,4 +38,4 @@ jobs:
             cd ~/app/restaurant-management-fe
             git pull origin main
             cd ~/app
-            docker-compose up -d --build restaurant-management-fe
+            docker compose up -d --build restaurant-management-fe
