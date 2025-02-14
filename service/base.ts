@@ -54,8 +54,6 @@ export const createDataService = <
   };
 
   const getAll = async () => {
-    console.log("API base URL:", process.env.NEXT_PUBLIC_API_BASE_URL);
-    console.log("API", API.getUri());
     return (await API.get<T[]>(endpoint)).data;
   };
 
