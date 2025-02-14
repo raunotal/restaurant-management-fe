@@ -54,10 +54,12 @@ export const createDataService = <
   };
 
   const getAll = async () => {
+    console.log("API", API.getUri());
     return (await API.get<T[]>(endpoint)).data;
   };
 
   const create = async (data: CreateDTO) => {
+    
     return (await API.post<T>(endpoint, data)).data;
   };
 
