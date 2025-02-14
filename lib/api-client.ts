@@ -3,7 +3,9 @@ import { auth } from "./auth-config";
 import { getSession } from "next-auth/react";
 
 export const API = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+  baseURL:
+    process.env.NEXT_PUBLIC_API_BASE_URL ||
+    "http://restaurant-management-be:5000/api/v1",
 });
 
 API.interceptors.request.use(
