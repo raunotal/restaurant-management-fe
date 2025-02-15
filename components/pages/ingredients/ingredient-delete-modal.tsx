@@ -1,9 +1,11 @@
 import Modal from "@/components/layout/modal";
 import Button from "@/components/ui/button";
+import { Endpoints } from "@/config/endpoints";
 import { ModalProps } from "@/config/types";
 import services from "@/service/services";
 import { Ingredient } from "@/types/ingredient";
 import { DialogTitle } from "@headlessui/react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
 type IngredientDeleteModalProps = ModalProps & {
@@ -15,9 +17,12 @@ export default function IngredientDeleteModal(
 ) {
   const { ingredient, setIsOpen } = props;
   const router = useRouter();
+  const queryClient = useQueryClient();
+
   const { mutateAsync: deleteMutateAsync } =
     services.ingredientService.useDelete({
       onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: [Endpoints.Ingredients] });
         router.push("/ingredients");
       },
     });

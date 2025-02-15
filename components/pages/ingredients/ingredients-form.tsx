@@ -22,6 +22,8 @@ import { Ingredient } from "@/types/ingredient";
 import FormRow from "@/components/common/form-row";
 import ImageUpload from "@/components/common/image-upload";
 import { Unit } from "@/types/unit";
+import { useQueryClient } from "@tanstack/react-query";
+import { Endpoints } from "@/config/endpoints";
 
 type IngredientFormProps = {
   ingredient?: Ingredient;
@@ -37,18 +39,23 @@ export default function IngredientFrom(props: IngredientFormProps) {
     services.ingredientCategoryService.useGetAll().data;
   const units = services.unitService.useGetAll().data;
   const suppliers = services.supplierService.useGetAll().data;
+  const queryClient = useQueryClient();
 
   const { mutateAsync: createMutateAsync } =
     services.ingredientService.useCreate({
       onSuccess: (data) => {
         toast.success("Tooraine on edukalt lisatud");
+        queryClient.invalidateQueries({ queryKey: [Endpoints.Ingredients] });
         router.push(`/ingredients/${data.id}`);
       },
     });
 
   const { mutateAsync: updateMutateAsync } =
     services.ingredientService.useUpdate({
-      onSuccess: () => toast.success("Tooraine on edukalt uuendatud"),
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: [Endpoints.Ingredients] });
+        toast.success("Tooraine on edukalt uuendatud");
+      },
     });
 
   const { handleSubmit, Field, Subscribe } = useForm({

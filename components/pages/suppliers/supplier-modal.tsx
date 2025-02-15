@@ -12,6 +12,8 @@ import {
   Supplier,
 } from "@/types/supplier";
 import services from "@/service/services";
+import { useQueryClient } from "@tanstack/react-query";
+import { Endpoints } from "@/config/endpoints";
 
 type SupplierModalProps = ModalProps & {
   supplier?: Supplier;
@@ -20,21 +22,25 @@ type SupplierModalProps = ModalProps & {
 export default function SupplierModal(props: SupplierModalProps) {
   const { supplier, setIsOpen, isOpen } = props;
   const { useCreate, useDelete, useUpdate } = services.supplierService;
+  const queryClient = useQueryClient();
 
   const { mutateAsync: createMutateAsync } = useCreate({
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [Endpoints.Suppliers] });
       setIsOpen(false);
     },
   });
 
   const { mutateAsync: deleteMutateAsync } = useDelete({
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [Endpoints.Suppliers] });
       setIsOpen(false);
     },
   });
 
   const { mutateAsync: updateMutateAsync } = useUpdate({
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [Endpoints.Suppliers] });
       setIsOpen(false);
     },
   });
