@@ -18,6 +18,8 @@ import Switch from "@/components/ui/switch";
 import RecipeDeleteModal from "./recipe-delete-modal";
 import { useRouter } from "next/navigation";
 import FormRow from "@/components/common/form-row";
+import { useQueryClient } from "@tanstack/react-query";
+import { Endpoints } from "@/config/endpoints";
 
 type RecipeFormProps = {
   recipe?: Recipe;
@@ -29,16 +31,21 @@ export default function RecipesFrom(props: RecipeFormProps) {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [image, setImage] = useState<File | null>(null);
   const recipeCategories = services.recipeCategoryService.useGetAll().data;
+  const queryClient = useQueryClient();
 
   const { mutateAsync: createMutateAsync } = services.recipeService.useCreate({
     onSuccess: (data) => {
       toast.success("Retsept on edukalt lisatud");
+      queryClient.invalidateQueries({ queryKey: [Endpoints.Recipes] });
       router.push(`/recipes/${data.id}`);
     },
   });
 
   const { mutateAsync: updateMutateAsync } = services.recipeService.useUpdate({
-    onSuccess: () => toast.success("Retsept on edukalt uuendatud"),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [Endpoints.Recipes] });
+      toast.success("Retsept on edukalt uuendatud");
+    },
   });
 
   const { handleSubmit, Field, Subscribe } = useForm({

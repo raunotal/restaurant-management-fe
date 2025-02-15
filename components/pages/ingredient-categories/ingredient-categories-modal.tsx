@@ -1,6 +1,7 @@
 import Modal from "@/components/layout/modal";
 import Button from "@/components/ui/button";
 import Input from "@/components/ui/input";
+import { Endpoints } from "@/config/endpoints";
 import { ModalProps } from "@/config/types";
 import services from "@/service/services";
 import {
@@ -11,6 +12,7 @@ import {
 import { setEmptyToNull } from "@/utils/helpers";
 import { DialogTitle } from "@headlessui/react";
 import { useForm } from "@tanstack/react-form";
+import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 
 type IngredientCategoryModalProps = ModalProps & {
@@ -21,23 +23,33 @@ export default function IngredientCategoriesModal(
   props: IngredientCategoryModalProps
 ) {
   const { ingredientCategory, setIsOpen, isOpen } = props;
+  const queryClient = useQueryClient();
   const { useCreate, useDelete, useUpdate } =
     services.ingredientCategoryService;
 
   const { mutateAsync: createMutateAsync } = useCreate({
     onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [Endpoints.IngredientCategories],
+      });
       setIsOpen(false);
     },
   });
 
   const { mutateAsync: deleteMutateAsync } = useDelete({
     onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [Endpoints.IngredientCategories],
+      });
       setIsOpen(false);
     },
   });
 
   const { mutateAsync: updateMutateAsync } = useUpdate({
     onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [Endpoints.IngredientCategories],
+      });
       setIsOpen(false);
     },
   });
