@@ -4,7 +4,7 @@ import { getSession } from "next-auth/react";
 
 const getDefaultUrl = () => {
   console.log("getDefaultUrl", process.env.NEXT_PUBLIC_API_BASE_URL);
-  return "http://localhost:5000/api/v1"
+  return "https://uvn-67-207.tll01.zonevs.eu/api/v1"
 }
 
 export const API = axios.create({
