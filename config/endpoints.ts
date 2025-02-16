@@ -5,4 +5,5 @@ export enum Endpoints {
   IngredientCategories = "ingredient-categories",
   RecipeCategories = "/recipe-categories",
   Ingredients = "/ingredients",
+  IngredientWarehouses = "/ingredient-warehouses",
 }

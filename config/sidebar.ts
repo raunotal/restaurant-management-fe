@@ -45,6 +45,10 @@ export const SIDEBAR_SETTINGS_MENU: SidebarMenu = {
       href: "/ingredient-categories",
     },
     {
+      label: "Tooraine ladu",
+      href: "/ingredient-warehouses",
+    },
+    {
       label: "Retsepti kategooriad",
       href: "/recipe-categories",
     },

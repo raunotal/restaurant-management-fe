@@ -8,6 +8,7 @@ import {
 import { createDataService } from "./base";
 import { CreateRecipeDTO, Recipe } from "@/types/recipe";
 import { CreateIngredientDTO, Ingredient } from "@/types/ingredient";
+import { CreateIngredientWarehouseDTO, IngredientWarehouse } from "@/types/ingredient-warehouse";
 
 const unitService = createDataService<Unit, CreateUnitDTO>(Endpoints.Units);
 const supplierService = createDataService<Supplier, CreateSupplierDTO>(
@@ -31,6 +32,10 @@ const ingredientService = createDataService<Ingredient, CreateIngredientDTO>(
   Endpoints.Ingredients
 );
 
+const ingredientWarehouseService = createDataService<IngredientWarehouse,CreateIngredientWarehouseDTO>(
+  Endpoints.IngredientWarehouses
+);
+
 const services = {
   unitService,
   supplierService,
@@ -38,6 +43,7 @@ const services = {
   recipeCategoryService,
   recipeService,
   ingredientService,
+  ingredientWarehouseService,
 };
 
 export default services;
