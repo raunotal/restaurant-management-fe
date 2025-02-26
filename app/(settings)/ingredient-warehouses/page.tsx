@@ -51,7 +51,7 @@ export default function IngredientWarehousesPage() {
         ingredientWarehouse={ingredientWarehouseToEdit}
       />
       <SettingsPage
-        title="Tooraine ladu"
+        title="Tooraine laod"
         description="Siin saad hallata tooraine ladusid"
         tableData={tableRows}
         tableHeaders={tableHeaders}

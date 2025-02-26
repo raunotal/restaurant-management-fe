@@ -45,7 +45,7 @@ export const SIDEBAR_SETTINGS_MENU: SidebarMenu = {
       href: "/ingredient-categories",
     },
     {
-      label: "Tooraine ladu",
+      label: "Tooraine laod",
       href: "/ingredient-warehouses",
     },
     {
