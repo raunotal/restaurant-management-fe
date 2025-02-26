@@ -39,6 +39,7 @@ export default function IngredientFrom(props: IngredientFormProps) {
     services.ingredientCategoryService.useGetAll().data;
   const units = services.unitService.useGetAll().data;
   const suppliers = services.supplierService.useGetAll().data;
+  const warehouses = services.ingredientWarehouseService.useGetAll().data;
   const queryClient = useQueryClient();
 
   const { mutateAsync: createMutateAsync } =
@@ -67,6 +68,7 @@ export default function IngredientFrom(props: IngredientFormProps) {
       unitId: ingredient?.unit.id || "",
       categoryId: ingredient?.category?.id || "",
       supplierId: ingredient?.supplier?.id || "",
+      warehouseId: ingredient?.warehouse?.id || "",
       imageUrl: ingredient?.imageUrl || "",
       isActive: ingredient?.isActive || false,
       comments: ingredient?.comments || "",
@@ -125,6 +127,13 @@ export default function IngredientFrom(props: IngredientFormProps) {
     key: supplier.id,
     value: supplier.name,
   }));
+
+  const warehouseData = warehouses!.map((warehouse) => ({
+    key: warehouse.id,
+    value: warehouse.name,
+  }));
+
+  console.log();
 
   return (
     <>
@@ -190,6 +199,23 @@ export default function IngredientFrom(props: IngredientFormProps) {
                   )}
                 />
               </div>
+            </FormRow>
+            <FormRow title="Ladu">
+              <Field
+                name="warehouseId"
+                children={(field) => {
+                  console.log("field", field);
+                  return (
+                    <Combobox
+                      data={warehouseData}
+                      onChange={(value) => field.handleChange(value?.key)}
+                      isField={false}
+                      selected={field.state.value}
+                      hasError={!!field.state.meta.errors.length}
+                    />
+                  );
+                }}
+              />
             </FormRow>
             <FormRow title="Tarnija">
               <Field
