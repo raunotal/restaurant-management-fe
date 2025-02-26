@@ -5,6 +5,7 @@ import {
 } from "./ingredient-category";
 import { Supplier, supplierSchema } from "./supplier";
 import { Unit, unitSchema } from "./unit";
+import { IngredientWarehouse, ingredientWarehouseSchema } from "./ingredient-warehouse";
 
 type IngredientType = {
   id: string;
@@ -15,6 +16,7 @@ type IngredientType = {
   purchasePrice?: number;
   category: IngredientCategory;
   supplier: Supplier;
+  warehouse?: IngredientWarehouse;
   imageUrl?: string;
   isActive: boolean;
   comments?: string;
@@ -22,11 +24,12 @@ type IngredientType = {
 
 type CreateIngredientDTOType = Omit<
   IngredientType,
-  "id" | "category" | "supplier" | "unit"
+  "id" | "category" | "supplier" | "unit" | "warehouse"
 > & {
   categoryId: string;
   supplierId: string;
   unitId: string;
+  warehouseId?: string;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -38,6 +41,7 @@ const ingredientSchema: z.ZodType<IngredientType> = z.object({
   purchasePrice: z.number().nonnegative().optional(),
   category: ingredientCategorySchema,
   supplier: supplierSchema,
+  warehouse: ingredientWarehouseSchema.optional(),
   unit: unitSchema,
   imageUrl: z.string().optional(),
   isActive: z.boolean(),
@@ -53,6 +57,7 @@ export const createIngredientSchema: z.ZodType<CreateIngredientDTOType> =
     categoryId: z.string().nonempty(),
     supplierId: z.string().nonempty(),
     unitId: z.string().nonempty(),
+    warehouseId: z.string().optional(),
     imageUrl: z.string().optional(),
     isActive: z.boolean(),
     comments: z.string().optional(),

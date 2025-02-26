@@ -64,14 +64,20 @@ export default function Combobox(props: ComboboxProps) {
       <HeadlessCombobox
         immediate
         value={selectedElement}
-        onChange={onChange}
+        onChange={(a) => {
+          console.log("a", a);
+          onChange(a as ComboboxElement);
+        }}
         onClose={() => setQuery("")}
       >
         <div className={classNames("relative", isField && "mt-2")}>
           <ComboboxInput
             className={inputClass}
             displayValue={(element: ComboboxElement) => element?.value}
-            onChange={(event) => setQuery(event.target.value)}
+            onChange={(event) => {
+              console.log("event", event.target.value);
+              setQuery(event.target.value);
+            }}
             placeholder={placeholder}
           />
           <ComboboxButton className="group absolute inset-y-0 right-0 px-2.5">
