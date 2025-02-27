@@ -169,7 +169,7 @@ export default function IngredientFrom(props: IngredientFormProps) {
               <Badge text="Aktiivne" color="active" />
             </div>
             <FormRow
-              title="Tooraine nimetus, kategooria ja ühik"
+              title="Tooraine nimetus ja kategooria"
               contentClassName="flex-col"
             >
               <div className="flex gap-4">
