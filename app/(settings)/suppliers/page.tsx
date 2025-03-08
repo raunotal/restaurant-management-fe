@@ -46,8 +46,8 @@ export default function SuppliersPage() {
         supplier={supplierToEdit}
       />
       <SettingsPage
-        title="Hankijad"
-        description="Siin saad hallata hankijaid"
+        title="Tarnijad"
+        description="Siin saad hallata tarnijaid."
         tableData={tableRows}
         tableHeaders={tableHeaders}
         data={suppliers}
