@@ -18,7 +18,7 @@ export default function NavLink(props: NavLinkProps) {
     >
       {showLetter && (
         <span className="text-gray-400 group-hover:text-indigo-600 bg-white border border-gray-200 group-hover:border-indigo-600 rounded-lg w-6 h-6 flex items-center justify-center">
-          <span className="font-medium text-xs mt-1">
+          <span className="font-medium text-xs">
             {children!.toString().charAt(0)}
           </span>
         </span>
