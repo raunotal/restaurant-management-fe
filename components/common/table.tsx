@@ -1,9 +1,10 @@
 import { sortTableRows } from "@/utils/helpers";
 import classNames from "classnames";
+import React from "react";
 
 export type TableRow = Record<
   string,
-  string | number | undefined | TableRowAction[]
+  string | number | undefined | TableRowAction[] | React.ReactNode
 >;
 
 export type TableRowAction = {
