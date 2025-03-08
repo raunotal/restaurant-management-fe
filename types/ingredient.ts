@@ -12,6 +12,7 @@ type IngredientType = {
   name: string;
   grossQuantity?: number;
   netQuantity?: number;
+  warehouseMinQuantity?: number;
   unit: Unit;
   purchasePrice?: number;
   category: IngredientCategory;
@@ -38,6 +39,7 @@ const ingredientSchema: z.ZodType<IngredientType> = z.object({
   name: z.string().min(1, "Tooraine nimi ei tohi olla tühi"),
   grossQuantity: z.number().nonnegative().optional(),
   netQuantity: z.number().nonnegative().optional(),
+  warehouseMinQuantity: z.number().nonnegative().optional(),
   purchasePrice: z.number().nonnegative().optional(),
   category: ingredientCategorySchema,
   supplier: supplierSchema,
@@ -54,6 +56,7 @@ export const createIngredientSchema: z.ZodType<CreateIngredientDTOType> =
     grossQuantity: z.number().nonnegative(),
     netQuantity: z.number().nonnegative(),
     purchasePrice: z.number().nonnegative().optional(),
+    warehouseMinQuantity: z.number().nonnegative().optional(),
     categoryId: z.string().nonempty(),
     supplierId: z.string().nonempty(),
     unitId: z.string().nonempty(),
