@@ -32,7 +32,9 @@ type IngredientFormProps = {
 export default function IngredientFrom(props: IngredientFormProps) {
   const { ingredient } = props;
   const router = useRouter();
-  const [selectedUnit, setSelectedUnit] = useState<Unit | undefined>(undefined);
+  const [selectedUnit, setSelectedUnit] = useState<Unit | undefined>(
+    ingredient?.unit
+  );
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [image, setImage] = useState<File | null>(null);
   const ingredientCategories =
@@ -65,6 +67,7 @@ export default function IngredientFrom(props: IngredientFormProps) {
       grossQuantity: ingredient?.grossQuantity || "",
       netQuantity: ingredient?.netQuantity || "",
       purchasePrice: ingredient?.purchasePrice || "",
+      warehouseMinQuantity: ingredient?.warehouseMinQuantity || "",
       unitId: ingredient?.unit.id || "",
       categoryId: ingredient?.category?.id || "",
       supplierId: ingredient?.supplier?.id || "",
@@ -247,6 +250,26 @@ export default function IngredientFrom(props: IngredientFormProps) {
                     selected={field.state.value}
                     hasError={!!field.state.meta.errors.length}
                   />
+                )}
+              />
+            </FormRow>
+            <FormRow title="Miinimumkogus laos">
+              <Field
+                name="warehouseMinQuantity"
+                children={(field) => (
+                  <div className="flex flex-auto items-center gap-2">
+                    <Input
+                      name={field.name}
+                      defaultValue={field.state.value}
+                      onChange={(e) => field.handleChange(+e.target.value)}
+                      isField={false}
+                      type="number"
+                      hasError={!!field.state.meta.errors.length}
+                      className="basis-1/4"
+                      step={0.001}
+                    />
+                    {selectedUnit?.displayName}
+                  </div>
                 )}
               />
             </FormRow>
