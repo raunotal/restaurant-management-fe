@@ -20,6 +20,7 @@ type IngredientType = {
   warehouse?: IngredientWarehouse;
   imageUrl?: string;
   isActive: boolean;
+  bulkPackage?: string;
   comments?: string;
 };
 
@@ -47,6 +48,7 @@ const ingredientSchema: z.ZodType<IngredientType> = z.object({
   unit: unitSchema,
   imageUrl: z.string().optional(),
   isActive: z.boolean(),
+  bulkPackage: z.string().optional(),
   comments: z.string().optional(),
 });
 
@@ -63,6 +65,7 @@ export const createIngredientSchema: z.ZodType<CreateIngredientDTOType> =
     warehouseId: z.string().optional(),
     imageUrl: z.string().optional(),
     isActive: z.boolean(),
+    bulkPackage: z.string().optional(),
     comments: z.string().optional(),
   });
 
