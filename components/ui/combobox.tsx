@@ -65,7 +65,6 @@ export default function Combobox(props: ComboboxProps) {
         immediate
         value={selectedElement}
         onChange={(a) => {
-          console.log("a", a);
           onChange(a as ComboboxElement);
         }}
         onClose={() => setQuery("")}
@@ -75,7 +74,6 @@ export default function Combobox(props: ComboboxProps) {
             className={inputClass}
             displayValue={(element: ComboboxElement) => element?.value}
             onChange={(event) => {
-              console.log("event", event.target.value);
               setQuery(event.target.value);
             }}
             placeholder={placeholder}
