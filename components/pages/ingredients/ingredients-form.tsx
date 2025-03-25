@@ -74,6 +74,7 @@ export default function IngredientFrom(props: IngredientFormProps) {
       warehouseId: ingredient?.warehouse?.id || "",
       imageUrl: ingredient?.imageUrl || "",
       isActive: ingredient?.isActive || false,
+      bulkPackage: ingredient?.bulkPackage || "",
       comments: ingredient?.comments || "",
     } as CreateIngredientDTO,
     validators: {
@@ -310,7 +311,7 @@ export default function IngredientFrom(props: IngredientFormProps) {
                 )}
               />
             </FormRow>
-            <FormRow title="Hind (käibemaksuta)">
+            <FormRow title="Brutokoguse hind (käibemaksuta)">
               <Field
                 name="purchasePrice"
                 children={(field) => (
@@ -326,6 +327,24 @@ export default function IngredientFrom(props: IngredientFormProps) {
                       hasError={!!field.state.meta.errors.length}
                     />
                     €
+                  </div>
+                )}
+              />
+            </FormRow>
+            <FormRow title="Hulgipakk">
+              <Field
+                name="bulkPackage"
+                children={(field) => (
+                  <div className="flex flex-auto items-center gap-2">
+                    <Input
+                      name={field.name}
+                      defaultValue={field.state.value}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      isField={false}
+                      className="basis-1/4"
+                      type="text"
+                      hasError={!!field.state.meta.errors.length}
+                    />
                   </div>
                 )}
               />
