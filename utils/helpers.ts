@@ -6,14 +6,14 @@ export const sortTableRows = (rows: TableRow[], groupBy?: string) => {
       if (
         a[groupBy] !== undefined &&
         b[groupBy] !== undefined &&
-        a[groupBy] < b[groupBy]
+        a[groupBy]! < b[groupBy]!
       ) {
         return -1;
       }
       if (
         a[groupBy] !== undefined &&
         b[groupBy] !== undefined &&
-        a[groupBy] > b[groupBy]
+        a[groupBy]! > b[groupBy]!
       ) {
         return 1;
       }

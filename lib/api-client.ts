@@ -2,14 +2,8 @@ import axios from "axios";
 import { auth } from "./auth-config";
 import { getSession } from "next-auth/react";
 
-const getDefaultUrl = () => {
-  console.log("getDefaultUrl", process.env.NEXT_PUBLIC_API_BASE_URL);
-  return "https://uvn-67-207.tll01.zonevs.eu/api/v1"
-}
-
 export const API = axios.create({
-  baseURL:
-    process.env.NEXT_PUBLIC_API_BASE_URL || getDefaultUrl(),
+  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
 });
 
 API.interceptors.request.use(

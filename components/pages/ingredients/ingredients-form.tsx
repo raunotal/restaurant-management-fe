@@ -136,8 +136,6 @@ export default function IngredientFrom(props: IngredientFormProps) {
     value: warehouse.name,
   }));
 
-  console.log();
-
   return (
     <>
       {ingredient && (
@@ -207,7 +205,6 @@ export default function IngredientFrom(props: IngredientFormProps) {
               <Field
                 name="warehouseId"
                 children={(field) => {
-                  console.log("field", field);
                   return (
                     <Combobox
                       data={warehouseData}
