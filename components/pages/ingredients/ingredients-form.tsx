@@ -310,7 +310,7 @@ export default function IngredientFrom(props: IngredientFormProps) {
                 )}
               />
             </FormRow>
-            <FormRow title="Hind (käibemaksuta)">
+            <FormRow title="Brutokoguse hind (käibemaksuta)">
               <Field
                 name="purchasePrice"
                 children={(field) => (
