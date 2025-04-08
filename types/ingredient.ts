@@ -61,8 +61,8 @@ const ingredientSchema: z.ZodType<IngredientType> = z.object({
 export const createIngredientSchema: z.ZodType<CreateIngredientDTOType> =
   z.object({
     name: z.string().min(1, "Tooraine nimi ei tohi olla tühi"),
-    grossQuantity: z.number().nonnegative(),
-    netQuantity: z.number().nonnegative(),
+    grossQuantity: z.number().nonnegative().optional(),
+    netQuantity: z.number().nonnegative().optional(),
     purchasePrice: z.number().nonnegative().optional(),
     warehouseMinQuantity: z.number().nonnegative().optional(),
     categoryId: z.string().nonempty(),

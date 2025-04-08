@@ -64,10 +64,10 @@ export default function IngredientFrom(props: IngredientFormProps) {
   const { handleSubmit, Field, Subscribe } = useForm({
     defaultValues: {
       name: ingredient?.name || "",
-      grossQuantity: ingredient?.grossQuantity || "",
-      netQuantity: ingredient?.netQuantity || "",
-      purchasePrice: ingredient?.purchasePrice || "",
-      warehouseMinQuantity: ingredient?.warehouseMinQuantity || "",
+      grossQuantity: ingredient?.grossQuantity || 0,
+      netQuantity: ingredient?.netQuantity || 0,
+      purchasePrice: ingredient?.purchasePrice || 0,
+      warehouseMinQuantity: ingredient?.warehouseMinQuantity || 0,
       unitId: ingredient?.unit.id || "",
       categoryId: ingredient?.category?.id || "",
       supplierId: ingredient?.supplier?.id || "",
@@ -204,10 +204,7 @@ export default function IngredientFrom(props: IngredientFormProps) {
                 />
               </div>
             </FormRow>
-            <FormRow
-              title="Tootekood ja Tarnija"
-              contentClassName="flex-col"
-            >
+            <FormRow title="Tootekood ja Tarnija" contentClassName="flex-col">
               <div className="flex gap-4">
                 <Field
                   name="productCode"
@@ -298,7 +295,9 @@ export default function IngredientFrom(props: IngredientFormProps) {
                   <div className="flex flex-auto items-center gap-2">
                     <Input
                       name={field.name}
-                      defaultValue={field.state.value}
+                      defaultValue={
+                        field.state.value === 0 ? "" : field.state.value
+                      }
                       onChange={(e) => field.handleChange(+e.target.value)}
                       isField={false}
                       type="number"
@@ -318,7 +317,9 @@ export default function IngredientFrom(props: IngredientFormProps) {
                   <div className="flex flex-auto items-center gap-2">
                     <Input
                       name={field.name}
-                      defaultValue={field.state.value}
+                      defaultValue={
+                        field.state.value === 0 ? "" : field.state.value
+                      }
                       onChange={(e) => field.handleChange(+e.target.value)}
                       isField={false}
                       className="basis-1/4"
@@ -338,7 +339,9 @@ export default function IngredientFrom(props: IngredientFormProps) {
                   <div className="flex flex-auto items-center gap-2">
                     <Input
                       name={field.name}
-                      defaultValue={field.state.value}
+                      defaultValue={
+                        field.state.value === 0 ? "" : field.state.value
+                      }
                       onChange={(e) => field.handleChange(+e.target.value)}
                       isField={false}
                       className="basis-1/4"
@@ -358,7 +361,9 @@ export default function IngredientFrom(props: IngredientFormProps) {
                   <div className="flex flex-auto items-center gap-2">
                     <Input
                       name={field.name}
-                      defaultValue={field.state.value}
+                      defaultValue={
+                        field.state.value === 0 ? "" : field.state.value
+                      }
                       onChange={(e) => field.handleChange(+e.target.value)}
                       isField={false}
                       className="basis-1/4"
