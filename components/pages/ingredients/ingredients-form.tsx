@@ -76,6 +76,7 @@ export default function IngredientFrom(props: IngredientFormProps) {
       isActive: ingredient?.isActive || false,
       bulkPackage: ingredient?.bulkPackage || "",
       comments: ingredient?.comments || "",
+      shelfLife: ingredient?.shelfLife || "",
     } as CreateIngredientDTO,
     validators: {
       onSubmit: createIngredientSchema,
@@ -202,6 +203,20 @@ export default function IngredientFrom(props: IngredientFormProps) {
                 />
               </div>
             </FormRow>
+            <FormRow title="Tarnija">
+              <Field
+                name="supplierId"
+                children={(field) => (
+                  <Combobox
+                    data={suppliersData}
+                    onChange={(value) => field.handleChange(value?.key)}
+                    isField={false}
+                    selected={field.state.value}
+                    hasError={!!field.state.meta.errors.length}
+                  />
+                )}
+              />
+            </FormRow>
             <FormRow title="Ladu">
               <Field
                 name="warehouseId"
@@ -218,17 +233,20 @@ export default function IngredientFrom(props: IngredientFormProps) {
                 }}
               />
             </FormRow>
-            <FormRow title="Tarnija">
+            <FormRow title="Säilivusaeg">
               <Field
-                name="supplierId"
+                name="shelfLife"
                 children={(field) => (
-                  <Combobox
-                    data={suppliersData}
-                    onChange={(value) => field.handleChange(value?.key)}
-                    isField={false}
-                    selected={field.state.value}
-                    hasError={!!field.state.meta.errors.length}
-                  />
+                  <div className="flex flex-auto items-center gap-2">
+                    <Input
+                      name={field.name}
+                      defaultValue={field.state.value}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      isField={false}
+                      type="text"
+                      hasError={!!field.state.meta.errors.length}
+                    />
+                  </div>
                 )}
               />
             </FormRow>
