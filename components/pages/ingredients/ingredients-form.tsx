@@ -77,6 +77,7 @@ export default function IngredientFrom(props: IngredientFormProps) {
       bulkPackage: ingredient?.bulkPackage || "",
       comments: ingredient?.comments || "",
       shelfLife: ingredient?.shelfLife || "",
+      productCode: ingredient?.productCode || "",
     } as CreateIngredientDTO,
     validators: {
       onSubmit: createIngredientSchema,
@@ -203,19 +204,40 @@ export default function IngredientFrom(props: IngredientFormProps) {
                 />
               </div>
             </FormRow>
-            <FormRow title="Tarnija">
-              <Field
-                name="supplierId"
-                children={(field) => (
-                  <Combobox
-                    data={suppliersData}
-                    onChange={(value) => field.handleChange(value?.key)}
-                    isField={false}
-                    selected={field.state.value}
-                    hasError={!!field.state.meta.errors.length}
-                  />
-                )}
-              />
+            <FormRow
+              title="Tootekood ja Tarnija"
+              contentClassName="flex-col"
+            >
+              <div className="flex gap-4">
+                <Field
+                  name="productCode"
+                  children={(field) => (
+                    <div className="flex flex-auto items-center gap-2 basis-1/2">
+                      <Input
+                        name={field.name}
+                        value={field.state.value}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        isField={false}
+                        className="w-full"
+                        hasError={!!field.state.meta.errors.length}
+                      />
+                    </div>
+                  )}
+                />
+                <Field
+                  name="supplierId"
+                  children={(field) => (
+                    <Combobox
+                      data={suppliersData}
+                      onChange={(value) => field.handleChange(value?.key)}
+                      isField={false}
+                      selected={field.state.value}
+                      hasError={!!field.state.meta.errors.length}
+                      className="basis-1/2"
+                    />
+                  )}
+                />
+              </div>
             </FormRow>
             <FormRow title="Ladu">
               <Field

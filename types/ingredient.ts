@@ -23,6 +23,7 @@ type IngredientType = {
   bulkPackage?: string;
   comments?: string;
   shelfLife?: string;
+  productCode?: string;
 };
 
 type CreateIngredientDTOType = Omit<
@@ -34,6 +35,7 @@ type CreateIngredientDTOType = Omit<
   unitId: string;
   warehouseId?: string;
   shelfLife?: string;
+  productCode?: string;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -53,6 +55,7 @@ const ingredientSchema: z.ZodType<IngredientType> = z.object({
   bulkPackage: z.string().optional(),
   comments: z.string().optional(),
   shelfLife: z.string().optional(),
+  productCode: z.string().optional(),
 });
 
 export const createIngredientSchema: z.ZodType<CreateIngredientDTOType> =
@@ -71,6 +74,7 @@ export const createIngredientSchema: z.ZodType<CreateIngredientDTOType> =
     bulkPackage: z.string().optional(),
     comments: z.string().optional(),
     shelfLife: z.string().optional(),
+    productCode: z.string().optional(),
   });
 
 export type Ingredient = z.infer<typeof ingredientSchema>;
