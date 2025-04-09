@@ -78,6 +78,8 @@ export default function IngredientFrom(props: IngredientFormProps) {
       comments: ingredient?.comments || "",
       shelfLife: ingredient?.shelfLife || "",
       productCode: ingredient?.productCode || "",
+      warehouseMinQuantityDescription:
+        ingredient?.warehouseMinQuantityDescription || "",
     } as CreateIngredientDTO,
     validators: {
       onSubmit: createIngredientSchema,
@@ -209,16 +211,13 @@ export default function IngredientFrom(props: IngredientFormProps) {
                 <Field
                   name="productCode"
                   children={(field) => (
-                    <div className="flex flex-auto items-center gap-2 basis-1/2">
-                      <Input
-                        name={field.name}
-                        value={field.state.value}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                        isField={false}
-                        className="w-full"
-                        hasError={!!field.state.meta.errors.length}
-                      />
-                    </div>
+                    <Input
+                      name={field.name}
+                      value={field.state.value}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      isField={false}
+                      hasError={!!field.state.meta.errors.length}
+                    />
                   )}
                 />
                 <Field
@@ -230,7 +229,6 @@ export default function IngredientFrom(props: IngredientFormProps) {
                       isField={false}
                       selected={field.state.value}
                       hasError={!!field.state.meta.errors.length}
-                      className="basis-1/2"
                     />
                   )}
                 />
@@ -289,26 +287,45 @@ export default function IngredientFrom(props: IngredientFormProps) {
               />
             </FormRow>
             <FormRow title="Miinimumkogus laos">
-              <Field
-                name="warehouseMinQuantity"
-                children={(field) => (
-                  <div className="flex flex-auto items-center gap-2">
-                    <Input
-                      name={field.name}
-                      defaultValue={
-                        field.state.value === 0 ? "" : field.state.value
-                      }
-                      onChange={(e) => field.handleChange(+e.target.value)}
-                      isField={false}
-                      type="number"
-                      hasError={!!field.state.meta.errors.length}
-                      className="basis-1/4"
-                      step={0.001}
-                    />
-                    {selectedUnit?.displayName}
-                  </div>
-                )}
-              />
+              <div className="flex gap-4">
+                <Field
+                  name="warehouseMinQuantity"
+                  children={(field) => (
+                    <div className="flex flex-auto items-center gap-2">
+                      <Input
+                        name={field.name}
+                        defaultValue={
+                          field.state.value === 0 ? "" : field.state.value
+                        }
+                        onChange={(e) => field.handleChange(+e.target.value)}
+                        isField={false}
+                        type="number"
+                        hasError={!!field.state.meta.errors.length}
+                        step={0.001}
+                        placeholder="Brutokogus"
+                      />
+                      {selectedUnit?.displayName}
+                    </div>
+                  )}
+                />
+                <Field
+                  name="warehouseMinQuantityDescription"
+                  children={(field) => (
+                    <div className="flex flex-auto items-center gap-2">
+                      <Input
+                        name={field.name}
+                        defaultValue={field.state.value}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        isField={false}
+                        type="text"
+                        hasError={!!field.state.meta.errors.length}
+                        placeholder="Näiteks: 5 pakki"
+                        className="basis-1/1"
+                      />
+                    </div>
+                  )}
+                />
+              </div>
             </FormRow>
             <FormRow title="Brutokogus">
               <Field
