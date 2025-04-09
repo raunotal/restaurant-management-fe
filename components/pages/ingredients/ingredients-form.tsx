@@ -24,6 +24,8 @@ import ImageUpload from "@/components/common/image-upload";
 import { Unit } from "@/types/unit";
 import { useQueryClient } from "@tanstack/react-query";
 import { Endpoints } from "@/config/endpoints";
+import FormField from "@/components/common/form-field";
+import Divider from "@/components/ui/divider";
 
 type IngredientFormProps = {
   ingredient?: Ingredient;
@@ -67,7 +69,7 @@ export default function IngredientFrom(props: IngredientFormProps) {
       grossQuantity: ingredient?.grossQuantity || 0,
       netQuantity: ingredient?.netQuantity || 0,
       purchasePrice: ingredient?.purchasePrice || 0,
-      warehouseMinQuantity: ingredient?.warehouseMinQuantity || 0,
+      warehouseMinQuantity: ingredient?.warehouseMinQuantity || "",
       unitId: ingredient?.unit.id || "",
       categoryId: ingredient?.category?.id || "",
       supplierId: ingredient?.supplier?.id || "",
@@ -78,8 +80,6 @@ export default function IngredientFrom(props: IngredientFormProps) {
       comments: ingredient?.comments || "",
       shelfLife: ingredient?.shelfLife || "",
       productCode: ingredient?.productCode || "",
-      warehouseMinQuantityDescription:
-        ingredient?.warehouseMinQuantityDescription || "",
     } as CreateIngredientDTO,
     validators: {
       onSubmit: createIngredientSchema,
@@ -174,27 +174,26 @@ export default function IngredientFrom(props: IngredientFormProps) {
               />
               <Badge text="Aktiivne" color="active" />
             </div>
-            <FormRow
-              title="Tooraine nimetus ja kategooria"
-              contentClassName="flex-col"
-            >
-              <div className="flex gap-4">
-                <Field
-                  name="name"
-                  children={(field) => (
+            <FormRow>
+              <Field
+                name="name"
+                children={(field) => (
+                  <FormField label="Tooraine nimetus" id={field.name}>
                     <Input
                       name={field.name}
+                      id={field.name}
                       value={field.state.value}
                       onChange={(e) => field.handleChange(e.target.value)}
                       isField={false}
-                      className="basis-2/3"
                       hasError={!!field.state.meta.errors.length}
                     />
-                  )}
-                />
-                <Field
-                  name="categoryId"
-                  children={(field) => (
+                  </FormField>
+                )}
+              />
+              <Field
+                name="categoryId"
+                children={(field) => (
+                  <FormField label="Tooraine kategooria">
                     <Combobox
                       data={ingredientCategoriesData}
                       onChange={(value) => field.handleChange(value?.key)}
@@ -202,27 +201,30 @@ export default function IngredientFrom(props: IngredientFormProps) {
                       selected={field.state.value}
                       hasError={!!field.state.meta.errors.length}
                     />
-                  )}
-                />
-              </div>
+                  </FormField>
+                )}
+              />
             </FormRow>
-            <FormRow title="Tootekood ja Tarnija" contentClassName="flex-col">
-              <div className="flex gap-4">
-                <Field
-                  name="productCode"
-                  children={(field) => (
+            <FormRow>
+              <Field
+                name="productCode"
+                children={(field) => (
+                  <FormField label="Toote kood" id={field.name}>
                     <Input
                       name={field.name}
+                      id={field.name}
                       value={field.state.value}
                       onChange={(e) => field.handleChange(e.target.value)}
                       isField={false}
                       hasError={!!field.state.meta.errors.length}
                     />
-                  )}
-                />
-                <Field
-                  name="supplierId"
-                  children={(field) => (
+                  </FormField>
+                )}
+              />
+              <Field
+                name="supplierId"
+                children={(field) => (
+                  <FormField label="Tarnija">
                     <Combobox
                       data={suppliersData}
                       onChange={(value) => field.handleChange(value?.key)}
@@ -230,15 +232,16 @@ export default function IngredientFrom(props: IngredientFormProps) {
                       selected={field.state.value}
                       hasError={!!field.state.meta.errors.length}
                     />
-                  )}
-                />
-              </div>
+                  </FormField>
+                )}
+              />
             </FormRow>
-            <FormRow title="Ladu">
+            <Divider />
+            <FormRow>
               <Field
                 name="warehouseId"
-                children={(field) => {
-                  return (
+                children={(field) => (
+                  <FormField label="Ladu" className="basis-2/5">
                     <Combobox
                       data={warehouseData}
                       onChange={(value) => field.handleChange(value?.key)}
@@ -246,52 +249,97 @@ export default function IngredientFrom(props: IngredientFormProps) {
                       selected={field.state.value}
                       hasError={!!field.state.meta.errors.length}
                     />
-                  );
-                }}
+                  </FormField>
+                )}
               />
-            </FormRow>
-            <FormRow title="Säilivusaeg">
               <Field
                 name="shelfLife"
                 children={(field) => (
-                  <div className="flex flex-auto items-center gap-2">
+                  <FormField
+                    label="Säilivusaeg"
+                    id={field.name}
+                    className="basis-3/5"
+                  >
                     <Input
                       name={field.name}
+                      id={field.name}
                       defaultValue={field.state.value}
                       onChange={(e) => field.handleChange(e.target.value)}
                       isField={false}
                       type="text"
                       hasError={!!field.state.meta.errors.length}
                     />
-                  </div>
+                  </FormField>
                 )}
               />
             </FormRow>
-            <FormRow title="Ühik">
+            <FormRow>
+              <Field
+                name="bulkPackage"
+                children={(field) => (
+                  <FormField
+                    label="Hulgipakk"
+                    id={field.name}
+                    className="basis-2/5"
+                  >
+                    <Input
+                      name={field.name}
+                      value={field.state.value}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      isField={false}
+                      type="text"
+                      hasError={!!field.state.meta.errors.length}
+                    />
+                  </FormField>
+                )}
+              />
+              <Field
+                name="warehouseMinQuantity"
+                children={(field) => (
+                  <FormField
+                    label="Minimaalne kogus laos"
+                    id={field.name}
+                    className="basis-3/5"
+                  >
+                    <Input
+                      name={field.name}
+                      value={field.state.value}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      isField={false}
+                      type="text"
+                      hasError={!!field.state.meta.errors.length}
+                      placeholder="Näiteks: 5 pakki"
+                    />
+                  </FormField>
+                )}
+              />
+            </FormRow>
+            <Divider />
+            <FormRow>
               <Field
                 name="unitId"
                 children={(field) => (
-                  <Combobox
-                    data={unitsData}
-                    onChange={(value) => {
-                      setSelectedUnit(
-                        units.find((unit) => unit.id === value?.key)
-                      );
-                      field.handleChange(value?.key);
-                    }}
-                    isField={false}
-                    selected={field.state.value}
-                    hasError={!!field.state.meta.errors.length}
-                  />
+                  <FormField label="Ühik">
+                    <Combobox
+                      data={unitsData}
+                      onChange={(value) => {
+                        setSelectedUnit(
+                          units.find((unit) => unit.id === value?.key)
+                        );
+                        field.handleChange(value?.key);
+                      }}
+                      isField={false}
+                      selected={field.state.value}
+                      hasError={!!field.state.meta.errors.length}
+                    />
+                  </FormField>
                 )}
               />
-            </FormRow>
-            <FormRow title="Miinimumkogus laos">
-              <div className="flex gap-4">
-                <Field
-                  name="warehouseMinQuantity"
-                  children={(field) => (
-                    <div className="flex flex-auto items-center gap-2">
+              <Field
+                name="grossQuantity"
+                children={(field) => (
+                  <FormField label="Brutokogus" id={field.name}>
+                    <div className="flex items-center gap-2">
                       <Input
                         name={field.name}
                         defaultValue={
@@ -300,114 +348,56 @@ export default function IngredientFrom(props: IngredientFormProps) {
                         onChange={(e) => field.handleChange(+e.target.value)}
                         isField={false}
                         type="number"
-                        hasError={!!field.state.meta.errors.length}
                         step={0.001}
-                        placeholder="Brutokogus"
+                        hasError={!!field.state.meta.errors.length}
                       />
                       {selectedUnit?.displayName}
                     </div>
-                  )}
-                />
-                <Field
-                  name="warehouseMinQuantityDescription"
-                  children={(field) => (
-                    <div className="flex flex-auto items-center gap-2">
-                      <Input
-                        name={field.name}
-                        defaultValue={field.state.value}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                        isField={false}
-                        type="text"
-                        hasError={!!field.state.meta.errors.length}
-                        placeholder="Näiteks: 5 pakki"
-                        className="basis-1/1"
-                      />
-                    </div>
-                  )}
-                />
-              </div>
-            </FormRow>
-            <FormRow title="Brutokogus">
-              <Field
-                name="grossQuantity"
-                children={(field) => (
-                  <div className="flex flex-auto items-center gap-2">
-                    <Input
-                      name={field.name}
-                      defaultValue={
-                        field.state.value === 0 ? "" : field.state.value
-                      }
-                      onChange={(e) => field.handleChange(+e.target.value)}
-                      isField={false}
-                      className="basis-1/4"
-                      type="number"
-                      step={0.001}
-                      hasError={!!field.state.meta.errors.length}
-                    />
-                    {selectedUnit?.displayName}
-                  </div>
+                  </FormField>
                 )}
               />
-            </FormRow>
-            <FormRow title="Netokogus">
               <Field
                 name="netQuantity"
                 children={(field) => (
-                  <div className="flex flex-auto items-center gap-2">
-                    <Input
-                      name={field.name}
-                      defaultValue={
-                        field.state.value === 0 ? "" : field.state.value
-                      }
-                      onChange={(e) => field.handleChange(+e.target.value)}
-                      isField={false}
-                      className="basis-1/4"
-                      type="number"
-                      step={0.001}
-                      hasError={!!field.state.meta.errors.length}
-                    />
-                    {selectedUnit?.displayName}
-                  </div>
+                  <FormField label="Netokogus (toorkaal)" id={field.name}>
+                    <div className="flex items-center gap-2">
+                      <Input
+                        name={field.name}
+                        defaultValue={
+                          field.state.value === 0 ? "" : field.state.value
+                        }
+                        onChange={(e) => field.handleChange(+e.target.value)}
+                        isField={false}
+                        type="number"
+                        step={0.001}
+                        hasError={!!field.state.meta.errors.length}
+                      />
+                      {selectedUnit?.displayName}
+                    </div>
+                  </FormField>
                 )}
               />
             </FormRow>
-            <FormRow title="Brutokoguse hind (käibemaksuta)">
+            <FormRow>
               <Field
                 name="purchasePrice"
                 children={(field) => (
-                  <div className="flex flex-auto items-center gap-2">
-                    <Input
-                      name={field.name}
-                      defaultValue={
-                        field.state.value === 0 ? "" : field.state.value
-                      }
-                      onChange={(e) => field.handleChange(+e.target.value)}
-                      isField={false}
-                      className="basis-1/4"
-                      type="number"
-                      step={0.01}
-                      hasError={!!field.state.meta.errors.length}
-                    />
-                    €
-                  </div>
-                )}
-              />
-            </FormRow>
-            <FormRow title="Hulgipakk">
-              <Field
-                name="bulkPackage"
-                children={(field) => (
-                  <div className="flex flex-auto items-center gap-2">
-                    <Input
-                      name={field.name}
-                      defaultValue={field.state.value}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      isField={false}
-                      className="basis-1/4"
-                      type="text"
-                      hasError={!!field.state.meta.errors.length}
-                    />
-                  </div>
+                  <FormField label="Ostuhind" id={field.name}>
+                    <div className="flex items-center gap-2">
+                      <Input
+                        name={field.name}
+                        defaultValue={
+                          field.state.value === 0 ? "" : field.state.value
+                        }
+                        onChange={(e) => field.handleChange(+e.target.value)}
+                        isField={false}
+                        type="number"
+                        step={0.01}
+                        hasError={!!field.state.meta.errors.length}
+                      />
+                      €
+                    </div>
+                  </FormField>
                 )}
               />
             </FormRow>
