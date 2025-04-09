@@ -178,7 +178,11 @@ export default function IngredientFrom(props: IngredientFormProps) {
               <Field
                 name="name"
                 children={(field) => (
-                  <FormField label="Tooraine nimetus" id={field.name}>
+                  <FormField
+                    label="Tooraine nimetus"
+                    id={field.name}
+                    className="basis-3/5"
+                  >
                     <Input
                       name={field.name}
                       id={field.name}
@@ -193,7 +197,7 @@ export default function IngredientFrom(props: IngredientFormProps) {
               <Field
                 name="categoryId"
                 children={(field) => (
-                  <FormField label="Tooraine kategooria">
+                  <FormField label="Tooraine kategooria" className="basis-2/5">
                     <Combobox
                       data={ingredientCategoriesData}
                       onChange={(value) => field.handleChange(value?.key)}
@@ -378,6 +382,7 @@ export default function IngredientFrom(props: IngredientFormProps) {
                 )}
               />
             </FormRow>
+            <Divider />
             <FormRow>
               <Field
                 name="purchasePrice"
