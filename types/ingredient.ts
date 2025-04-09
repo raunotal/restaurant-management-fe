@@ -12,7 +12,7 @@ type IngredientType = {
   name: string;
   grossQuantity?: number;
   netQuantity?: number;
-  warehouseMinQuantity?: number;
+  warehouseMinQuantity?: string;
   unit: Unit;
   purchasePrice?: number;
   category: IngredientCategory;
@@ -24,7 +24,6 @@ type IngredientType = {
   comments?: string;
   shelfLife?: string;
   productCode?: string;
-  warehouseMinQuantityDescription?: string;
 };
 
 type CreateIngredientDTOType = Omit<
@@ -37,7 +36,7 @@ type CreateIngredientDTOType = Omit<
   warehouseId?: string;
   shelfLife?: string;
   productCode?: string;
-  warehouseMinQuantityDescription?: string;
+  warehouseMinQuantity?: string;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -46,7 +45,6 @@ const ingredientSchema: z.ZodType<IngredientType> = z.object({
   name: z.string().min(1, "Tooraine nimi ei tohi olla tühi"),
   grossQuantity: z.number().nonnegative().optional(),
   netQuantity: z.number().nonnegative().optional(),
-  warehouseMinQuantity: z.number().nonnegative().optional(),
   purchasePrice: z.number().nonnegative().optional(),
   category: ingredientCategorySchema,
   supplier: supplierSchema,
@@ -58,7 +56,7 @@ const ingredientSchema: z.ZodType<IngredientType> = z.object({
   comments: z.string().optional(),
   shelfLife: z.string().optional(),
   productCode: z.string().optional(),
-  warehouseMinQuantityDescription: z.string().optional(),
+  warehouseMinQuantity: z.string().optional(),
 });
 
 export const createIngredientSchema: z.ZodType<CreateIngredientDTOType> =
@@ -67,7 +65,6 @@ export const createIngredientSchema: z.ZodType<CreateIngredientDTOType> =
     grossQuantity: z.number().nonnegative().optional(),
     netQuantity: z.number().nonnegative().optional(),
     purchasePrice: z.number().nonnegative().optional(),
-    warehouseMinQuantity: z.number().nonnegative().optional(),
     categoryId: z.string().nonempty(),
     supplierId: z.string().nonempty(),
     unitId: z.string().nonempty(),
@@ -78,7 +75,7 @@ export const createIngredientSchema: z.ZodType<CreateIngredientDTOType> =
     comments: z.string().optional(),
     shelfLife: z.string().optional(),
     productCode: z.string().optional(),
-    warehouseMinQuantityDescription: z.string().optional(),
+    warehouseMinQuantity: z.string().optional(),
   });
 
 export type Ingredient = z.infer<typeof ingredientSchema>;
