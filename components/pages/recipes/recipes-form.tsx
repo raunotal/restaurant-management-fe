@@ -132,10 +132,7 @@ export default function RecipesFrom(props: RecipeFormProps) {
               />
               <Badge text="Aktiivne" color="active" />
             </div>
-            <FormRow
-              title="Retsepti nimetus, kategooria valik ja valmistusaeg"
-              contentClassName="flex-col"
-            >
+            <FormRow>
               <div className="flex gap-4">
                 <Field
                   name="name"
