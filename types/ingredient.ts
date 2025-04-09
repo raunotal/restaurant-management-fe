@@ -24,6 +24,7 @@ type IngredientType = {
   comments?: string;
   shelfLife?: string;
   productCode?: string;
+  warehouseMinQuantityDescription?: string;
 };
 
 type CreateIngredientDTOType = Omit<
@@ -36,6 +37,7 @@ type CreateIngredientDTOType = Omit<
   warehouseId?: string;
   shelfLife?: string;
   productCode?: string;
+  warehouseMinQuantityDescription?: string;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -56,6 +58,7 @@ const ingredientSchema: z.ZodType<IngredientType> = z.object({
   comments: z.string().optional(),
   shelfLife: z.string().optional(),
   productCode: z.string().optional(),
+  warehouseMinQuantityDescription: z.string().optional(),
 });
 
 export const createIngredientSchema: z.ZodType<CreateIngredientDTOType> =
@@ -75,6 +78,7 @@ export const createIngredientSchema: z.ZodType<CreateIngredientDTOType> =
     comments: z.string().optional(),
     shelfLife: z.string().optional(),
     productCode: z.string().optional(),
+    warehouseMinQuantityDescription: z.string().optional(),
   });
 
 export type Ingredient = z.infer<typeof ingredientSchema>;
