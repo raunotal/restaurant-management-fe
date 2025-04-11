@@ -387,7 +387,7 @@ export default function IngredientFrom(props: IngredientFormProps) {
               <Field
                 name="purchasePrice"
                 children={(field) => (
-                  <FormField label="Ostuhind" id={field.name}>
+                  <FormField label="Brutokoguse hind (käibemaksuta)" id={field.name}>
                     <div className="flex items-center gap-2">
                       <Input
                         name={field.name}
