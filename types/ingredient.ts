@@ -5,7 +5,10 @@ import {
 } from "./ingredient-category";
 import { Supplier, supplierSchema } from "./supplier";
 import { Unit, unitSchema } from "./unit";
-import { IngredientWarehouse, ingredientWarehouseSchema } from "./ingredient-warehouse";
+import {
+  IngredientWarehouse,
+  ingredientWarehouseSchema,
+} from "./ingredient-warehouse";
 
 type IngredientType = {
   id: string;

@@ -4,6 +4,9 @@ import DashboardIcon from "./dashboard-icon";
 import RecipesIcon from "./recipes-icon";
 import IngredientsIcon from "./ingredients-icon";
 import SignOutIcon from "./sign-out-icon";
+import classNames from "classnames";
+import EditIcon from "./edit-icon";
+import DuplicateIcon from "./duplicate-icon";
 
 interface IconComponentProps extends IconProps {
   type: IconType;
@@ -15,29 +18,35 @@ export interface IconProps {
   className?: string;
 }
 
+const ICON_COMPONENTS = {
+  home: DashboardIcon,
+  recipes: RecipesIcon,
+  ingredients: IngredientsIcon,
+  signout: SignOutIcon,
+  edit: EditIcon,
+  duplicate: DuplicateIcon,
+} as const;
+
 export default function Icon(props: IconComponentProps) {
-  const { type, ...iconProps } = props;
+  const {
+    className,
+    size = 24,
+    color = "currentColor",
+    type,
+    ...iconProps
+  } = props;
 
-  iconProps.className = "text-gray-400";
+  const IconComponent = ICON_COMPONENTS[type];
 
-  let IconComponent: React.ReactNode;
-
-  switch (type) {
-    case "home":
-      IconComponent = <DashboardIcon {...iconProps} />;
-      break;
-    case "recipes":
-      IconComponent = <RecipesIcon {...iconProps} />;
-      break;
-    case "ingredients":
-      IconComponent = <IngredientsIcon {...iconProps} />;
-      break;
-    case "signout":
-      IconComponent = <SignOutIcon {...iconProps} />;
-      break;
-    default:
-      IconComponent = null;
-  }
-
-  return IconComponent;
+  return (
+    <IconComponent
+      {...iconProps}
+      className={classNames(
+        "text-gray-400 group-hover:text-indigo-600",
+        className
+      )}
+      size={size}
+      color={color}
+    />
+  );
 }

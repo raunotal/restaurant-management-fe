@@ -20,7 +20,7 @@ export default function IngredientCategoriesPage() {
       description: ingredientCategory.description,
       actions: [
         {
-          text: "Muuda",
+          content: "Muuda",
           data: ingredientCategory.id,
           onClick: (data) => {
             setSelectedIngredientCategory(data);

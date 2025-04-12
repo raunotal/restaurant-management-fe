@@ -19,7 +19,7 @@ export default function UnitsPage() {
     ratio: unit.ratio === 0 ? "-" : unit.ratio,
     actions: [
       {
-        text: "Muuda",
+        content: "Muuda",
         data: unit.id,
         onClick: (data) => {
           setSelectedUnit(data);

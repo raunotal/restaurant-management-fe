@@ -1,18 +1,13 @@
 import React from "react";
 import { IconProps } from "./icon";
-import classNames from "classnames";
 
-export default function IngredientsIcon({
-  size = 24,
-  color = "currentColor",
-  className,
-}: IconProps) {
+export default function IngredientsIcon({ size, color, className }: IconProps) {
   return (
     <svg
       fill="#000000"
       viewBox="0 0 50 50"
       stroke={color}
-      className={classNames(className, "group-hover:text-indigo-600")}
+      className={className}
       width={size}
       height={size}
     >
