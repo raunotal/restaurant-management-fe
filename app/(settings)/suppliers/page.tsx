@@ -17,7 +17,7 @@ export default function SuppliersPage() {
     address: supplier.address,
     actions: [
       {
-        text: "Muuda",
+        content: "Muuda",
         data: supplier.id,
         onClick: (data) => {
           setSelectedSupplier(data);

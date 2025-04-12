@@ -110,7 +110,11 @@ export default function RecipesFrom(props: RecipeFormProps) {
           setIsOpen={setIsDeleteModalOpen}
         />
       )}
-      <PageHeader title="Lisa uus retsept" />
+      <PageHeader
+        title="Lisa uus retsept"
+        onClickText="Tagasi"
+        onClick={() => router.push("/recipes")}
+      />
       <form
         onSubmit={(e) => {
           e.preventDefault();

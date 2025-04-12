@@ -18,7 +18,7 @@ export default function RecipeCategoriesPage() {
     description: recipeCategory.description,
     actions: [
       {
-        text: "Muuda",
+        content: "Muuda",
         data: recipeCategory.id,
         onClick: (data) => {
           setSelectedRecipeCategory(data);

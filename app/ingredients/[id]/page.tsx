@@ -6,7 +6,7 @@ import { notFound, useParams } from "next/navigation";
 import React from "react";
 
 export default function UpdateIngredientPage() {
-  const id = useParams().id;
+  const { id } = useParams();
   const ingredient = services.ingredientService.useGet(id as string).data;
 
   if (!ingredient) {

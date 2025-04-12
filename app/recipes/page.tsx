@@ -12,6 +12,7 @@ export default function RecipesPage() {
       <PageHeader
         title="Retseptid"
         description="Siin saad hallata retsepte"
+        onClickText="Lisa uus"
         onClick={() => router.push("/recipes/create")}
       />
       <RecipesGrid />
