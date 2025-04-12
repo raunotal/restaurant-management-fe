@@ -1,14 +1,12 @@
 import { sortTableRows } from "@/utils/helpers";
 import classNames from "classnames";
-import React from "react";
+import React, { Fragment, ReactNode } from "react";
 
-export type TableRow = Record<
-  string,
-  string | number | undefined | TableRowAction[] | React.ReactNode
->;
+export type TableRow = Record<string, TableRowAction[] | React.ReactNode>;
 
 export type TableRowAction = {
-  text: string;
+  title: string;
+  content: ReactNode;
   data?: string;
   position?: number;
   onClick: (data?: string) => void;
@@ -69,7 +67,7 @@ export default function Table(props: TableProps) {
                               "font-light":
                                 rowFieldIndex !== 0 &&
                                 rowFieldIndex !== Object.values(row).length - 1,
-                              "text-indigo-600 pr-6 text-right":
+                              "text-indigo-600 pr-6 text-right flex gap-2 items-center justify-end":
                                 rowFieldIndex === Object.values(row).length - 1,
                             }
                           )}
@@ -78,13 +76,20 @@ export default function Table(props: TableProps) {
                           {!isRowAction && (value as string)}
                           {isRowAction &&
                             value.map((action, index) => (
-                              <span
-                                className="cursor-pointer"
-                                onClick={() => action.onClick(action.data)}
-                                key={`${rowIndex}-action-${index}`}
-                              >
-                                {action.text}
-                              </span>
+                              <Fragment key={`${rowIndex}-action-${index}`}>
+                                <span
+                                  className="cursor-pointer tooltip"
+                                  aria-label={action.title}
+                                  onClick={() => action.onClick(action.data)}
+                                  key={`${rowIndex}-action-${index}`}
+                                >
+                                  <span className="tooltiptext">
+                                    {action.title}
+                                  </span>
+                                  {action.content}
+                                </span>
+                                {index !== value.length - 1 && <span> | </span>}
+                              </Fragment>
                             ))}
                         </td>
                       );

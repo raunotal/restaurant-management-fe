@@ -213,7 +213,7 @@ export default function IngredientFrom(props: IngredientFormProps) {
               <Field
                 name="productCode"
                 children={(field) => (
-                  <FormField label="Toote kood" id={field.name}>
+                  <FormField label="Toote kood" id={field.name} className="basis-2/5">
                     <Input
                       name={field.name}
                       id={field.name}
@@ -228,7 +228,7 @@ export default function IngredientFrom(props: IngredientFormProps) {
               <Field
                 name="supplierId"
                 children={(field) => (
-                  <FormField label="Tarnija">
+                  <FormField label="Tarnija" className="basis-3/5">
                     <Combobox
                       data={suppliersData}
                       onChange={(value) => field.handleChange(value?.key)}
