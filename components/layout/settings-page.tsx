@@ -20,6 +20,7 @@ export default function SettingsPage<T extends { id: string }>(
       <PageHeader
         title={title}
         description={description}
+        onClickText="Lisa uus"
         onClick={toggleModal}
       />
       <Table

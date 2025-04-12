@@ -45,6 +45,7 @@ export default function IngredientFrom(props: IngredientFormProps) {
   const suppliers = services.supplierService.useGetAll().data;
   const warehouses = services.ingredientWarehouseService.useGetAll().data;
   const queryClient = useQueryClient();
+  const isDuplicate = ingredient && !ingredient.id;
 
   const { mutateAsync: createMutateAsync } =
     services.ingredientService.useCreate({
@@ -97,12 +98,12 @@ export default function IngredientFrom(props: IngredientFormProps) {
         imageResponse = await response.json();
       }
 
-      if (ingredient) {
+      if (ingredient && !isDuplicate) {
         const isImageChanged =
           !(ingredient.imageUrl === image?.name) && imageResponse;
 
         const updatedIngredient = {
-          id: ingredient.id,
+          id: (ingredient as Ingredient).id,
           ...value,
         };
 
@@ -143,15 +144,15 @@ export default function IngredientFrom(props: IngredientFormProps) {
 
   return (
     <>
-      {ingredient && (
-        <IngredientDeleteModal
-          ingredient={ingredient}
-          isOpen={isDeleteModalOpen}
-          setIsOpen={setIsDeleteModalOpen}
-        />
-      )}
+      <IngredientDeleteModal
+        ingredient={ingredient as Ingredient}
+        isOpen={isDeleteModalOpen}
+        setIsOpen={setIsDeleteModalOpen}
+      />
       <PageHeader
         title={ingredient ? "Tooraine muutmine" : "Tooraine lisamine"}
+        onClickText="Tagasi"
+        onClick={() => router.push("/ingredients")}
       />
       <form
         onSubmit={(e) => {
@@ -213,7 +214,11 @@ export default function IngredientFrom(props: IngredientFormProps) {
               <Field
                 name="productCode"
                 children={(field) => (
-                  <FormField label="Toote kood" id={field.name} className="basis-2/5">
+                  <FormField
+                    label="Toote kood"
+                    id={field.name}
+                    className="basis-2/5"
+                  >
                     <Input
                       name={field.name}
                       id={field.name}
@@ -387,7 +392,10 @@ export default function IngredientFrom(props: IngredientFormProps) {
               <Field
                 name="purchasePrice"
                 children={(field) => (
-                  <FormField label="Brutokoguse hind (käibemaksuta)" id={field.name}>
+                  <FormField
+                    label="Brutokoguse hind (käibemaksuta)"
+                    id={field.name}
+                  >
                     <div className="flex items-center gap-2">
                       <Input
                         name={field.name}
@@ -444,7 +452,7 @@ export default function IngredientFrom(props: IngredientFormProps) {
               </Button>
             )}
           />
-          {ingredient && (
+          {ingredient && !isDuplicate && (
             <Button
               type="button"
               color="danger"

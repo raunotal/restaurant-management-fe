@@ -34,7 +34,7 @@ export default function RecipesPage() {
         title: "Kopeeri",
         content: <Icon type="duplicate" size={16} />,
         data: ingredient.id,
-        onClick: () => router.push(`/ingredients/${ingredient.id}`),
+        onClick: () => router.push(`/ingredients/create?id=${ingredient.id}`),
       },
     ],
   }));
@@ -43,6 +43,7 @@ export default function RecipesPage() {
       <PageHeader
         title="Toorained"
         description="Siin saad hallata tooraineid"
+        onClickText="Lisa uus"
         onClick={() => router.push("/ingredients/create")}
       />
       <Table
