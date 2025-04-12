@@ -20,7 +20,7 @@ export default function IngredientWarehousesPage() {
       description: ingredientWarehouse.description,
       actions: [
         {
-          text: "Muuda",
+          content: "Muuda",
           data: ingredientWarehouse.id,
           onClick: (data) => {
             setSelectedIngredientWarehouse(data);

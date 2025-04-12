@@ -5,7 +5,7 @@ import React, { Fragment, ReactNode } from "react";
 export type TableRow = Record<string, TableRowAction[] | React.ReactNode>;
 
 export type TableRowAction = {
-  title: string;
+  title?: string;
   content: ReactNode;
   data?: string;
   position?: number;
@@ -83,9 +83,11 @@ export default function Table(props: TableProps) {
                                   onClick={() => action.onClick(action.data)}
                                   key={`${rowIndex}-action-${index}`}
                                 >
-                                  <span className="tooltiptext">
-                                    {action.title}
-                                  </span>
+                                  {action.title && (
+                                    <span className="tooltiptext">
+                                      {action.title}
+                                    </span>
+                                  )}
                                   {action.content}
                                 </span>
                                 {index !== value.length - 1 && <span> | </span>}
