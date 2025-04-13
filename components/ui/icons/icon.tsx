@@ -7,6 +7,8 @@ import SignOutIcon from "./sign-out-icon";
 import classNames from "classnames";
 import EditIcon from "./edit-icon";
 import DuplicateIcon from "./duplicate-icon";
+import ChevronDownIcon from "@heroicons/react/24/solid/ChevronDownIcon";
+import ChevronUpIcon from "@heroicons/react/24/solid/ChevronUpIcon";
 
 interface IconComponentProps extends IconProps {
   type: IconType;
@@ -18,6 +20,8 @@ export interface IconProps {
   className?: string;
 }
 
+
+// TODO: replace icons with heroicons
 const ICON_COMPONENTS = {
   home: DashboardIcon,
   recipes: RecipesIcon,
@@ -25,6 +29,8 @@ const ICON_COMPONENTS = {
   signout: SignOutIcon,
   edit: EditIcon,
   duplicate: DuplicateIcon,
+  "chevron-up": ChevronUpIcon,
+  "chevron-down": ChevronDownIcon,
 } as const;
 
 export default function Icon(props: IconComponentProps) {
@@ -46,6 +52,8 @@ export default function Icon(props: IconComponentProps) {
         className
       )}
       size={size}
+      width={size}
+      height={size}
       color={color}
     />
   );
