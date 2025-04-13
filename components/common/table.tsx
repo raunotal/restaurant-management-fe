@@ -1,5 +1,7 @@
 import classNames from "classnames";
-import React, { Fragment, ReactNode } from "react";
+import React, { Fragment, ReactNode, useState, useMemo } from "react";
+import { orderBy } from "lodash";
+import Icon from "../ui/icons/icon";
 
 export type TableRow = Record<string, TableRowAction[] | React.ReactNode>;
 
@@ -11,6 +13,8 @@ export type TableRowAction = {
   onClick: (data?: string) => void;
 };
 
+type SortDirection = "asc" | "desc";
+
 interface TableProps {
   headers: string[];
   rows: TableRow[];
@@ -19,6 +23,64 @@ interface TableProps {
 
 export default function Table(props: TableProps) {
   const { headers, rows, className } = props;
+  const [sortBy, setSortBy] = useState<string | null>(null);
+  const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
+
+  const handleSort = (headerIndex: number) => {
+    if (headerIndex === headers.length - 1) return;
+
+    const key = Object.keys(rows[0])[headerIndex];
+
+    if (sortBy === key) {
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+    } else {
+      setSortBy(key);
+      setSortDirection("asc");
+    }
+  };
+
+  const sortedRows = useMemo(() => {
+    if (!sortBy || rows.length === 0) return rows;
+
+    return orderBy(
+      rows,
+      [
+        (row) => {
+          const value = row[sortBy];
+          if (!Array.isArray(value)) {
+            return typeof value === "string" ? value.toLowerCase() : value;
+          }
+          return "";
+        },
+      ],
+      [sortDirection]
+    );
+  }, [rows, sortBy, sortDirection]);
+
+  const renderSortIndicator = (headerIndex: number) => {
+    const key = rows.length > 0 ? Object.keys(rows[0])[headerIndex] : null;
+
+    if (headerIndex === headers.length - 1 || !key) return null;
+
+    return (
+      <span
+        className={classNames(
+          "flex items-center justify-center ml-2 w-5 h-5 rounded-[4px] opacity-0",
+          {
+            "bg-gray-200 opacity-100": sortBy === key,
+            "group-hover:opacity-75": sortBy !== key,
+          }
+        )}
+      >
+        {sortDirection === "asc" ? (
+          <Icon type="chevron-up" className="text-gray-600" size={16} />
+        ) : (
+          <Icon type="chevron-down" className="text-gray-600" size={16} />
+        )}
+      </span>
+    );
+    // }
+  };
 
   return (
     <div className={classNames(className)}>
@@ -37,17 +99,22 @@ export default function Table(props: TableProps) {
                         {
                           "pl-6": index === 0,
                           "pr-6": index === headers.length - 1,
+                          "cursor-pointer": index !== headers.length - 1, // Make header clickable for sorting except the last one
                         }
                       )}
                       key={`header-${index}`}
+                      onClick={() => handleSort(index)}
                     >
-                      {head}
+                      <div className="flex items-center group">
+                        {head}
+                        {renderSortIndicator(index)}
+                      </div>
                     </th>
                   ))}
                 </tr>
               </thead>
               <tbody className="bg-white">
-                {rows.map((row, rowIndex) => (
+                {sortedRows.map((row, rowIndex) => (
                   <tr
                     key={`row-${rowIndex}`}
                     className="border-b border-gray-200 font-medium"
