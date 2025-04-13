@@ -22,6 +22,7 @@ interface ComboboxProps {
   selected?: string;
   hasError?: boolean;
   isField?: boolean;
+  multiple?: boolean;
   onChange: (value: ComboboxElement) => void;
   className?: string;
 }
@@ -34,6 +35,7 @@ export default function Combobox(props: ComboboxProps) {
     selected,
     isField = true,
     hasError,
+    multiple,
     onChange,
     className,
   } = props;
@@ -68,6 +70,7 @@ export default function Combobox(props: ComboboxProps) {
           onChange(a as ComboboxElement);
         }}
         onClose={() => setQuery("")}
+        multiple={multiple}
       >
         <div className={classNames("relative", isField && "mt-2")}>
           <ComboboxInput
