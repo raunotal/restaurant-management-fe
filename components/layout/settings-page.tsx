@@ -27,7 +27,6 @@ export default function SettingsPage<T extends { id: string }>(
         className="mt-8"
         headers={tableHeaders}
         rows={tableData}
-        groupBy="parentUnit"
       />
     </>
   );
