@@ -4,7 +4,9 @@ export type IconType =
   | "ingredients"
   | "signout"
   | "duplicate"
-  | "edit";
+  | "edit"
+  | "chevron-up"
+  | "chevron-down";
 
 export type ModalProps = {
   isOpen: boolean;

@@ -2,11 +2,7 @@ import React from "react";
 import { IconProps } from "./icon";
 import classNames from "classnames";
 
-export default function DashboardIcon({
-  size = 24,
-  color = "currentColor",
-  className,
-}: IconProps) {
+export default function DashboardIcon({ size, color, className }: IconProps) {
   return (
     <svg
       fill="none"
