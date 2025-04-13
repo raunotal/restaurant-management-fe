@@ -2,11 +2,7 @@ import React from "react";
 import { IconProps } from "./icon";
 import classNames from "classnames";
 
-export default function RecipesIcon({
-  size = 24,
-  color = "currentColor",
-  className,
-}: IconProps) {
+export default function RecipesIcon({ size, color, className }: IconProps) {
   return (
     <svg
       fill="#000000"

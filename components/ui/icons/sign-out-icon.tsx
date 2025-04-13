@@ -2,11 +2,7 @@ import React from "react";
 import { IconProps } from "./icon";
 import classNames from "classnames";
 
-export default function SignOutIcon({
-  size = 24,
-  color = "currentColor",
-  className,
-}: IconProps) {
+export default function SignOutIcon({ size, color, className }: IconProps) {
   return (
     <svg
       viewBox="0 0 24 24"

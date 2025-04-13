@@ -46,12 +46,7 @@ export default function RecipesPage() {
         onClickText="Lisa uus"
         onClick={() => router.push("/ingredients/create")}
       />
-      <Table
-        className="mt-8"
-        headers={tableHeaders}
-        rows={tableData}
-        groupBy="parentUnit"
-      />
+      <Table className="mt-8" headers={tableHeaders} rows={tableData} />
     </>
   );
 }
