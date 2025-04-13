@@ -79,7 +79,6 @@ export default function Table(props: TableProps) {
         )}
       </span>
     );
-    // }
   };
 
   return (
@@ -99,7 +98,7 @@ export default function Table(props: TableProps) {
                         {
                           "pl-6": index === 0,
                           "pr-6": index === headers.length - 1,
-                          "cursor-pointer": index !== headers.length - 1, // Make header clickable for sorting except the last one
+                          "cursor-pointer": index !== headers.length - 1,
                         }
                       )}
                       key={`header-${index}`}
