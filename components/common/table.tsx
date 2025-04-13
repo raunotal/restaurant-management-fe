@@ -1,4 +1,3 @@
-import { sortTableRows } from "@/utils/helpers";
 import classNames from "classnames";
 import React, { Fragment, ReactNode } from "react";
 
@@ -13,15 +12,13 @@ export type TableRowAction = {
 };
 
 interface TableProps {
-  groupBy?: string;
   headers: string[];
   rows: TableRow[];
   className?: string;
 }
 
 export default function Table(props: TableProps) {
-  const { groupBy, headers, rows, className } = props;
-  const sortedRows = sortTableRows(rows, groupBy);
+  const { headers, rows, className } = props;
 
   return (
     <div className={classNames(className)}>
@@ -50,7 +47,7 @@ export default function Table(props: TableProps) {
                 </tr>
               </thead>
               <tbody className="bg-white">
-                {sortedRows.map((row, rowIndex) => (
+                {rows.map((row, rowIndex) => (
                   <tr
                     key={`row-${rowIndex}`}
                     className="border-b border-gray-200 font-medium"
