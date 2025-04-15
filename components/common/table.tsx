@@ -70,26 +70,6 @@ export default function Table(props: TableProps) {
     }
   };
 
-  const sortedRows = useMemo(() => {
-    if (!sortBy) return rows;
-
-    return orderBy(
-      rows,
-      [
-        (row) => {
-          const value = row[sortBy];
-          if (typeof value === "string") {
-            return value.toLowerCase();
-          } else if (isReactElementWithTextProp(value)) {
-            return value.props.text.toLowerCase();
-          }
-          return value;
-        },
-      ],
-      [sortDirection]
-    );
-  }, [rows, sortBy, sortDirection]);
-
   const renderSortIndicator = (headerIndex: number) => {
     const key = rows.length > 0 ? Object.keys(rows[0])[headerIndex] : null;
 
@@ -163,6 +143,67 @@ export default function Table(props: TableProps) {
       [headerIndex]: updatedFilters,
     }));
   };
+
+  const filteredRows = useMemo(() => {
+    return rows.filter((row) => {
+      const inputFilterPassed = Object.entries(inputFilter).every(
+        ([index, value]) => {
+          const key = Object.keys(row)[Number(index)];
+          const rowValue = row[key];
+
+          if (typeof rowValue === "string") {
+            return rowValue.toLowerCase().includes(value.toLowerCase());
+          } else if (isReactElementWithTextProp(rowValue)) {
+            return rowValue.props.text
+              .toLowerCase()
+              .includes(value.toLowerCase());
+          }
+          return true;
+        }
+      );
+
+      const comboboxFilterPassed = Object.entries(filterOptions).every(
+        ([index, selectedOptions]) => {
+          if (selectedOptions.length === 0) return true;
+
+          const key = Object.keys(row)[Number(index)];
+          const rowValue = row[key];
+
+          let valueToCheck = "";
+          if (typeof rowValue === "string") {
+            valueToCheck = rowValue;
+          } else if (isReactElementWithTextProp(rowValue)) {
+            valueToCheck = rowValue.props.text;
+          } else {
+            return true;
+          }
+
+          return selectedOptions.some((option) => option.key === valueToCheck);
+        }
+      );
+
+      return inputFilterPassed && comboboxFilterPassed;
+    });
+  }, [rows, inputFilter, filterOptions]);
+
+  const sortedRows = useMemo(() => {
+    if (!sortBy) return filteredRows;
+    return orderBy(
+      filteredRows,
+      [
+        (row) => {
+          const value = row[sortBy];
+          if (typeof value === "string") {
+            return value.toLowerCase();
+          } else if (isReactElementWithTextProp(value)) {
+            return value.props.text.toLowerCase();
+          }
+          return value;
+        },
+      ],
+      [sortDirection]
+    );
+  }, [filteredRows, sortBy, sortDirection]);
 
   return (
     <div className={classNames(className)}>

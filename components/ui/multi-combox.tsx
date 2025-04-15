@@ -108,6 +108,7 @@ export default function MultiCombobox(props: ComboboxProps) {
             "transition duration-100 ease-in data-[leave]:data-[closed]:opacity-0",
             "mt-1 py-1 max-h-60 bg-white shadow-lg ring-1 ring-black ring-opacity-5 overflow"
           )}
+          
         >
           {filteredData.map((element) => (
             <ComboboxOption
