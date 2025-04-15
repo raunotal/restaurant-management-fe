@@ -9,25 +9,24 @@ import {
   Label,
   ComboboxButton,
 } from "@headlessui/react";
-import ChevronDownIcon from "@heroicons/react/24/solid/ChevronDownIcon";
 import classNames from "classnames";
 import { useState } from "react";
-
-export type ComboboxElement = { key: string; value: string };
+import { ComboboxElement } from "./combobox";
+import ChevronDownIcon from "@heroicons/react/24/solid/ChevronDownIcon";
 
 interface ComboboxProps {
   data: ComboboxElement[];
   label?: string;
   placeholder?: string;
-  selected?: string;
+  selected: ComboboxElement[];
   hasError?: boolean;
   isField?: boolean;
   multiple?: boolean;
-  onChange: (value: ComboboxElement) => void;
+  onChange: (value: ComboboxElement[]) => void;
   className?: string;
 }
 
-export default function Combobox(props: ComboboxProps) {
+export default function MultiCombobox(props: ComboboxProps) {
   const {
     data,
     label,
@@ -35,7 +34,6 @@ export default function Combobox(props: ComboboxProps) {
     selected,
     isField = true,
     hasError,
-    multiple,
     onChange,
     className,
   } = props;
@@ -53,9 +51,8 @@ export default function Combobox(props: ComboboxProps) {
     hasError && "outline-red-500"
   );
 
-  const selectedElement = data.find((element) => element.key === selected) || {
-    key: "",
-    value: "",
+  const handleRemoveItem = (itemToRemove: ComboboxElement) => {
+    onChange(selected.filter((item) => item.key !== itemToRemove.key));
   };
 
   return (
@@ -64,17 +61,15 @@ export default function Combobox(props: ComboboxProps) {
     >
       <Label className="text-gary-900 font-medium text-sm">{label}</Label>
       <HeadlessCombobox
-        value={selectedElement}
-        onChange={(a) => {
-          onChange(a as ComboboxElement);
-        }}
+        value={selected}
+        onChange={onChange}
         onClose={() => setQuery("")}
-        multiple={multiple}
+        multiple
+        immediate
       >
         <div className={classNames("relative", isField && "mt-2")}>
           <ComboboxInput
             className={inputClass}
-            displayValue={(element: ComboboxElement) => element?.value}
             onChange={(event) => {
               setQuery(event.target.value);
             }}
@@ -84,7 +79,27 @@ export default function Combobox(props: ComboboxProps) {
             <ChevronDownIcon className="size-4" />
           </ComboboxButton>
         </div>
-
+        
+        {selected.length > 0 && (
+          <div className="flex flex-wrap gap-2 mt-2">
+            {selected.map((element) => (
+              <span 
+                key={element.key} 
+                className="inline-flex items-center gap-1 px-2 py-1 text-xs font-semibold rounded-md bg-indigo-100 text-indigo-800"
+              >
+                {element.value}
+                <button 
+                  type="button" 
+                  onClick={() => handleRemoveItem(element)}
+                  className="text-indigo-600 hover:text-indigo-800 font-bold"
+                >
+                  ×
+                </button>
+              </span>
+            ))}
+          </div>
+        )}
+        
         <ComboboxOptions
           anchor="bottom start"
           transition
