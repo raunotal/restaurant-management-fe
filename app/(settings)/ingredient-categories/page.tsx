@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { TableRow } from "@/components/common/table";
+import { TableFilterType, TableRow } from "@/components/common/table";
 import SettingsPage from "@/components/layout/settings-page";
 import services from "@/service/services";
 import IngredientCategoriesModal from "@/components/pages/ingredient-categories/ingredient-categories-modal";
@@ -13,7 +13,11 @@ export default function IngredientCategoriesPage() {
   const [selectedIngredientCategory, setSelectedIngredientCategory] =
     useState<string>();
 
-  const tableHeaders = ["Nimi", "Kirjeldus", ""];
+  const tableHeaders = [
+    { title: "Nimi", filterType: TableFilterType.Input },
+    { title: "Kirjeldus", filterType: TableFilterType.None },
+    { title: "", filterType: TableFilterType.None },
+  ];
   const tableRows: TableRow[] = ingredientCategories.map(
     (ingredientCategory) => ({
       name: ingredientCategory.name,

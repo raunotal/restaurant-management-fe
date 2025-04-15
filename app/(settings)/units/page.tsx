@@ -1,6 +1,6 @@
 "use client";
 
-import { TableRow } from "@/components/common/table";
+import { TableFilterType, TableRow } from "@/components/common/table";
 import SettingsPage from "@/components/layout/settings-page";
 import UnitModal from "@/components/pages/units/unit-modal";
 import services from "@/service/services";
@@ -11,7 +11,28 @@ export default function UnitsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUnit, setSelectedUnit] = useState<string>();
 
-  const tableHeaders = ["Nimi", "Lühend", "Pea ühik", "Suhe", ""];
+  const tableHeaders = [
+    {
+      title: "Nimi",
+      filterType: TableFilterType.Input,
+    },
+    {
+      title: "Lühend",
+      filterType: TableFilterType.None,
+    },
+    {
+      title: "Pea ühik",
+      filterType: TableFilterType.Combobox,
+    },
+    {
+      title: "Suhe",
+      filterType: TableFilterType.None,
+    },
+    {
+      title: "",
+      filterType: TableFilterType.None,
+    },
+  ];
   const tableRows: TableRow[] = units.map((unit) => ({
     name: unit.name,
     displayName: unit.displayName,

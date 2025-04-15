@@ -1,6 +1,6 @@
 "use client";
 
-import Table from "@/components/common/table";
+import Table, { TableFilterType } from "@/components/common/table";
 import PageHeader from "@/components/layout/page-header";
 import Badge from "@/components/ui/badge";
 import Icon from "@/components/ui/icons/icon";
@@ -8,11 +8,16 @@ import services from "@/service/services";
 import { useRouter } from "next/navigation";
 import React from "react";
 
-export default function RecipesPage() {
+export default function IngredientsPage() {
   const ingredients = services.ingredientService.useGetAll().data;
   const router = useRouter();
 
-  const tableHeaders = ["Nimi", "Kategooria", "Staatus", ""];
+  const tableHeaders = [
+    { title: "Nimi", filterType: TableFilterType.Input },
+    { title: "Kategooria", filterType: TableFilterType.Combobox },
+    { title: "Staatus", filterType: TableFilterType.Combobox },
+    { title: "", filterType: TableFilterType.None },
+  ];
   const tableData = ingredients.map((ingredient) => ({
     name: ingredient.name,
     category: ingredient.category.name,

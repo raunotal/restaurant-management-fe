@@ -15,7 +15,7 @@ export interface InputProps
   hasError?: boolean;
   isField?: boolean;
   label?: string;
-  name: string;
+  name?: string;
 }
 
 export default function Input(props: InputProps) {

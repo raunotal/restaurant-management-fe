@@ -1,6 +1,10 @@
 "use client";
 
-import { TableRow } from "@/components/common/table";
+import {
+  TableFilterType,
+  TableHeader,
+  TableRow,
+} from "@/components/common/table";
 import SettingsPage from "@/components/layout/settings-page";
 import RecipeCategoriesModal from "@/components/pages/recipe-categories/recipe-categories-modal";
 import services from "@/service/services";
@@ -12,7 +16,11 @@ export default function RecipeCategoriesPage() {
   const [selectedRecipeCategory, setSelectedRecipeCategory] =
     useState<string>();
 
-  const tableHeaders = ["Nimi", "Kirjeldus", ""];
+  const tableHeaders: TableHeader[] = [
+    { title: "Nimi", filterType: TableFilterType.Input },
+    { title: "Kirjeldus", filterType: TableFilterType.None },
+    { title: "", filterType: TableFilterType.None },
+  ];
   const tableRows: TableRow[] = recipeCategories.map((recipeCategory) => ({
     name: recipeCategory.name,
     description: recipeCategory.description,
