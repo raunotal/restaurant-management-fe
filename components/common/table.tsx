@@ -2,10 +2,36 @@ import classNames from "classnames";
 import React, { Fragment, ReactNode, useState, useMemo } from "react";
 import { orderBy } from "lodash";
 import Icon from "../ui/icons/icon";
+import { ComboboxElement } from "../ui/combobox";
+import Input from "../ui/input";
+import MultiCombobox from "../ui/multi-combox";
+
+interface WithTextProp {
+  props: {
+    text: string;
+    [key: string]: unknown;
+  };
+}
+
+function isReactElementWithTextProp(
+  value: unknown
+): value is React.ReactElement & WithTextProp {
+  return (
+    React.isValidElement(value) &&
+    value.props !== null &&
+    typeof value.props === "object" &&
+    "text" in value.props
+  );
+}
+
+export type TableHeader = {
+  title: string;
+  filterType: TableFilterType;
+};
 
 export type TableRow = Record<string, TableRowAction[] | React.ReactNode>;
 
-export type TableRowAction = {
+type TableRowAction = {
   title?: string;
   content: ReactNode;
   data?: string;
@@ -13,18 +39,28 @@ export type TableRowAction = {
   onClick: (data?: string) => void;
 };
 
-type SortDirection = "asc" | "desc";
+export enum TableFilterType {
+  Input = "input",
+  Combobox = "combobox",
+  None = "none",
+}
 
 interface TableProps {
-  headers: string[];
+  headers: TableHeader[];
   rows: TableRow[];
   className?: string;
 }
+
+type SortDirection = "asc" | "desc";
 
 export default function Table(props: TableProps) {
   const { headers, rows, className } = props;
   const [sortBy, setSortBy] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
+  const [inputFilter, setInputFilter] = useState<Record<number, string>>({});
+  const [filterOptions, setFilterOptions] = useState<
+    Record<number, ComboboxElement[]>
+  >({});
 
   const handleSort = (headerIndex: number) => {
     if (headerIndex === headers.length - 1) return;
@@ -38,24 +74,6 @@ export default function Table(props: TableProps) {
       setSortDirection("asc");
     }
   };
-
-  const sortedRows = useMemo(() => {
-    if (!sortBy || rows.length === 0) return rows;
-
-    return orderBy(
-      rows,
-      [
-        (row) => {
-          const value = row[sortBy];
-          if (!Array.isArray(value)) {
-            return typeof value === "string" ? value.toLowerCase() : value;
-          }
-          return "";
-        },
-      ],
-      [sortDirection]
-    );
-  }, [rows, sortBy, sortDirection]);
 
   const renderSortIndicator = (headerIndex: number) => {
     const key = rows.length > 0 ? Object.keys(rows[0])[headerIndex] : null;
@@ -81,6 +99,117 @@ export default function Table(props: TableProps) {
     );
   };
 
+  const getComboboxData = (headerIndex: number) => {
+    const key = Object.keys(rows[0])[headerIndex];
+
+    const comboboxData: ComboboxElement[] = rows.map((row) => {
+      const value = row[key];
+      if (isReactElementWithTextProp(value)) {
+        return { key: value.props.text, value: value.props.text };
+      } else {
+        return {
+          key: value?.toString() || "-",
+          value: value?.toString() || "-",
+        };
+      }
+    });
+
+    return comboboxData.filter(
+      (value, index, self) =>
+        index === self.findIndex((v) => v.key === value.key)
+    );
+  };
+
+  const handleInputFilterChange = (headerIndex: number, value: string) => {
+    setInputFilter((prevState) => ({
+      ...prevState,
+      [headerIndex]: value,
+    }));
+  };
+
+  const handleComboboxFilterChange = (
+    headerIndex: number,
+    selected: ComboboxElement[]
+  ) => {
+    let updatedFilters = selected;
+    const duplicate = selected.filter(
+      (value, index, self) =>
+        index !== self.findIndex((v) => v.key === value.key)
+    );
+
+    if (duplicate) {
+      updatedFilters = selected.filter(
+        (value) => !duplicate.some((v) => v.key === value.key)
+      );
+    }
+
+    setFilterOptions((prevState) => ({
+      ...prevState,
+      [headerIndex]: updatedFilters,
+    }));
+  };
+
+  const filteredRows = useMemo(() => {
+    return rows.filter((row) => {
+      const inputFilterPassed = Object.entries(inputFilter).every(
+        ([index, value]) => {
+          const key = Object.keys(row)[Number(index)];
+          const rowValue = row[key];
+
+          if (typeof rowValue === "string") {
+            return rowValue.toLowerCase().includes(value.toLowerCase());
+          } else if (isReactElementWithTextProp(rowValue)) {
+            return rowValue.props.text
+              .toLowerCase()
+              .includes(value.toLowerCase());
+          }
+          return true;
+        }
+      );
+
+      const comboboxFilterPassed = Object.entries(filterOptions).every(
+        ([index, selectedOptions]) => {
+          if (selectedOptions.length === 0) return true;
+
+          const key = Object.keys(row)[Number(index)];
+          const rowValue = row[key];
+
+          let valueToCheck = "";
+          if (typeof rowValue === "string") {
+            valueToCheck = rowValue;
+          } else if (isReactElementWithTextProp(rowValue)) {
+            valueToCheck = rowValue.props.text;
+          } else {
+            return true;
+          }
+
+          return selectedOptions.some((option) => option.key === valueToCheck);
+        }
+      );
+
+      return inputFilterPassed && comboboxFilterPassed;
+    });
+  }, [rows, inputFilter, filterOptions]);
+
+  const sortedRows = useMemo(() => {
+    if (!sortBy) return filteredRows;
+    return orderBy(
+      filteredRows,
+      [
+        (row) => {
+          const value = row[sortBy];
+          if (typeof value === "string") {
+            return value.toLowerCase();
+          } else if (isReactElementWithTextProp(value)) {
+            return value.props.text.toLowerCase();
+          }
+          return value;
+        },
+      ],
+      [sortDirection]
+    );
+  }, [filteredRows, sortBy, sortDirection]);
+
   return (
     <div className={classNames(className)}>
       <div className="-my-2 -mx-8 overflow-x-auto">
@@ -89,27 +218,55 @@ export default function Table(props: TableProps) {
             <table className="w-full">
               <thead className="border-b border-gray-300 bg-gray-50">
                 <tr>
-                  {headers.map((head, index) => (
-                    <th
-                      scope="col"
-                      className={classNames(
-                        "px-3 py-3.5",
-                        "text-gray-900 text-sm text-left",
-                        {
-                          "pl-6": index === 0,
-                          "pr-6": index === headers.length - 1,
-                          "cursor-pointer": index !== headers.length - 1,
-                        }
-                      )}
-                      key={`header-${index}`}
-                      onClick={() => handleSort(index)}
-                    >
-                      <div className="flex items-center group">
-                        {head}
-                        {renderSortIndicator(index)}
-                      </div>
-                    </th>
-                  ))}
+                  {headers.map((head, index) => {
+                    const comboboxData = getComboboxData(index);
+                    const comboboxHasData = comboboxData.length > 1;
+                    return (
+                      <th
+                        scope="col"
+                        className={classNames(
+                          "px-3 py-3.5",
+                          "text-gray-900 text-sm text-left align-top",
+                          {
+                            "pl-6": index === 0,
+                            "pr-6": index === headers.length - 1,
+                            "cursor-pointer": index !== headers.length - 1,
+                          }
+                        )}
+                        key={`header-${index}`}
+                      >
+                        <div
+                          className="flex items-center group"
+                          onClick={() => handleSort(index)}
+                        >
+                          {head.title}
+                          {renderSortIndicator(index)}
+                        </div>
+                        {head.filterType === TableFilterType.Input && (
+                          <Input
+                            className="mt-2"
+                            value={inputFilter[index] || ""}
+                            onChange={(e) =>
+                              handleInputFilterChange(index, e.target.value)
+                            }
+                            placeholder="Otsi..."
+                          />
+                        )}
+                        {head.filterType === TableFilterType.Combobox &&
+                          comboboxHasData && (
+                            <MultiCombobox
+                              data={comboboxData}
+                              onChange={(data) =>
+                                handleComboboxFilterChange(index, data)
+                              }
+                              selected={filterOptions[index] || []}
+                              placeholder="Vali..."
+                              className="mt-2"
+                            />
+                          )}
+                      </th>
+                    );
+                  })}
                 </tr>
               </thead>
               <tbody className="bg-white">
@@ -136,7 +293,7 @@ export default function Table(props: TableProps) {
                           )}
                           key={`row-${rowIndex}-${rowFieldIndex}`}
                         >
-                          {!isRowAction && (value as string)}
+                          {!isRowAction && value}
                           {isRowAction &&
                             value.map((action, index) => (
                               <Fragment key={`${rowIndex}-action-${index}`}>

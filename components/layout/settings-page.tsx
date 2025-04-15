@@ -1,11 +1,11 @@
-import Table, { TableRow } from "@/components/common/table";
+import Table, { TableHeader, TableRow } from "@/components/common/table";
 import PageHeader from "./page-header";
 
 type SettingsPageProps<T extends { id: string }> = {
   title: string;
   description: string;
   tableData: TableRow[];
-  tableHeaders: string[];
+  tableHeaders: TableHeader[];
   data: T[];
   toggleModal: () => void;
 };
@@ -23,11 +23,7 @@ export default function SettingsPage<T extends { id: string }>(
         onClickText="Lisa uus"
         onClick={toggleModal}
       />
-      <Table
-        className="mt-8"
-        headers={tableHeaders}
-        rows={tableData}
-      />
+      <Table className="mt-8" headers={tableHeaders} rows={tableData} />
     </>
   );
 }
