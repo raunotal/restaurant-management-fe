@@ -24,6 +24,11 @@ function isReactElementWithTextProp(
   );
 }
 
+export type TableHeader = {
+  title: string;
+  filterType: TableFilterType;
+};
+
 export type TableRow = Record<string, TableRowAction[] | React.ReactNode>;
 
 type TableRowAction = {
@@ -41,7 +46,7 @@ export enum TableFilterType {
 }
 
 interface TableProps {
-  headers: { title: string; filterType: TableFilterType }[];
+  headers: TableHeader[];
   rows: TableRow[];
   className?: string;
 }
