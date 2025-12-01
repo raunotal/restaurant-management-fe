@@ -4,7 +4,28 @@ import { TableFilterType, TableRow } from "@/components/common/table";
 import SettingsPage from "@/components/layout/settings-page";
 import SupplierModal from "@/components/pages/suppliers/supplier-modal";
 import services from "@/service/services";
-import React, { useState } from "react";
+import React, { ReactNode, useState } from "react";
+
+const getSupplierUrl = (address: string | undefined): string | ReactNode => {
+  if (!address) {
+    return "";
+  }
+
+  if (address.includes("https://")) {
+    return (
+      <a
+        className="text-blue-500 hover:text-blue-700"
+        href={address}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {address}
+      </a>
+    );
+  }
+
+  return address;
+};
 
 export default function SuppliersPage() {
   const suppliers = services.supplierService.useGetAll().data;
@@ -25,9 +46,10 @@ export default function SuppliersPage() {
       filterType: TableFilterType.None,
     },
   ];
+
   const tableRows: TableRow[] = suppliers.map((supplier) => ({
     name: supplier.name,
-    address: supplier.address,
+    url: getSupplierUrl(supplier.address),
     actions: [
       {
         content: "Muuda",

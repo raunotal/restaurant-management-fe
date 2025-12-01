@@ -1,6 +1,7 @@
 import Modal from "@/components/layout/modal";
 import Button from "@/components/ui/button";
 import Input from "@/components/ui/input";
+import Textarea from "@/components/ui/textarea";
 import { DialogTitle } from "@headlessui/react";
 import React, { useEffect } from "react";
 import { useForm } from "@tanstack/react-form";
@@ -49,6 +50,8 @@ export default function SupplierModal(props: SupplierModalProps) {
     defaultValues: {
       name: supplier?.name || "",
       address: supplier?.address || "",
+      contact: supplier?.contact || "",
+      deliveryTerms: supplier?.deliveryTerms || "",
     } as CreateSupplierDTO,
     onSubmit: ({ value }) => {
       if (supplier) {
@@ -100,6 +103,31 @@ export default function SupplierModal(props: SupplierModalProps) {
               label="Aadress"
               value={field.state.value}
               onChange={(e) => field.handleChange(e.target.value)}
+            />
+          )}
+        />
+        <Field
+          name="contact"
+          children={(field) => (
+            <Textarea
+              name={field.name}
+              label="Kontakt"
+              value={field.state.value}
+              onChange={(e) => field.handleChange(e.target.value)}
+              rows={3}
+            />
+          )}
+        />
+        <Field
+          name="deliveryTerms"
+          children={(field) => (
+            <Textarea
+              name={field.name}
+              label="Tarnetingimused"
+              value={field.state.value}
+              onChange={(e) => field.handleChange(e.target.value)}
+              rows={4}
+              className="mt-2"
             />
           )}
         />
