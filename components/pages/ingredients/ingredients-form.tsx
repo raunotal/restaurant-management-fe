@@ -78,7 +78,7 @@ export default function IngredientFrom(props: IngredientFormProps) {
       supplierId: ingredient?.supplier?.id || "",
       warehouseId: ingredient?.warehouse?.id || "",
       imageUrl: ingredient?.imageUrl || "",
-      isActive: ingredient?.isActive || false,
+      isActive: ingredient?.isActive ?? true,
       bulkPackage: ingredient?.bulkPackage || "",
       comments: ingredient?.comments || "",
       shelfLife: ingredient?.shelfLife || "",
