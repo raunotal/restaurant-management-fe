@@ -53,7 +53,7 @@ export default function RecipesFrom(props: RecipeFormProps) {
   const { handleSubmit, Field, Subscribe } = useForm({
     defaultValues: {
       name: recipe?.name || "",
-      isActive: recipe?.isActive || false,
+      isActive: recipe?.isActive ?? true,
       categoryId: recipe?.category?.id || "",
       preparationTime: recipe?.preparationTime || 0,
       comments: recipe?.comments || "",
