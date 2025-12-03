@@ -24,6 +24,7 @@ import ImageUpload from "@/components/common/image-upload";
 import { Unit } from "@/types/unit";
 import { useQueryClient } from "@tanstack/react-query";
 import { Endpoints } from "@/config/endpoints";
+import { getErrorMessageEt } from "@/config/error-messages";
 import FormField from "@/components/common/form-field";
 import Divider from "@/components/ui/divider";
 
@@ -39,6 +40,7 @@ export default function IngredientFrom(props: IngredientFormProps) {
   );
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [image, setImage] = useState<File | null>(null);
+  const [isImageRemoved, setIsImageRemoved] = useState(false);
   const ingredientCategories =
     services.ingredientCategoryService.useGetAll().data;
   const units = services.unitService.useGetAll().data;
@@ -95,19 +97,52 @@ export default function IngredientFrom(props: IngredientFormProps) {
           method: "POST",
           body: data,
         });
-        imageResponse = await response.json();
+        const result = await response.json();
+
+        if (!response.ok) {
+          const code = result?.error?.code as string | undefined;
+          toast.error(getErrorMessageEt(code));
+          return;
+        }
+
+        imageResponse = result;
       }
 
       if (ingredient && !isDuplicate) {
         const isImageChanged =
           !(ingredient.imageUrl === image?.name) && imageResponse;
 
-        const updatedIngredient = {
+        if (isImageRemoved && !image && ingredient.imageUrl) {
+          try {
+            const response = await fetch("/api/images", {
+              method: "DELETE",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ imageUrl: ingredient.imageUrl }),
+            });
+
+            if (!response.ok) {
+              const result = await response.json().catch(() => null);
+              const code = result?.error?.code as string | undefined;
+              toast.error(getErrorMessageEt(code));
+            }
+          } catch (error) {
+            console.error("Failed to delete ingredient image from S3", error);
+            toast.error(getErrorMessageEt("IMAGE_DELETE_FAILED"));
+          }
+        }
+
+        const updatedIngredient: CreateIngredientDTO & {
+          id: string;
+        } = {
           id: (ingredient as Ingredient).id,
-          ...value,
+          ...(value as CreateIngredientDTO),
         };
 
-        if (isImageChanged) {
+        if (isImageRemoved && !image) {
+          updatedIngredient.imageUrl = "";
+        } else if (isImageChanged && imageResponse?.imageUrl) {
           updatedIngredient.imageUrl = imageResponse?.imageUrl;
         }
         await updateMutateAsync(setEmptyToNull(updatedIngredient));
@@ -417,8 +452,17 @@ export default function IngredientFrom(props: IngredientFormProps) {
           </div>
           <div className="basis-1/4">
             <ImageUpload
-              onChange={(file) => setImage(file)}
-              imageUrl={ingredient?.imageUrl}
+              onChange={(file) => {
+                setImage(file);
+                if (file) {
+                  setIsImageRemoved(false);
+                }
+              }}
+              onRemove={() => {
+                setImage(null);
+                setIsImageRemoved(true);
+              }}
+              imageUrl={isImageRemoved ? undefined : ingredient?.imageUrl}
               selectedImage={image}
               type="ingredient"
             />
