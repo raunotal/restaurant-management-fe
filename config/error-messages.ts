@@ -10,7 +10,7 @@ export type ErrorCode =
 const ESTONIAN_ERROR_MESSAGES: Record<ErrorCode, string> = {
   IMAGE_NO_FILE: "Faili ei valitud.",
   IMAGE_TOO_LARGE_AFTER_COMPRESSION:
-    "Pilt jäi ka pärast töötlemist liiga suureks. Palun kasuta väiksemat või madalama kvaliteediga pilti.",
+    "Pildi kompresseerimine ebaõnnestus. Palun kasuta väiksemat või madalama kvaliteediga pilti.",
   IMAGE_COMPRESSION_FAILED:
     "Pildi töötlemine ebaõnnestus. Palun proovi teise pildifailiga.",
   IMAGE_UPLOAD_FAILED:
@@ -29,4 +29,3 @@ export const getErrorMessageEt = (code?: string) => {
     ESTONIAN_ERROR_MESSAGES.UNKNOWN_ERROR
   );
 };
-
