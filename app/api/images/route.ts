@@ -1,4 +1,8 @@
-import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import {
+  DeleteObjectCommand,
+  PutObjectCommand,
+  S3Client,
+} from "@aws-sdk/client-s3";
 import { NextRequest, NextResponse } from "next/server";
 import sharp from "sharp";
 
@@ -10,8 +14,9 @@ const s3 = new S3Client({
   region: process.env.AWS_REGION,
 });
 
+const MAX_SIZE = 500 * 1024;
+
 const compressImage = async (buffer: Buffer, contentType: string) => {
-  const MAX_SIZE = 500 * 1024;
   let quality = 80;
   let compressedBuffer = buffer;
 
@@ -38,12 +43,19 @@ const compressImage = async (buffer: Buffer, contentType: string) => {
     }
 
     if (compressedBuffer.length > MAX_SIZE) {
-      throw new Error("Could not compress image to under 500KB");
+      throw new Error("IMAGE_TOO_LARGE_AFTER_COMPRESSION");
     }
 
     return compressedBuffer;
   } catch (error) {
-    throw new Error("Error compressing image: " + error);
+    if (
+      error instanceof Error &&
+      error.message === "IMAGE_TOO_LARGE_AFTER_COMPRESSION"
+    ) {
+      throw error;
+    }
+
+    throw new Error("IMAGE_COMPRESSION_FAILED");
   }
 };
 
@@ -53,7 +65,10 @@ export async function POST(request: NextRequest) {
     const image = formData.get("image") as File;
 
     if (!image) {
-      return NextResponse.json({ error: "No file uploaded" }, { status: 400 });
+      return NextResponse.json(
+        { error: { code: "IMAGE_NO_FILE" } },
+        { status: 400 }
+      );
     }
 
     const buffer = Buffer.from(await image.arrayBuffer());
@@ -74,8 +89,53 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: true, imageUrl });
   } catch (error) {
     console.error("Error uploading image:", error);
+
+    let code = "IMAGE_UPLOAD_FAILED";
+
+    if (error instanceof Error) {
+      if (error.message === "IMAGE_TOO_LARGE_AFTER_COMPRESSION") {
+        code = "IMAGE_TOO_LARGE_AFTER_COMPRESSION";
+      } else if (error.message === "IMAGE_COMPRESSION_FAILED") {
+        code = "IMAGE_COMPRESSION_FAILED";
+      }
+    }
+
+    return NextResponse.json({ error: { code } }, { status: 500 });
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const { imageUrl } = await request.json();
+
+    if (!imageUrl) {
+      return NextResponse.json(
+        { error: { code: "IMAGE_URL_REQUIRED" } },
+        { status: 400 }
+      );
+    }
+
+    let key: string;
+
+    try {
+      const url = new URL(imageUrl);
+      key = url.pathname.replace(/^\//, "");
+    } catch {
+      key = imageUrl.split("/").pop() ?? imageUrl;
+    }
+
+    const command = new DeleteObjectCommand({
+      Bucket: process.env.AWS_BUCKET_NAME!,
+      Key: key,
+    });
+
+    await s3.send(command);
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("Error deleting image:", error);
     return NextResponse.json(
-      { error: "Error uploading image" },
+      { error: { code: "IMAGE_DELETE_FAILED" } },
       { status: 500 }
     );
   }
