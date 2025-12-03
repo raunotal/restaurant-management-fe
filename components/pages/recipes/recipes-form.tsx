@@ -20,6 +20,7 @@ import { useRouter } from "next/navigation";
 import FormRow from "@/components/common/form-row";
 import { useQueryClient } from "@tanstack/react-query";
 import { Endpoints } from "@/config/endpoints";
+import { getErrorMessageEt } from "@/config/error-messages";
 
 type RecipeFormProps = {
   recipe?: Recipe;
@@ -30,6 +31,7 @@ export default function RecipesFrom(props: RecipeFormProps) {
   const router = useRouter();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [image, setImage] = useState<File | null>(null);
+  const [isImageRemoved, setIsImageRemoved] = useState(false);
   const recipeCategories = services.recipeCategoryService.useGetAll().data;
   const queryClient = useQueryClient();
 
@@ -69,19 +71,50 @@ export default function RecipesFrom(props: RecipeFormProps) {
           method: "POST",
           body: data,
         });
-        imageResponse = await response.json();
+        const result = await response.json();
+
+        if (!response.ok) {
+          const code = result?.error?.code as string | undefined;
+          toast.error(getErrorMessageEt(code));
+          return;
+        }
+
+        imageResponse = result;
       }
 
       if (recipe) {
         const isImageChanged =
           !(recipe.imageUrl === image?.name) && imageResponse;
 
-        const updatedRecipe = {
+        if (isImageRemoved && !image && recipe.imageUrl) {
+          try {
+            const response = await fetch("/api/images", {
+              method: "DELETE",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ imageUrl: recipe.imageUrl }),
+            });
+
+            if (!response.ok) {
+              const result = await response.json().catch(() => null);
+              const code = result?.error?.code as string | undefined;
+              toast.error(getErrorMessageEt(code));
+            }
+          } catch (error) {
+            console.error("Failed to delete recipe image from S3", error);
+            toast.error(getErrorMessageEt("IMAGE_DELETE_FAILED"));
+          }
+        }
+
+        const updatedRecipe: CreateRecipeDTO & { id: string } = {
           id: recipe.id,
-          ...value,
+          ...(value as CreateRecipeDTO),
         };
 
-        if (isImageChanged) {
+        if (isImageRemoved && !image) {
+          updatedRecipe.imageUrl = "";
+        } else if (isImageChanged && imageResponse?.imageUrl) {
           updatedRecipe.imageUrl = imageResponse?.imageUrl;
         }
         await updateMutateAsync(setEmptyToNull(updatedRecipe));
@@ -179,8 +212,17 @@ export default function RecipesFrom(props: RecipeFormProps) {
           </div>
           <div className="basis-1/4">
             <ImageUpload
-              onChange={(file) => setImage(file)}
-              imageUrl={recipe?.imageUrl}
+              onChange={(file) => {
+                setImage(file);
+                if (file) {
+                  setIsImageRemoved(false);
+                }
+              }}
+              onRemove={() => {
+                setImage(null);
+                setIsImageRemoved(true);
+              }}
+              imageUrl={isImageRemoved ? undefined : recipe?.imageUrl}
               selectedImage={image}
               type="recipe"
             />
