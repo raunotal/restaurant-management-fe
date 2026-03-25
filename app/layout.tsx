@@ -33,9 +33,11 @@ export default async function RootLayout({
               inter.className
             )}
           >
-            <Sidebar />
+            <div className="sticky top-0 h-screen overflow-y-auto">
+              <Sidebar />
+            </div>
             <Suspense fallback={<Loader />}>
-              <div className="bg-gray-100 p-8">
+              <div className="bg-gray-100 p-8 overflow-y-auto">
                 <Toaster />
                 {children}
               </div>

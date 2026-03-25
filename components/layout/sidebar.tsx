@@ -4,6 +4,7 @@ import logo from "@/public/logo.svg";
 import NavLink from "../ui/nav-link";
 import {
   SIDEBAR_NAVIGATION_MENU,
+  SIDEBAR_REPORTS_MENU,
   SIDEBAR_SETTINGS_MENU,
   SidebarMenu,
 } from "@/config/sidebar";
@@ -46,6 +47,9 @@ export default async function Sidebar() {
           <ul className="flex flex-col flex-1 gap-7">
             <li>
               <SidebarMenuSection {...SIDEBAR_NAVIGATION_MENU} />
+            </li>
+            <li>
+              <SidebarMenuSection {...SIDEBAR_REPORTS_MENU} />
             </li>
             <li>
               <SidebarMenuSection {...SIDEBAR_SETTINGS_MENU} />
