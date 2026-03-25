@@ -32,6 +32,17 @@ export const SIDEBAR_NAVIGATION_MENU: SidebarMenu = {
   ],
 };
 
+export const SIDEBAR_REPORTS_MENU: SidebarMenu = {
+  name: "Aruanded",
+  showLetter: true,
+  items: [
+    {
+      label: "Tellimisleht",
+      href: "/tellimisleht",
+    },
+  ],
+};
+
 export const SIDEBAR_SETTINGS_MENU: SidebarMenu = {
   name: "Seaded",
   showLetter: true,
