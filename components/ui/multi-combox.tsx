@@ -13,6 +13,7 @@ import classNames from "classnames";
 import { useState } from "react";
 import { ComboboxElement } from "./combobox";
 import ChevronDownIcon from "@heroicons/react/24/solid/ChevronDownIcon";
+import CheckIcon from "@heroicons/react/24/solid/CheckIcon";
 
 interface ComboboxProps {
   data: ComboboxElement[];
@@ -64,6 +65,7 @@ export default function MultiCombobox(props: ComboboxProps) {
         value={selected}
         onChange={onChange}
         onClose={() => setQuery("")}
+        by="key"
         multiple
         immediate
       >
@@ -110,15 +112,24 @@ export default function MultiCombobox(props: ComboboxProps) {
           )}
           
         >
-          {filteredData.map((element) => (
-            <ComboboxOption
-              key={`autocomplete-${element.key}`}
-              value={element}
-              className="py-2 pl-3 pr-9 text-sm hover:bg-indigo-600 hover:text-white cursor-pointer"
-            >
-              {element.value}
-            </ComboboxOption>
-          ))}
+          {filteredData.map((element) => {
+            const isSelected = selected.some((s) => s.key === element.key);
+            return (
+              <ComboboxOption
+                key={`autocomplete-${element.key}`}
+                value={element}
+                className={classNames(
+                  "py-2 pl-3 pr-9 text-sm cursor-pointer flex items-center justify-between",
+                  isSelected
+                    ? "bg-indigo-50 text-indigo-700"
+                    : "hover:bg-indigo-600 hover:text-white"
+                )}
+              >
+                {element.value}
+                {isSelected && <CheckIcon className="size-4 mr-3 shrink-0" />}
+              </ComboboxOption>
+            );
+          })}
         </ComboboxOptions>
       </HeadlessCombobox>
     </Field>
