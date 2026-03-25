@@ -38,7 +38,7 @@ export const SIDEBAR_REPORTS_MENU: SidebarMenu = {
   items: [
     {
       label: "Tellimisleht",
-      href: "/tellimisleht",
+      href: "/order-form",
     },
   ],
 };
