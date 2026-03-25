@@ -3,7 +3,7 @@ import { auth } from "./auth-config";
 import { getAccessToken } from "./auth-token";
 
 const getDefaultUrl = () => {
-  return "https://uvn-67-207.tll01.zonevs.eu/api/v1";
+  return "https://retseptid.augustresto.ee/api/v1";
 };
 
 export const API = axios.create({
@@ -30,5 +30,5 @@ API.interceptors.request.use(
 
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
