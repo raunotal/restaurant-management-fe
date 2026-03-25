@@ -4,7 +4,6 @@ import React from "react";
 import PageHeader from "@/components/layout/page-header";
 import MultiCombobox from "@/components/ui/multi-combox";
 import { ComboboxElement } from "@/components/ui/combobox";
-import Button from "@/components/ui/button";
 import services from "@/service/services";
 import { Ingredient } from "@/types/ingredient";
 import { useState } from "react";
