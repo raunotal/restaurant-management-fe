@@ -7,6 +7,12 @@ import { ComboboxElement } from "@/components/ui/combobox";
 import services from "@/service/services";
 import { Ingredient } from "@/types/ingredient";
 import { useState } from "react";
+import {
+  exportToExcel,
+  exportToPdf,
+  buildFilename,
+  buildDateLabel,
+} from "@/utils/export-order-form";
 
 function filterAndGroupIngredients(
   ingredients: Ingredient[],
@@ -63,6 +69,16 @@ export default function TellimislehtPage() {
     value: c.name,
   }));
 
+  const handleExcelExport = async () => {
+    if (!reportRows) return;
+    await exportToExcel(reportRows, buildFilename(), buildDateLabel());
+  };
+
+  const handlePdfExport = () => {
+    if (!reportRows) return;
+    exportToPdf(reportRows, buildFilename(), buildDateLabel());
+  };
+
   const handleGenerate = () => {
     const rows = filterAndGroupIngredients(
       ingredients,
@@ -106,12 +122,26 @@ export default function TellimislehtPage() {
             isField={false}
           />
         </div>
-        <div className="mt-4">
+        <div className="mt-4 flex items-center gap-3">
           <button
             onClick={handleGenerate}
             className="text-white bg-indigo-600 font-semibold p-2.5 rounded-md text-sm px-5 h-[40px]"
           >
             Koosta aruanne
+          </button>
+          <button
+            onClick={handleExcelExport}
+            disabled={!reportRows}
+            className="text-white bg-green-600 font-semibold p-2.5 rounded-md text-sm px-5 h-[40px] disabled:bg-gray-300"
+          >
+            Excel
+          </button>
+          <button
+            onClick={handlePdfExport}
+            disabled={!reportRows}
+            className="text-white bg-red-600 font-semibold p-2.5 rounded-md text-sm px-5 h-[40px] disabled:bg-gray-300"
+          >
+            PDF
           </button>
         </div>
       </div>
