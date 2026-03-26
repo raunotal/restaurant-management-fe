@@ -1,13 +1,6 @@
 @import "tailwindcss";
 @config "../tailwind.config.ts";
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  border: 0 solid;
-}
-
 @layer base {
   html {
     -webkit-font-smoothing: antialiased;

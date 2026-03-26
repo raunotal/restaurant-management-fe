@@ -9,8 +9,8 @@ export function SignOut() {
         await signOut();
       }}
     >
-      <button type="submit" className="flex items-center gap-2">
-        Logi välja <Icon type="signout" />
+      <button type="submit" className="text-md">
+        Logi välja
       </button>
     </form>
   );
