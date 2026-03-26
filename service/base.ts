@@ -29,8 +29,8 @@ export const useCustomMutation = <TData, TResponse = TData>(
   return useMutation<TResponse, Error, TData>({
     ...options,
     mutationFn,
-    onSuccess: (_, variables) => {
-      options?.onSuccess?.(_, variables, { variables });
+    onSuccess: (data, variables, onMutateResult, context) => {
+      options?.onSuccess?.(data, variables, onMutateResult, context);
     },
   });
 };
