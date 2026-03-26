@@ -22,12 +22,12 @@ export const unitSchema: z.ZodType<UnitType> = z.lazy(() =>
   })
 );
 
-export const createUnitSchema: z.ZodType<CreateUnitDTOType> = z.object({
+export const createUnitSchema = z.object({
   name: z.string().min(1, "Ühiku nimi ei tohi olla tühi"),
   displayName: z.string(),
   ratio: z.number().optional(),
   parentUnitId: z.string().optional(),
-});
+}) satisfies z.ZodType<CreateUnitDTOType>;
 
 export type Unit = z.infer<typeof unitSchema>;
 export type CreateUnitDTO = z.infer<typeof createUnitSchema>;

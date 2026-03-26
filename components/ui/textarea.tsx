@@ -40,7 +40,7 @@ export default function Textarea(props: TextareaProps) {
       )}
       <TextareaComponent
         className={classNames(
-          "py-1.5 px-3  text-sm outline-gray-300 -outline-offset-1 outline-1 outline-solid focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 text-gray-900 py-1.5 px3 bg-white rounded-md w-full placeholder:text-gray-400",
+          "py-1.5 px-3  text-sm outline-gray-300 -outline-offset-1 outline-1 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 text-gray-900 py-1.5 px3 bg-white rounded-md w-full placeholder:text-gray-400",
           isField && "mt-2",
           hasError && "outline-red-500",
           textareaClassName

@@ -216,7 +216,7 @@ export default function Table(props: TableProps) {
     <div className={classNames(className)}>
       <div className="-my-2 -mx-8 overflow-x-auto">
         <div className="py-2 px-8">
-          <div className="rounded-lg shadow ring-1 ring-black ring-opacity-5 overflow-hidden">
+          <div className="rounded-lg shadow ring-1 ring-black/5 overflow-hidden">
             <table className="w-full">
               <thead className="border-b border-gray-300 bg-gray-50">
                 <tr>

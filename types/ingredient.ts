@@ -43,7 +43,7 @@ type CreateIngredientDTOType = Omit<
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const ingredientSchema: z.ZodType<IngredientType> = z.object({
+const ingredientSchema = z.object({
   id: z.string(),
   name: z.string().min(1, "Tooraine nimi ei tohi olla tühi"),
   grossQuantity: z.number().nonnegative().optional(),
@@ -60,26 +60,25 @@ const ingredientSchema: z.ZodType<IngredientType> = z.object({
   shelfLife: z.string().optional(),
   productCode: z.string().optional(),
   warehouseMinQuantity: z.string().optional(),
-});
+}) satisfies z.ZodType<IngredientType>;
 
-export const createIngredientSchema: z.ZodType<CreateIngredientDTOType> =
-  z.object({
-    name: z.string().min(1, "Tooraine nimi ei tohi olla tühi"),
-    grossQuantity: z.number().nonnegative().optional(),
-    netQuantity: z.number().nonnegative().optional(),
-    purchasePrice: z.number().nonnegative().optional(),
-    categoryId: z.string().nonempty(),
-    supplierId: z.string().nonempty(),
-    unitId: z.string().nonempty(),
-    warehouseId: z.string().optional(),
-    imageUrl: z.string().optional(),
-    isActive: z.boolean(),
-    bulkPackage: z.string().optional(),
-    comments: z.string().optional(),
-    shelfLife: z.string().optional(),
-    productCode: z.string().optional(),
-    warehouseMinQuantity: z.string().optional(),
-  });
+export const createIngredientSchema = z.object({
+  name: z.string().min(1, "Tooraine nimi ei tohi olla tühi"),
+  grossQuantity: z.number().nonnegative().optional(),
+  netQuantity: z.number().nonnegative().optional(),
+  purchasePrice: z.number().nonnegative().optional(),
+  categoryId: z.string().min(1),
+  supplierId: z.string().min(1),
+  unitId: z.string().min(1),
+  warehouseId: z.string().optional(),
+  imageUrl: z.string().optional(),
+  isActive: z.boolean(),
+  bulkPackage: z.string().optional(),
+  comments: z.string().optional(),
+  shelfLife: z.string().optional(),
+  productCode: z.string().optional(),
+  warehouseMinQuantity: z.string().optional(),
+}) satisfies z.ZodType<CreateIngredientDTOType>;
 
 export type Ingredient = z.infer<typeof ingredientSchema>;
 export type CreateIngredientDTO = z.infer<typeof createIngredientSchema>;

@@ -10,20 +10,20 @@ type SupplierType = {
 
 type CreateSupplierDTOType = Omit<SupplierType, "id">;
 
-export const supplierSchema: z.ZodType<SupplierType> = z.object({
+export const supplierSchema = z.object({
   id: z.string(),
   name: z.string().min(1, "Tarnija nimi ei tohi olla tühi"),
   address: z.string().optional(),
   contact: z.string().optional(),
   deliveryTerms: z.string().optional(),
-});
+}) satisfies z.ZodType<SupplierType>;
 
-export const createSupplierSchema: z.ZodType<CreateSupplierDTOType> = z.object({
+export const createSupplierSchema = z.object({
   name: z.string().min(1, "Tarnija nimi ei tohi olla tühi"),
   address: z.string().optional(),
   contact: z.string().optional(),
   deliveryTerms: z.string().optional(),
-});
+}) satisfies z.ZodType<CreateSupplierDTOType>;
 
 export type Supplier = z.infer<typeof supplierSchema>;
 export type CreateSupplierDTO = z.infer<typeof createSupplierSchema>;

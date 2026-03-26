@@ -16,7 +16,7 @@ type CreateRecipeDTOType = Omit<RecipeType, "id" | "category"> & {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const recipeSchema: z.ZodType<RecipeType> = z.object({
+const recipeSchema = z.object({
   id: z.string(),
   name: z.string().min(1, "Retsepti nimi ei tohi olla tühi"),
   preparationTime: z.number().nonnegative().optional(),
@@ -24,16 +24,16 @@ const recipeSchema: z.ZodType<RecipeType> = z.object({
   isActive: z.boolean(),
   imageUrl: z.string().optional(),
   comments: z.string().optional(),
-});
+}) satisfies z.ZodType<RecipeType>;
 
-export const createRecipeSchema: z.ZodType<CreateRecipeDTOType> = z.object({
+export const createRecipeSchema = z.object({
   name: z.string().min(1, "Retsepti nimi ei tohi olla tühi"),
   preparationTime: z.number().nonnegative().optional(),
-  categoryId: z.string().nonempty(),
+  categoryId: z.string().min(1),
   isActive: z.boolean(),
   imageUrl: z.string().optional(),
   comments: z.string().optional(),
-});
+}) satisfies z.ZodType<CreateRecipeDTOType>;
 
 export type Recipe = z.infer<typeof recipeSchema>;
 export type CreateRecipeDTO = z.infer<typeof createRecipeSchema>;

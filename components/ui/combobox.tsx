@@ -49,7 +49,7 @@ export default function Combobox(props: ComboboxProps) {
         });
 
   const inputClass = classNames(
-    "py-1.5 px-3 text-sm outline-gray-300 -outline-offset-1 outline-1 outline-solid focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 text-gray-900 py-1.5 px3 bg-white rounded-md w-full placeholder:text-gray-400",
+    "py-1.5 px-3 text-sm outline-gray-300 -outline-offset-1 outline-1 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 text-gray-900 py-1.5 px3 bg-white rounded-md w-full placeholder:text-gray-400",
     hasError && "outline-red-500"
   );
 
@@ -91,7 +91,7 @@ export default function Combobox(props: ComboboxProps) {
           className={classNames(
             "w-[var(--input-width)] rounded-md empty:invisible",
             "transition duration-100 ease-in data-[leave]:data-[closed]:opacity-0",
-            "mt-1 py-1 max-h-60 bg-white shadow-lg ring-1 ring-black ring-opacity-5 overflow"
+            "mt-1 py-1 max-h-60 bg-white shadow-lg ring-1 ring-black/5 overflow"
           )}
         >
           {filteredData.map((element) => (
