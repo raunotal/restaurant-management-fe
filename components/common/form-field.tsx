@@ -2,7 +2,7 @@ import classNames from "classnames";
 import React from "react";
 
 type FormFieldProps = {
-  label: string;
+  label: React.ReactNode;
   id?: string;
   className?: string;
   children: React.ReactNode;

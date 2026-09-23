@@ -27,10 +27,16 @@ import { Endpoints } from "@/config/endpoints";
 import { getErrorMessageEt } from "@/config/error-messages";
 import FormField from "@/components/common/form-field";
 import Divider from "@/components/ui/divider";
+import {
+  calculateColdProcessingLoss,
+  calculateNetQuantity,
+} from "@/utils/quantity";
 
 type IngredientFormProps = {
   ingredient?: Ingredient;
 };
+
+type QuantityInputMode = "netQuantity" | "coldProcessingLoss";
 
 export default function IngredientFrom(props: IngredientFormProps) {
   const { ingredient } = props;
@@ -41,6 +47,8 @@ export default function IngredientFrom(props: IngredientFormProps) {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [image, setImage] = useState<File | null>(null);
   const [isImageRemoved, setIsImageRemoved] = useState(false);
+  const [quantityInputMode, setQuantityInputMode] =
+    useState<QuantityInputMode>("netQuantity");
   const ingredientCategories =
     services.ingredientCategoryService.useGetAll().data;
   const units = services.unitService.useGetAll().data;
@@ -66,11 +74,17 @@ export default function IngredientFrom(props: IngredientFormProps) {
       },
     });
 
-  const { handleSubmit, Field, Subscribe } = useForm({
+  const form = useForm({
     defaultValues: {
       name: ingredient?.name || "",
       grossQuantity: ingredient?.grossQuantity || 0,
       netQuantity: ingredient?.netQuantity || 0,
+      coldProcessingLoss:
+        ingredient?.coldProcessingLoss ??
+        calculateColdProcessingLoss(
+          ingredient?.grossQuantity,
+          ingredient?.netQuantity
+        ),
       purchasePrice: ingredient?.purchasePrice || 0,
       warehouseMinQuantity: ingredient?.warehouseMinQuantity || "",
       unitId: ingredient?.unit.id || "",
@@ -156,6 +170,28 @@ export default function IngredientFrom(props: IngredientFormProps) {
       }
     },
   });
+  const { handleSubmit, Field, Subscribe, getFieldValue, setFieldValue } = form;
+
+  // Only one of netQuantity / coldProcessingLoss is entered manually,
+  // the other one is always derived from it and grossQuantity.
+  const recalculateQuantities = () => {
+    const grossQuantity = getFieldValue("grossQuantity");
+
+    if (quantityInputMode === "netQuantity") {
+      setFieldValue(
+        "coldProcessingLoss",
+        calculateColdProcessingLoss(grossQuantity, getFieldValue("netQuantity"))
+      );
+    } else {
+      setFieldValue(
+        "netQuantity",
+        calculateNetQuantity(
+          grossQuantity,
+          getFieldValue("coldProcessingLoss")
+        ) ?? 0
+      );
+    }
+  };
 
   const ingredientCategoriesData = ingredientCategories!.map((category) => ({
     key: category.id,
@@ -389,7 +425,10 @@ export default function IngredientFrom(props: IngredientFormProps) {
                         defaultValue={
                           field.state.value === 0 ? "" : field.state.value
                         }
-                        onChange={(e) => field.handleChange(+e.target.value)}
+                        onChange={(e) => {
+                          field.handleChange(+e.target.value);
+                          recalculateQuantities();
+                        }}
                         isField={false}
                         type="number"
                         step={0.001}
@@ -400,26 +439,94 @@ export default function IngredientFrom(props: IngredientFormProps) {
                   </FormField>
                 )}
               />
+            </FormRow>
+            <FormRow>
               <Field
                 name="netQuantity"
-                children={(field) => (
-                  <FormField label="Netokogus (toorkaal)" id={field.name}>
-                    <div className="flex items-center gap-2">
-                      <Input
-                        name={field.name}
-                        defaultValue={
-                          field.state.value === 0 ? "" : field.state.value
-                        }
-                        onChange={(e) => field.handleChange(+e.target.value)}
-                        isField={false}
-                        type="number"
-                        step={0.001}
-                        hasError={!!field.state.meta.errors.length}
-                      />
-                      {selectedUnit?.displayName}
-                    </div>
-                  </FormField>
-                )}
+                children={(field) => {
+                  const isEditable = quantityInputMode === "netQuantity";
+                  const value =
+                    field.state.value === 0 ? "" : field.state.value;
+
+                  return (
+                    <FormField
+                      label={
+                        <QuantityInputModeLabel
+                          label="Netokogus (toorkaal)"
+                          checked={isEditable}
+                          onChange={() => setQuantityInputMode("netQuantity")}
+                        />
+                      }
+                    >
+                      <div className="flex items-center gap-2">
+                        <Input
+                          key={isEditable ? "editable" : "calculated"}
+                          name={field.name}
+                          {...(isEditable
+                            ? { defaultValue: value }
+                            : { value })}
+                          onChange={(e) => {
+                            field.handleChange(+e.target.value);
+                            recalculateQuantities();
+                          }}
+                          disabled={!isEditable}
+                          isField={false}
+                          type="number"
+                          step={0.001}
+                          hasError={!!field.state.meta.errors.length}
+                        />
+                        {selectedUnit?.displayName}
+                      </div>
+                    </FormField>
+                  );
+                }}
+              />
+              <Field
+                name="coldProcessingLoss"
+                children={(field) => {
+                  const isEditable = quantityInputMode === "coldProcessingLoss";
+                  const value = field.state.value ?? "";
+
+                  return (
+                    <FormField
+                      label={
+                        <QuantityInputModeLabel
+                          label="Külmtöötlemiskadu"
+                          checked={isEditable}
+                          onChange={() =>
+                            setQuantityInputMode("coldProcessingLoss")
+                          }
+                        />
+                      }
+                    >
+                      <div className="flex items-center gap-2">
+                        <Input
+                          key={isEditable ? "editable" : "calculated"}
+                          name={field.name}
+                          {...(isEditable
+                            ? { defaultValue: value }
+                            : { value })}
+                          onChange={(e) => {
+                            field.handleChange(
+                              e.target.value === ""
+                                ? undefined
+                                : +e.target.value
+                            );
+                            recalculateQuantities();
+                          }}
+                          disabled={!isEditable}
+                          isField={false}
+                          type="number"
+                          step={0.01}
+                          min={0}
+                          max={100}
+                          hasError={!!field.state.meta.errors.length}
+                        />
+                        %
+                      </div>
+                    </FormField>
+                  );
+                }}
               />
             </FormRow>
             <Divider />
@@ -508,5 +615,28 @@ export default function IngredientFrom(props: IngredientFormProps) {
         </div>
       </form>
     </>
+  );
+}
+
+type QuantityInputModeLabelProps = {
+  label: string;
+  checked: boolean;
+  onChange: () => void;
+};
+
+function QuantityInputModeLabel(props: QuantityInputModeLabelProps) {
+  const { label, checked, onChange } = props;
+
+  return (
+    <span className="flex items-center gap-2 cursor-pointer">
+      <input
+        type="radio"
+        name="quantityInputMode"
+        checked={checked}
+        onChange={onChange}
+        className="accent-indigo-600 outline-hidden focus-visible:outline-indigo-600"
+      />
+      {label}
+    </span>
   );
 }
