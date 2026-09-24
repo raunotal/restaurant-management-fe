@@ -64,6 +64,10 @@ export const SIDEBAR_SETTINGS_MENU: SidebarMenu = {
       href: "/recipe-categories",
     },
     {
+      label: "Retsepti tooterühmad",
+      href: "/recipe-product-groups",
+    },
+    {
       label: "Ühikud",
       href: "/units",
     },

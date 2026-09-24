@@ -33,6 +33,8 @@ export default function RecipesFrom(props: RecipeFormProps) {
   const [image, setImage] = useState<File | null>(null);
   const [isImageRemoved, setIsImageRemoved] = useState(false);
   const recipeCategories = services.recipeCategoryService.useGetAll().data;
+  const recipeProductGroups =
+    services.recipeProductGroupService.useGetAll().data;
   const queryClient = useQueryClient();
 
   const { mutateAsync: createMutateAsync } = services.recipeService.useCreate({
@@ -55,6 +57,7 @@ export default function RecipesFrom(props: RecipeFormProps) {
       name: recipe?.name || "",
       isActive: recipe?.isActive ?? true,
       categoryId: recipe?.category?.id || "",
+      productGroupId: recipe?.productGroup?.id || "",
       preparationTime: recipe?.preparationTime || 0,
       comments: recipe?.comments || "",
     } as CreateRecipeDTO,
@@ -134,6 +137,11 @@ export default function RecipesFrom(props: RecipeFormProps) {
     value: category.name,
   }));
 
+  const recipeProductGroupsData = recipeProductGroups.map((productGroup) => ({
+    key: productGroup.id,
+    value: productGroup.name,
+  }));
+
   return (
     <>
       {recipe && (
@@ -191,6 +199,26 @@ export default function RecipesFrom(props: RecipeFormProps) {
                       data={recipeCategoriesData}
                       onChange={(value) => field.handleChange(value?.key)}
                       isField={false}
+                      selected={field.state.value}
+                      hasError={!!field.state.meta.errors.length}
+                    />
+                  )}
+                />
+                <Field
+                  name="productGroupId"
+                  children={(field) => (
+                    <Combobox
+                      data={
+                        field.state.value
+                          ? [
+                              { key: "", value: "Tooterühm puudub" },
+                              ...recipeProductGroupsData,
+                            ]
+                          : recipeProductGroupsData
+                      }
+                      onChange={(value) => field.handleChange(value?.key)}
+                      isField={false}
+                      placeholder="Tooterühm"
                       selected={field.state.value}
                       hasError={!!field.state.meta.errors.length}
                     />
