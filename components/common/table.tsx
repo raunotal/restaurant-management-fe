@@ -49,13 +49,14 @@ interface TableProps {
   headers: TableHeader[];
   rows: TableRow[];
   className?: string;
+  defaultSortBy?: string;
 }
 
 type SortDirection = "asc" | "desc";
 
 export default function Table(props: TableProps) {
-  const { headers, rows, className } = props;
-  const [sortBy, setSortBy] = useState<string | null>(null);
+  const { headers, rows, className, defaultSortBy } = props;
+  const [sortBy, setSortBy] = useState<string | null>(defaultSortBy ?? null);
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
   const [inputFilter, setInputFilter] = useState<Record<number, string>>({});
   const [filterOptions, setFilterOptions] = useState<
@@ -146,14 +147,14 @@ export default function Table(props: TableProps) {
     return (
       <span
         className={classNames(
-          "flex items-center justify-center ml-2 w-5 h-5 rounded-[4px] opacity-0",
+          "flex items-center justify-center ml-2 w-5 h-5 rounded-[4px]",
           {
-            "bg-gray-200 opacity-100": sortBy === key,
-            "group-hover:opacity-75": sortBy !== key,
+            "bg-gray-200": sortBy === key,
+            "opacity-40 group-hover:opacity-75": sortBy !== key,
           }
         )}
       >
-        {sortDirection === "asc" ? (
+        {sortBy !== key || sortDirection === "asc" ? (
           <Icon type="chevron-up" className="text-gray-600" size={16} />
         ) : (
           <Icon type="chevron-down" className="text-gray-600" size={16} />

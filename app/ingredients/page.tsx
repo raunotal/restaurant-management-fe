@@ -53,7 +53,12 @@ export default function IngredientsPage() {
         onClickText="Lisa uus"
         onClick={() => router.push("/ingredients/create")}
       />
-      <Table className="mt-8" headers={tableHeaders} rows={tableData} />
+      <Table
+        className="mt-8"
+        headers={tableHeaders}
+        rows={tableData}
+        defaultSortBy="name"
+      />
     </>
   );
 }
