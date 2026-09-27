@@ -15,12 +15,14 @@ export default function IngredientsPage() {
   const tableHeaders = [
     { title: "Nimi", filterType: TableFilterType.Input },
     { title: "Kategooria", filterType: TableFilterType.Combobox },
+    { title: "Tarnija", filterType: TableFilterType.Combobox },
     { title: "Staatus", filterType: TableFilterType.Combobox },
     { title: "", filterType: TableFilterType.None },
   ];
   const tableData = ingredients.map((ingredient) => ({
     name: ingredient.name,
     category: ingredient.category.name,
+    supplier: ingredient.supplier?.name ?? "",
     status: (
       <Badge
         text={ingredient.isActive ? "Aktiivne" : "Mitteaktiivne"}
