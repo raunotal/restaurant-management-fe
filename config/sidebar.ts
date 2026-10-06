@@ -56,6 +56,10 @@ export const SIDEBAR_SETTINGS_MENU: SidebarMenu = {
       href: "/ingredient-categories",
     },
     {
+      label: "Tooraine tooterühmad",
+      href: "/ingredient-product-groups",
+    },
+    {
       label: "Tooraine laod",
       href: "/ingredient-warehouses",
     },

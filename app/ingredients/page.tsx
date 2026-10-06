@@ -14,6 +14,7 @@ export default function IngredientsPage() {
 
   const tableHeaders = [
     { title: "Nimi", filterType: TableFilterType.Input },
+    { title: "Tooterühm", filterType: TableFilterType.Combobox },
     { title: "Kategooria", filterType: TableFilterType.Combobox },
     { title: "Tarnija", filterType: TableFilterType.Combobox },
     { title: "Staatus", filterType: TableFilterType.Combobox },
@@ -21,6 +22,7 @@ export default function IngredientsPage() {
   ];
   const tableData = ingredients.map((ingredient) => ({
     name: ingredient.name,
+    productGroup: ingredient.productGroup?.name ?? "",
     category: ingredient.category.name,
     supplier: ingredient.supplier?.name ?? "",
     status: (

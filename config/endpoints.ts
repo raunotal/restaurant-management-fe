@@ -3,6 +3,7 @@ export enum Endpoints {
   Units = "/units",
   Suppliers = "/suppliers",
   IngredientCategories = "ingredient-categories",
+  IngredientProductGroups = "/ingredient-product-groups",
   RecipeCategories = "/recipe-categories",
   RecipeProductGroups = "/recipe-product-groups",
   Ingredients = "/ingredients",

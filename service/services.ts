@@ -12,6 +12,10 @@ import {
   RecipeProductGroup,
 } from "@/types/recipe-product-group";
 import { CreateIngredientDTO, Ingredient } from "@/types/ingredient";
+import {
+  CreateIngredientProductGroupDTO,
+  IngredientProductGroup,
+} from "@/types/ingredient-product-group";
 import { CreateIngredientWarehouseDTO, IngredientWarehouse } from "@/types/ingredient-warehouse";
 
 const unitService = createDataService<Unit, CreateUnitDTO>(Endpoints.Units);
@@ -33,6 +37,11 @@ const recipeProductGroupService = createDataService<
   CreateRecipeProductGroupDTO
 >(Endpoints.RecipeProductGroups);
 
+const ingredientProductGroupService = createDataService<
+  IngredientProductGroup,
+  CreateIngredientProductGroupDTO
+>(Endpoints.IngredientProductGroups);
+
 const recipeService = createDataService<Recipe, CreateRecipeDTO>(
   Endpoints.Recipes
 );
@@ -49,6 +58,7 @@ const services = {
   unitService,
   supplierService,
   ingredientCategoryService,
+  ingredientProductGroupService,
   recipeCategoryService,
   recipeProductGroupService,
   recipeService,
