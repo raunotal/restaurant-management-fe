@@ -51,6 +51,8 @@ export default function IngredientFrom(props: IngredientFormProps) {
     useState<QuantityInputMode>("netQuantity");
   const ingredientCategories =
     services.ingredientCategoryService.useGetAll().data;
+  const ingredientProductGroups =
+    services.ingredientProductGroupService.useGetAll().data;
   const units = services.unitService.useGetAll().data;
   const suppliers = services.supplierService.useGetAll().data;
   const warehouses = services.ingredientWarehouseService.useGetAll().data;
@@ -89,6 +91,7 @@ export default function IngredientFrom(props: IngredientFormProps) {
       warehouseMinQuantity: ingredient?.warehouseMinQuantity || "",
       unitId: ingredient?.unit.id || "",
       categoryId: ingredient?.category?.id || "",
+      productGroupId: ingredient?.productGroup?.id || "",
       supplierId: ingredient?.supplier?.id || "",
       warehouseId: ingredient?.warehouse?.id || "",
       imageUrl: ingredient?.imageUrl || "",
@@ -198,6 +201,13 @@ export default function IngredientFrom(props: IngredientFormProps) {
     value: category.name,
   }));
 
+  const ingredientProductGroupsData = ingredientProductGroups.map(
+    (productGroup) => ({
+      key: productGroup.id,
+      value: productGroup.name,
+    })
+  );
+
   const unitsData = units!.map((unit) => ({
     key: unit.id,
     value: unit.name,
@@ -253,7 +263,7 @@ export default function IngredientFrom(props: IngredientFormProps) {
                   <FormField
                     label="Tooraine nimetus"
                     id={field.name}
-                    className="basis-3/5"
+                    className="basis-full"
                   >
                     <Input
                       name={field.name}
@@ -266,10 +276,33 @@ export default function IngredientFrom(props: IngredientFormProps) {
                   </FormField>
                 )}
               />
+            </FormRow>
+            <FormRow>
+              <Field
+                name="productGroupId"
+                children={(field) => (
+                  <FormField label="Tooraine tooterühm" className="basis-2/5">
+                    <Combobox
+                      data={
+                        field.state.value
+                          ? [
+                              { key: "", value: "Tooterühm puudub" },
+                              ...ingredientProductGroupsData,
+                            ]
+                          : ingredientProductGroupsData
+                      }
+                      onChange={(value) => field.handleChange(value?.key)}
+                      isField={false}
+                      selected={field.state.value}
+                      hasError={!!field.state.meta.errors.length}
+                    />
+                  </FormField>
+                )}
+              />
               <Field
                 name="categoryId"
                 children={(field) => (
-                  <FormField label="Tooraine kategooria" className="basis-2/5">
+                  <FormField label="Tooraine kategooria" className="basis-3/5">
                     <Combobox
                       data={ingredientCategoriesData}
                       onChange={(value) => field.handleChange(value?.key)}

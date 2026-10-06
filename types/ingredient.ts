@@ -3,6 +3,10 @@ import {
   IngredientCategory,
   ingredientCategorySchema,
 } from "./ingredient-category";
+import {
+  IngredientProductGroup,
+  ingredientProductGroupSchema,
+} from "./ingredient-product-group";
 import { Supplier, supplierSchema } from "./supplier";
 import { Unit, unitSchema } from "./unit";
 import {
@@ -20,6 +24,7 @@ type IngredientType = {
   unit: Unit;
   purchasePrice?: number;
   category: IngredientCategory;
+  productGroup?: IngredientProductGroup | null;
   supplier: Supplier;
   warehouse?: IngredientWarehouse;
   imageUrl?: string;
@@ -32,9 +37,10 @@ type IngredientType = {
 
 type CreateIngredientDTOType = Omit<
   IngredientType,
-  "id" | "category" | "supplier" | "unit" | "warehouse"
+  "id" | "category" | "productGroup" | "supplier" | "unit" | "warehouse"
 > & {
   categoryId: string;
+  productGroupId?: string;
   supplierId: string;
   unitId: string;
   warehouseId?: string;
@@ -52,6 +58,7 @@ const ingredientSchema = z.object({
   coldProcessingLoss: z.number().min(0).max(100).optional(),
   purchasePrice: z.number().nonnegative().optional(),
   category: ingredientCategorySchema,
+  productGroup: ingredientProductGroupSchema.nullable().optional(),
   supplier: supplierSchema,
   warehouse: ingredientWarehouseSchema.optional(),
   unit: unitSchema,
@@ -71,6 +78,7 @@ export const createIngredientSchema = z.object({
   coldProcessingLoss: z.number().min(0).max(100).optional(),
   purchasePrice: z.number().nonnegative().optional(),
   categoryId: z.string().min(1),
+  productGroupId: z.string().optional(),
   supplierId: z.string().min(1),
   unitId: z.string().min(1),
   warehouseId: z.string().optional(),
