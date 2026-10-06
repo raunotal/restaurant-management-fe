@@ -17,6 +17,7 @@ import {
 function filterAndGroupIngredients(
   ingredients: Ingredient[],
   warehouseIds: string[],
+  productGroupIds: string[],
   supplierIds: string[],
   categoryIds: string[]
 ): Map<string, Ingredient[]> {
@@ -25,11 +26,16 @@ function filterAndGroupIngredients(
     const matchesWarehouse =
       warehouseIds.length === 0 ||
       (ing.warehouse && warehouseIds.includes(ing.warehouse.id));
+    const matchesProductGroup =
+      productGroupIds.length === 0 ||
+      (ing.productGroup && productGroupIds.includes(ing.productGroup.id));
     const matchesSupplier =
       supplierIds.length === 0 || supplierIds.includes(ing.supplier.id);
     const matchesCategory =
       categoryIds.length === 0 || categoryIds.includes(ing.category.id);
-    return matchesWarehouse && matchesSupplier && matchesCategory;
+    return (
+      matchesWarehouse && matchesProductGroup && matchesSupplier && matchesCategory
+    );
   });
 
   const grouped = new Map<string, Ingredient[]>();
@@ -48,10 +54,12 @@ function filterAndGroupIngredients(
 export default function TellimislehtPage() {
   const ingredients = services.ingredientService.useGetAll().data;
   const warehouses = services.ingredientWarehouseService.useGetAll().data;
+  const productGroups = services.ingredientProductGroupService.useGetAll().data;
   const suppliers = services.supplierService.useGetAll().data;
   const categories = services.ingredientCategoryService.useGetAll().data;
 
   const [selectedWarehouses, setSelectedWarehouses] = useState<ComboboxElement[]>([]);
+  const [selectedProductGroups, setSelectedProductGroups] = useState<ComboboxElement[]>([]);
   const [selectedSuppliers, setSelectedSuppliers] = useState<ComboboxElement[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<ComboboxElement[]>([]);
   const [reportRows, setReportRows] = useState<Map<string, Ingredient[]> | null>(null);
@@ -59,6 +67,10 @@ export default function TellimislehtPage() {
   const warehouseOptions: ComboboxElement[] = warehouses.map((w) => ({
     key: w.id,
     value: w.name,
+  }));
+  const productGroupOptions: ComboboxElement[] = productGroups.map((g) => ({
+    key: g.id,
+    value: g.name,
   }));
   const supplierOptions: ComboboxElement[] = suppliers.map((s) => ({
     key: s.id,
@@ -83,6 +95,7 @@ export default function TellimislehtPage() {
     const rows = filterAndGroupIngredients(
       ingredients,
       selectedWarehouses.map((w) => w.key),
+      selectedProductGroups.map((g) => g.key),
       selectedSuppliers.map((s) => s.key),
       selectedCategories.map((c) => c.key)
     );
@@ -96,13 +109,21 @@ export default function TellimislehtPage() {
         description="Vali filtrid ja koosta tellimisleht."
       />
       <div className="mt-8 bg-white rounded-lg p-6 shadow-sm">
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-4 gap-4">
           <MultiCombobox
             label="Tooraine ladu"
             placeholder="Kõik laod"
             data={warehouseOptions}
             selected={selectedWarehouses}
             onChange={setSelectedWarehouses}
+            isField={false}
+          />
+          <MultiCombobox
+            label="Tooraine tooterühm"
+            placeholder="Kõik tooterühmad"
+            data={productGroupOptions}
+            selected={selectedProductGroups}
+            onChange={setSelectedProductGroups}
             isField={false}
           />
           <MultiCombobox
